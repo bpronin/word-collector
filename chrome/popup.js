@@ -1,15 +1,11 @@
 const HISTORY_PAGE_URL = chrome.runtime.getURL("history.html")
 const OPTIONS_PAGE_URL = chrome.runtime.getURL("options.html")
 
-function selectTab(tab) {
-    chrome.tabs.update(tab.id, {highlighted: true})
-}
-
 function openTab(url) {
     chrome.tabs.query({url: url}, tabs => {
         const tab = tabs[0]
         if (tab) {
-            selectTab(tab)
+            chrome.tabs.update(tab.id, {highlighted: true})
         } else {
             chrome.tabs.create({url: url})
         }
