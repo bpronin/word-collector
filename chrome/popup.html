@@ -3,11 +3,31 @@
 <head>
     <title>Word collector</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/popup.css">
 </head>
-<body>
 
-<button id="history_button">History</button>
-<button id="options_button">Settings</button>
+<body id="body">
+
+<div id="header">
+    Word collector
+    <button id="settings_button">Settings</button>
+</div>
+
+<div id="content">
+
+    <div id="auth_section">
+        <div>Sign in to Google Spreadsheets</div>
+        <br/>
+        <button id="sign_in_button">Sign In</button>
+    </div>
+
+<!--    <div id="history_section">-->
+<!--        <p>Word 1</p>-->
+<!--        <p>Word 2</p>-->
+<!--        <p>Word 3</p>-->
+<!--    </div>-->
+
+</div>
 
 <script src="popup.js"></script>
 

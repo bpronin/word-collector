@@ -1,9 +1,7 @@
 const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU";
 
-function onSaveSelection(info) {
-    if (info.menuItemId === CONTEXT_MENU_ID) {
-        console.log("Saving: " + info.selectionText);
-    }
+function saveSelection(text) {
+    console.log("Saving: " + text);
 }
 
 chrome.contextMenus.create({
@@ -12,4 +10,12 @@ chrome.contextMenus.create({
     contexts: ["selection"]
 });
 
-chrome.contextMenus.onClicked.addListener(onSaveSelection)
+chrome.contextMenus.onClicked.addListener(info => {
+    if (info.menuItemId === CONTEXT_MENU_ID) {
+        saveSelection(info.selectionText);
+    }
+})
+
+// chrome.runtime.onInstalled.addListener(() => {
+//
+// });

@@ -1,41 +1,45 @@
-// function handleButtonClick(event) {
-//   // Remove styling from the previously selected color
-//   let current = event.target.parentElement.querySelector(
-//     `.${selectedClassName}`
-//   );
-//   if (current && current !== event.target) {
-//     current.classList.remove(selectedClassName);
-//   }
-//
-//   // Mark the button as selected
-//   let color = event.target.dataset.color;
-//   event.target.classList.add(selectedClassName);
-//   chrome.storage.sync.set({ color });
-// }
-//
-// // Add a button to the page for each supplied color
-// function constructOptions(buttonColors) {
-//   chrome.storage.sync.get("color", (data) => {
-//     let currentColor = data.color;
-//
-//     // For each color we were provided…
-//     for (let buttonColor of buttonColors) {
-//       // …crate a button with that color…
-//       let button = document.createElement("button");
-//       button.dataset.color = buttonColor;
-//       button.style.backgroundColor = buttonColor;
-//
-//       // …mark the currently selected color…
-//       if (buttonColor === currentColor) {
-//         button.classList.add(selectedClassName);
-//       }
-//
-//       // …and register a listener for when that button is clicked
-//       button.addEventListener("click", handleButtonClick);
-//       page.appendChild(button);
-//     }
-//   });
-// }
-//
-// // Initialize the page by constructing the color options
-// constructOptions(presetButtonColors);
+const signInButton = document.getElementById('authorize_button');
+const signOutButton = document.getElementById('signout_button');
+
+signInButton.addEventListener("click", onSignInClick);
+signOutButton.addEventListener("click", onSignOutClick);
+window.addEventListener('load', onGoogleApiLoad)
+
+/**
+ *  Sign in the user upon button click.
+ */
+function onSignInClick(event) {
+    console.log("Signing In...")
+    // googleSheetsSignIn();
+}
+
+/**
+ *  Sign out the user upon button click.
+ */
+function onSignOutClick(event) {
+    console.log("Signing Out...")
+    // googleSheetsSignOut();
+}
+
+/**
+ *  Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called.
+ */
+function updateSigninStatus(isSignedIn) {
+    if (isSignedIn) {
+        // signInButton.style.display = 'none';
+        // signOutButton.style.display = 'block';
+        console.log("Signed In");
+    } else {
+        // signInButton.style.display = 'block';
+        // signOutButton.style.display = 'none';
+        console.log("Signed Out");
+    }
+}
+
+/**
+ *  On load, called to load the auth2 library and API client library.
+ */
+function onGoogleApiLoad() {
+    console.log("Loading Google API...")
+    // googleSheetsInit(updateSigninStatus);
+}
