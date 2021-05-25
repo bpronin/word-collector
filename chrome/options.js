@@ -1,9 +1,15 @@
 const signInButton = document.getElementById('authorize_button');
 const signOutButton = document.getElementById('signout_button');
+const label = document.getElementById('path_label');
 
 signInButton.addEventListener("click", onSignInClick);
 signOutButton.addEventListener("click", onSignOutClick);
 window.addEventListener('load', onGoogleApiLoad)
+
+settings.getDataPath(value => {
+    label.innerHTML = value
+});
+
 
 /**
  *  Sign in the user upon button click.

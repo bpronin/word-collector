@@ -23,5 +23,18 @@ let chrome = chrome || {
     runtime: {
         getURL: () => {
         }
+    },
+    storage: {
+        sync: {
+            get: () => {
+            },
+            set: () => {
+            }
+        }
+    },
+    extension: {
+        getBackgroundPage: () => {
+
+        }
     }
 }

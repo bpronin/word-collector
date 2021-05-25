@@ -12,7 +12,8 @@
     "tabs",
     "activeTab",
     "scripting",
-    "identity"
+    "identity",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"

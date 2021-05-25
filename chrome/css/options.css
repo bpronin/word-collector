@@ -1,0 +1,71 @@
+body {
+    background-color: #F4F4F4;
+}
+
+.settings-header {
+    /*background-color: #678ab4;*/
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    font-size: 22px;
+    /*font-weight: bold;*/
+    text-align: center;
+    padding: 16px;
+}
+
+.settings-content {
+    padding: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-sections {
+    background-color: #FFFFFF;
+    width: 66%;
+    border-color: #C8C8C8;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom: none;
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+.setting-section {
+    border-bottom-color: #C8C8C8;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    padding: 16px;
+}
+
+.setting-title {
+    color: #6e6e6e;
+    padding-bottom: 8px;
+    width: 100%;
+    font-weight: bold;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between
+}
+
+.setting-label {
+    /*width: 80%;*/
+    /*margin-top: 8px;*/
+    /*margin-bottom: 8px;*/
+    /*background-color: #9F3A38;*/
+}
+
+.setting-button {
+    width: 24px;
+    height: 24px;
+    /*background-image: url(../icons/settings.svg);*/
+    /*margin-left: auto;*/
+    /*margin-right: 0;*/
+    /*padding: 8px;*/
+    /*outline: none;*/
+    /*margin: 4px;*/
+    /*margin: 4px 0 4px 0;*/
+    /*border: none;*/
+    /*border-radius: 2px;*/
+}

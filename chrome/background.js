@@ -1,4 +1,7 @@
+importScripts('settings.js')
+
 const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU";
+let DICTIONARY_PATH
 
 function saveSelection(text) {
     console.log("Saving: " + text);
@@ -16,6 +19,11 @@ chrome.contextMenus.onClicked.addListener(info => {
     }
 })
 
+settings.getDataPath(value => {
+    DICTIONARY_PATH = value
+});
+
 // chrome.runtime.onInstalled.addListener(() => {
 //
 // });
+
