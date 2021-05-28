@@ -1,51 +1,50 @@
-const signInButton = document.getElementById('authorize_button');
-const signOutButton = document.getElementById('signout_button');
-const label = document.getElementById('path_label');
-
-signInButton.addEventListener("click", onSignInClick);
-signOutButton.addEventListener("click", onSignOutClick);
-window.addEventListener('load', onGoogleApiLoad)
-
-settings.getDataPath(value => {
-    label.innerHTML = value
-});
-
+const signInButton = document.getElementById("sign_in_button")
+const signOutButton = document.getElementById("sign_out_button")
 
 /**
  *  Sign in the user upon button click.
  */
-function onSignInClick(event) {
+function onSignInClick() {
     console.log("Signing In...")
-    // googleSheetsSignIn();
+    sheets.signIn()
 }
 
 /**
  *  Sign out the user upon button click.
  */
-function onSignOutClick(event) {
+function onSignOutClick() {
     console.log("Signing Out...")
-    // googleSheetsSignOut();
+    sheets.signOut()
 }
 
 /**
  *  Called when the signed in status changes, to update the UI appropriately. After a sign-in, the API is called.
  */
-function updateSigninStatus(isSignedIn) {
+function onSignInStatusChanged(isSignedIn) {
     if (isSignedIn) {
-        // signInButton.style.display = 'none';
-        // signOutButton.style.display = 'block';
-        console.log("Signed In");
+        // signInButton.style.display = "none";
+        // signOutButton.style.display = "block";
+        console.log("Signed In")
     } else {
-        // signInButton.style.display = 'block';
-        // signOutButton.style.display = 'none';
-        console.log("Signed Out");
+        // signInButton.style.display = "block";
+        // signOutButton.style.display = "none";
+        console.log("Signed Out")
     }
 }
 
 /**
  *  On load, called to load the auth2 library and API client library.
  */
-function onGoogleApiLoad() {
-    console.log("Loading Google API...")
-    // googleSheetsInit(updateSigninStatus);
+function onLoad() {
+    sheets.setup(onSignInStatusChanged)
 }
+
+window.addEventListener("load", onLoad)
+signInButton.addEventListener("click", onSignInClick)
+signOutButton.addEventListener("click", onSignOutClick)
+
+document.getElementById("get_button").addEventListener("click", () => {
+    sheets.values((data) => {
+        console.log("Data:" + data.values.length)
+    })
+})

@@ -25,6 +25,14 @@ let chrome = chrome || {
         }
     },
     storage: {
+        local: {
+            get: (arg) => {
+                console.log("GET: " + arg)
+            },
+            set: (arg) => {
+                console.log("SET: " + arg)
+            }
+        },
         sync: {
             get: () => {
             },

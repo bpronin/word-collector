@@ -1,12 +1,8 @@
 {
+  "manifest_version": 3,
+  "version": "1.0.0",
   "name": "Words Collector",
   "description": "Collects words",
-  "version": "1.0.0",
-  "manifest_version": 3,
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icons/16.png"
-  },
   "permissions": [
     "contextMenus",
     "tabs",
@@ -15,6 +11,10 @@
     "identity",
     "storage"
   ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/16.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -27,8 +27,9 @@
     "128": "icons/128.png"
   },
   "options_page": "options.html",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4IBfduvcYaqvnZEddLUneNjHqA010oy31qDTQ9ZGTba+aTdFpz+xwPm39schE56RxiRjlBxcCz+zuyJeWm8K1Ycvdo3zjvPA66Qw51sV5PZP9oQvJvoQcXxfMPaj6c3zVdRXwgtDI7/O/V8I992CdMG5k0lTsstt67RxGbfUCO+2aDdheobnsZHdr+Ieo+NesDKkjp3/feCX4/lEEbmsKeYB07VVuKP3Js9ySrgWMcG4SaS4nCHmaVSUHBG5Gv2nQY52jMHBS45L32TnVsTrORZTda7DUeB5PcR2RAhc3aLHzQph68Vy963+7EGqNeXernWGDdhpuDBBNb0jqMCtQQIDAQAB",
   "oauth2": {
-    "client_id": "969392774646-lbqtov56l972akmt5srulp1dhga6pked.apps.googleusercontent.com",
+    "client_id": "969392774646-g3i6b3rk4s5u5ugh4qiev9d8ng25pv6u.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets.readonly"
     ]

@@ -1,37 +1,89 @@
-// Client ID and API key from the Developer Console
-const CLIENT_ID = '969392774646-lbqtov56l972akmt5srulp1dhga6pked.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg';
+const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg";
+const SPREADSEET_HOST = "https://sheets.googleapis.com/v4/spreadsheets/";
+let SPREADSHEET_ID = "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY";
+let SPREADSHEET_RANGE = "en-ru";
 
-// Array of API discovery doc URLs for APIs used by the quickstart
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+sheets = {
+    private: {
+        signInCallback: undefined,
 
-// Authorization scopes required by the API; multiple scopes can be included, separated by spaces.
-const SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+        getAuthToken: function (onToken) {
+            chrome.identity.getAuthToken(token => {
+                if (token) {
+                    onToken(token);
+                }
+            })
+        },
 
-/**
- *  Initializes the API client library and sets up sign-in state listeners.
- */
-function googleSheetsInit(onStatusChanged) {
-    gapi.load('client:auth2', () => {
-        gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        }).then(() => {
-            const signInStatus = gapi.auth2.getAuthInstance().isSignedIn;
-            signInStatus.listen(onStatusChanged);
-            onStatusChanged(signInStatus.get());
-        }, error => {
-            console.error(JSON.stringify(error, null, 2));
-        });
-    })
-}
+        request: function (onData) {
 
-function googleSheetsSignIn() {
-    gapi.auth2.getAuthInstance().signIn();
-}
+            function doRequest(token) {
+                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE;
+                fetch(
+                    url + "?key=" + API_KEY, {
+                        method: "GET",
+                        async: true,
+                        headers: {
+                            "Authorization": "Bearer " + token,
+                            "Content-Type": "application/json"
+                        },
+                        "contentType": "json"
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            response.json()
+                                .then(data => {
+                                    onData(data)
+                                })
+                        }
+                    })
+            }
 
-function googleSheetsSignOut() {
-    gapi.auth2.getAuthInstance().signOut();
+            sheets.private.getAuthToken(doRequest);
+        }
+    },
+
+    /**
+     *  Initializes the API client library and sets up sign-in state listeners.
+     */
+    setup: function (onSignInStatusChanged) {
+        sheets.private.signInCallback = onSignInStatusChanged
+        // chrome.identity.onSignInChanged.addListener(onSignInStatusChanged)
+
+        console.log("Google sheets initialized")
+    },
+
+    signIn: function () {
+        chrome.identity.getAuthToken({interactive: true}, () => {
+            console.log("Token obtained");
+
+            sheets.private.signInCallback(true)
+        })
+    },
+
+    signOut: function () {
+
+        function doSignOut(token) {
+            chrome.identity.removeCachedAuthToken({token: token}, () => {
+                console.log("Token removed from cache");
+            });
+
+            window.fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
+                .then(response => {
+                        if (response.ok) {
+                            console.log("Token revoked");
+
+                            sheets.private.signInCallback(false)
+                        }
+                    }
+                )
+        }
+
+        sheets.private.getAuthToken(doSignOut);
+    },
+
+    values: function (onData) {
+        sheets.private.request(onData)
+    }
+
 }
