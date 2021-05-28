@@ -15,19 +15,32 @@ sheets = {
             })
         },
 
-        request: function (onData) {
+/*
+        requestInit: function (token) {
+            return {
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                contentType: "json",
+                async: true
+            }
+        },
+*/
+
+        requestGet: function (onData) {
 
             function doRequest(token) {
-                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE;
+                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
                 fetch(
-                    url + "?key=" + API_KEY, {
+                    url + "key=" + API_KEY, {
                         method: "GET",
-                        async: true,
                         headers: {
                             "Authorization": "Bearer " + token,
                             "Content-Type": "application/json"
                         },
-                        "contentType": "json"
+                        contentType: "json",
+                        async: true
                     })
                     .then(response => {
                         if (response.ok) {
@@ -35,6 +48,32 @@ sheets = {
                                 .then(data => {
                                     onData(data)
                                 })
+                        }
+                    })
+            }
+
+            sheets.private.getAuthToken(doRequest);
+        },
+
+        requestPost: function (data) {
+
+            function doRequest(token) {
+                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
+                    "?valueInputOption=USER_ENTERED&";
+                fetch(
+                    url + "key=" + API_KEY, {
+                        method: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + token,
+                            "Content-Type": "application/json"
+                        },
+                        contentType: "json",
+                        body: JSON.stringify(data),
+                        async: true
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Request accepted")
                         }
                     })
             }
@@ -48,7 +87,10 @@ sheets = {
      */
     setup: function (onSignInStatusChanged) {
         sheets.private.signInCallback = onSignInStatusChanged
-        // chrome.identity.onSignInChanged.addListener(onSignInStatusChanged)
+
+        chrome.identity.onSignInChanged.addListener((account, token)=>{
+            console.log("Google sheets onSignInChanged: "+token)
+        })
 
         console.log("Google sheets initialized")
     },
@@ -83,7 +125,11 @@ sheets = {
     },
 
     values: function (onData) {
-        sheets.private.request(onData)
+        sheets.private.requestGet(onData)
+    },
+
+    append: function (value) {
+        sheets.private.requestPost({values: [[value]]})
     }
 
 }

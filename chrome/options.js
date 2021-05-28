@@ -48,3 +48,7 @@ document.getElementById("get_button").addEventListener("click", () => {
         console.log("Data:" + data.values.length)
     })
 })
+
+document.getElementById("put_button").addEventListener("click", () => {
+    sheets.append("sample text")
+})
