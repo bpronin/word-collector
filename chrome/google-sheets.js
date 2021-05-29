@@ -4,81 +4,64 @@ let SPREADSHEET_ID = "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY";
 let SPREADSHEET_RANGE = "en-ru";
 
 sheets = {
-    private: {
-        signInCallback: undefined,
-
-        getAuthToken: function (onToken) {
-            chrome.identity.getAuthToken(token => {
-                if (token) {
-                    onToken(token);
-                }
-            })
-        },
-
-/*
-        requestInit: function (token) {
-            return {
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                },
-                contentType: "json",
-                async: true
-            }
-        },
-*/
+    internal: {
+        onSignInStatusChanged: undefined,
 
         requestGet: function (onData) {
 
             function doRequest(token) {
-                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
-                fetch(
-                    url + "key=" + API_KEY, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": "Bearer " + token,
-                            "Content-Type": "application/json"
-                        },
-                        contentType: "json",
-                        async: true
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            response.json()
-                                .then(data => {
-                                    onData(data)
-                                })
-                        }
-                    })
+                if (token) {
+                    const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
+                    fetch(
+                        url + "key=" + API_KEY, {
+                            method: "GET",
+                            headers: {
+                                "Authorization": "Bearer " + token,
+                                "Content-Type": "application/json"
+                            },
+                            contentType: "json",
+                            async: true
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                response.json()
+                                    .then(data => {
+                                        onData(data)
+                                    })
+                            }
+                        })
+                }
             }
 
-            sheets.private.getAuthToken(doRequest);
+            sheets.authenticate(false, doRequest);
         },
 
         requestPost: function (data) {
 
             function doRequest(token) {
-                const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
-                    "?valueInputOption=USER_ENTERED&";
-                fetch(
-                    url + "key=" + API_KEY, {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Bearer " + token,
-                            "Content-Type": "application/json"
-                        },
-                        contentType: "json",
-                        body: JSON.stringify(data),
-                        async: true
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            console.log("Request accepted")
-                        }
-                    })
+                if (token) {
+                    const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
+                        "?valueInputOption=USER_ENTERED&";
+                    fetch(
+                        url + "key=" + API_KEY, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + token,
+                                "Content-Type": "application/json"
+                            },
+                            contentType: "json",
+                            body: JSON.stringify(data),
+                            async: true
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log("Request accepted")
+                            }
+                        })
+                }
             }
 
-            sheets.private.getAuthToken(doRequest);
+            sheets.authenticate(false, doRequest);
         }
     },
 
@@ -86,50 +69,69 @@ sheets = {
      *  Initializes the API client library and sets up sign-in state listeners.
      */
     setup: function (onSignInStatusChanged) {
-        sheets.private.signInCallback = onSignInStatusChanged
+        sheets.internal.onSignInStatusChanged = onSignInStatusChanged
 
-        chrome.identity.onSignInChanged.addListener((account, token)=>{
-            console.log("Google sheets onSignInChanged: "+token)
+        // when this listener is calling ?
+        chrome.identity.onSignInChanged.addListener((account, token) => {
+            console.log("Google sheets onSignInChanged: " + token)
         })
 
         console.log("Google sheets initialized")
     },
 
-    signIn: function () {
-        chrome.identity.getAuthToken({interactive: true}, () => {
-            console.log("Token obtained");
-
-            sheets.private.signInCallback(true)
+    authenticate: function (interactive, onToken) {
+        chrome.identity.getAuthToken({interactive: interactive}, token => {
+            onToken(token);
+            sheets.internal.onSignInStatusChanged(token !== undefined)
         })
+    },
+
+    signIn: function () {
+
+        function doSignIn(token) {
+            if (!token) {
+                console.log("Signing in...")
+
+                sheets.authenticate(true, () => {
+                    console.log("Token obtained");
+                });
+            } else {
+                console.log("Using cached token");
+            }
+        }
+
+        sheets.authenticate(false, doSignIn)
     },
 
     signOut: function () {
 
         function doSignOut(token) {
-            chrome.identity.removeCachedAuthToken({token: token}, () => {
-                console.log("Token removed from cache");
-            });
+            if (token) {
+                console.log("Signing out...")
 
-            window.fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
-                .then(response => {
-                        if (response.ok) {
-                            console.log("Token revoked");
+                chrome.identity.removeCachedAuthToken({token: token}, () => {
+                    console.log("Token removed from cache");
+                });
 
-                            sheets.private.signInCallback(false)
+                window.fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
+                    .then(response => {
+                            if (response.ok) {
+                                console.log("Token revoked");
+                            }
                         }
-                    }
-                )
+                    )
+            }
         }
 
-        sheets.private.getAuthToken(doSignOut);
+        sheets.internal.authenticate(false, doSignOut);
     },
 
     values: function (onData) {
-        sheets.private.requestGet(onData)
+        sheets.internal.requestGet(onData)
     },
 
     append: function (value) {
-        sheets.private.requestPost({values: [[value]]})
+        sheets.internal.requestPost({values: [[value]]})
     }
 
 }
