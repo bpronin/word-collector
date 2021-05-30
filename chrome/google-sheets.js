@@ -1,62 +1,40 @@
 const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg";
-const SPREADSHEET_HOST = "https://sheets.googleapis.com/v4/spreadsheets/";
-
-let SPREADSHEET_ID = "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY";
-let SPREADSHEET_RANGE = "en-ru";
 
 sheets = {
     internal: {
         onSignInStatusChanged: undefined,
 
-        requestGet: function (onData) {
+        sendRequest: function (method, path, params, data, onResponse) {
 
             function doRequest(token) {
                 if (token) {
-                    const url = SPREADSHEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
-                    fetch(
-                        url + "key=" + API_KEY, {
-                            method: "GET",
-                            headers: {
-                                "Authorization": "Bearer " + token,
-                                "Content-Type": "application/json"
-                            },
-                            contentType: "json",
-                            async: true
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                response.json()
-                                    .then(data => {
-                                        onData(data)
-                                    })
-                            }
-                        })
-                }
-            }
+                    const input = "https://sheets.googleapis.com/v4/spreadsheets/" + path + "?key=" + API_KEY + params;
 
-            sheets.authenticate(false, doRequest);
-        },
+                    const init = {
+                        method: method,
+                        headers: {
+                            "Authorization": "Bearer " + token,
+                            "Content-Type": "application/json"
+                        },
+                        contentType: "json",
+                        async: true
+                    }
 
-        requestPost: function (data) {
+                    if (method === "POST") {
+                        init.body = JSON.stringify(data)
+                    }
 
-            function doRequest(token) {
-                if (token) {
-                    const url = SPREADSHEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
-                        "?valueInputOption=USER_ENTERED&";
-                    fetch(
-                        url + "key=" + API_KEY, {
-                            method: "POST",
-                            headers: {
-                                "Authorization": "Bearer " + token,
-                                "Content-Type": "application/json"
-                            },
-                            contentType: "json",
-                            body: JSON.stringify(data),
-                            async: true
-                        })
+                    fetch(input, init)
                         .then(response => {
                             if (response.ok) {
                                 console.log("Request accepted")
+
+                                response.json()
+                                    .then(data => {
+                                        onResponse(data)
+                                    })
+                            } else {
+                                throw ("Request rejected: " + response.status)
                             }
                         })
                 }
@@ -64,6 +42,11 @@ sheets = {
 
             sheets.authenticate(false, doRequest);
         }
+    },
+
+    spreadsheet: {
+        id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+        range: "en-ru"
     },
 
     /**
@@ -128,11 +111,20 @@ sheets = {
     },
 
     values: function (onData) {
-        sheets.internal.requestGet(onData)
+        sheets.internal.sendRequest("GET",
+            sheets.spreadsheet.id + "/values/" + sheets.spreadsheet.range,
+            "",
+            undefined,
+            onData)
     },
 
     append: function (value) {
-        sheets.internal.requestPost({values: [[value]]})
+        sheets.internal.sendRequest("POST",
+            sheets.spreadsheet.id + "/values/" + sheets.spreadsheet.range + ":append",
+            "&valueInputOption=USER_ENTERED",
+            {values: [[value]]},
+            noop
+        )
     }
 
 }
