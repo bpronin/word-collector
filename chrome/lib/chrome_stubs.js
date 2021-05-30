@@ -5,44 +5,49 @@
 
 let chrome = chrome || {
     contextMenus: {
-        create: () => {
+        create: function () {
         },
         onClicked: {
-            addListener: () => {
+            addListener: function () {
             }
         }
     },
     tabs: {
-        query: () => {
+        query: function () {
         },
-        update: () => {
+        update: function () {
         },
-        create: () => {
+        create: function () {
+        },
+        sendMessage: function () {
         }
     },
     runtime: {
-        getURL: () => {
+        getURL: function () {
+        },
+        onInstalled: function () {
+        },
+        onMessage: function () {
+        },
+        sendMessage: function () {
         }
     },
     storage: {
         local: {
-            get: (arg) => {
-                console.log("GET: " + arg)
+            get: function () {
             },
-            set: (arg) => {
-                console.log("SET: " + arg)
+            set: function () {
             }
         },
         sync: {
-            get: () => {
+            get: function () {
             },
-            set: () => {
+            set: function () {
             }
         }
     },
     extension: {
-        getBackgroundPage: () => {
-
+        getBackgroundPage: function () {
         }
     }
 }

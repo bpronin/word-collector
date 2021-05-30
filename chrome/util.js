@@ -1,3 +1,7 @@
+function noop() {
+    /* placeholder function. does nothing */
+}
+
 function chromeOpenTab(url) {
     chrome.tabs.query({url: url}, tabs => {
         const tab = tabs[0]

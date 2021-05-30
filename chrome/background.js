@@ -1,13 +1,13 @@
-importScripts("google-sheets.js")
+importScripts("util.js", "google-sheets.js")
 
 const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU";
+const OPTIONS_PAGE_URL = chrome.runtime.getURL("options.html")
 
 function onSignInStatusChanged(signedIn) {
-
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    chrome.tabs.query({url: OPTIONS_PAGE_URL}, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, {
-            action: "sign_in_state_changed",
-            signed_in: signedIn
+            action: "state_changed",
+            signedIn: signedIn
         }, response => {
             console.log("Message response: " + response)
         });
@@ -38,9 +38,8 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         switch (request.action) {
             case "get_state":
-                sheets.authenticate(false, token => {
-                    sendResponse({signedIn: (token !== undefined)})
-                })
+                sheets.authenticate(false)
+                sendResponse("ok")
                 break
             case "sign_in":
                 sheets.signIn()
@@ -50,6 +49,8 @@ chrome.runtime.onMessage.addListener(
                 sheets.signOut()
                 sendResponse("ok")
                 break
+            default:
+                throw ("unknown action: " + request.action)
         }
     }
 );

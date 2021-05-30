@@ -20,17 +20,15 @@ function onSignOutClick() {
     });
 }
 
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        if (request.action === "sign_in_state_changed") {
-            if (request.signed_in) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === "state_changed") {
+            if (request.signedIn) {
                 statusLabel.innerHTML = "Signed in"
             } else {
                 statusLabel.innerHTML = "Signed out"
             }
-
-            sendResponse("ok");
         }
+        sendResponse("ok")
     }
 );
 
@@ -42,3 +40,5 @@ document.getElementById("get_button").addEventListener("click", () => {
     //     console.log("Data:" + data.values.length)
     // })
 })
+
+chrome.runtime.sendMessage({action: "get_state"});

@@ -1,5 +1,6 @@
 const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg";
-const SPREADSEET_HOST = "https://sheets.googleapis.com/v4/spreadsheets/";
+const SPREADSHEET_HOST = "https://sheets.googleapis.com/v4/spreadsheets/";
+
 let SPREADSHEET_ID = "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY";
 let SPREADSHEET_RANGE = "en-ru";
 
@@ -11,7 +12,7 @@ sheets = {
 
             function doRequest(token) {
                 if (token) {
-                    const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
+                    const url = SPREADSHEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + "?";
                     fetch(
                         url + "key=" + API_KEY, {
                             method: "GET",
@@ -40,7 +41,7 @@ sheets = {
 
             function doRequest(token) {
                 if (token) {
-                    const url = SPREADSEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
+                    const url = SPREADSHEET_HOST + SPREADSHEET_ID + "/values/" + SPREADSHEET_RANGE + ":append" +
                         "?valueInputOption=USER_ENTERED&";
                     fetch(
                         url + "key=" + API_KEY, {
@@ -79,7 +80,7 @@ sheets = {
         console.log("Google sheets initialized")
     },
 
-    authenticate: function (interactive, onToken) {
+    authenticate: function (interactive, onToken = noop) {
         chrome.identity.getAuthToken({interactive: interactive}, token => {
             onToken(token);
             sheets.internal.onSignInStatusChanged(token !== undefined)
@@ -113,7 +114,7 @@ sheets = {
                     console.log("Token removed from cache");
                 });
 
-                window.fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
+                fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
                     .then(response => {
                             if (response.ok) {
                                 console.log("Token revoked");
@@ -123,7 +124,7 @@ sheets = {
             }
         }
 
-        sheets.internal.authenticate(false, doSignOut);
+        sheets.authenticate(false, doSignOut);
     },
 
     values: function (onData) {
