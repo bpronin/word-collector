@@ -1,4 +1,4 @@
-importScripts("util.js", "google-sheets.js")
+importScripts("util.js", "settings.js", "google-sheets.js")
 
 const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU";
 const OPTIONS_PAGE_URL = chrome.runtime.getURL("options.html")
@@ -26,11 +26,17 @@ chrome.contextMenus.onClicked.addListener(info => {
 })
 
 chrome.runtime.onInstalled.addListener(() => {
-    sheets.setup(signedIn => {
+
+    function onStateChanged(signedIn) {
         sendMessage({
             action: "state_changed",
             signedIn: signedIn
         });
+    }
+
+    settings.getSheet(sheet => {
+        sheets.sheet = sheet
+        sheets.setup(onStateChanged)
     })
 
     console.log("Installed")

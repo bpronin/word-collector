@@ -7,47 +7,48 @@ sheets = {
         sendRequest: function (method, path, params, data, onResponse) {
 
             function doRequest(token) {
-                if (token) {
-                    const input = "https://sheets.googleapis.com/v4/spreadsheets/" + path + "?key=" + API_KEY + params;
-
-                    const init = {
-                        method: method,
-                        headers: {
-                            "Authorization": "Bearer " + token,
-                            "Content-Type": "application/json"
-                        },
-                        contentType: "json",
-                        async: true
-                    }
-
-                    if (method === "POST") {
-                        init.body = JSON.stringify(data)
-                    }
-
-                    fetch(input, init)
-                        .then(response => {
-                            if (response.ok) {
-                                console.log("Request accepted")
-
-                                response.json()
-                                    .then(data => {
-                                        onResponse(data)
-                                    })
-                            } else {
-                                throw ("Request rejected: " + response.status)
-                            }
-                        })
+                if (!token) {
+                    throw ("Token is undefined")
                 }
+
+                let input = "https://sheets.googleapis.com/v4/spreadsheets/" + path + "?key=" + API_KEY;
+                if (params) {
+                    input += params
+                }
+
+                const init = {
+                    method: method,
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    },
+                    contentType: "json",
+                    async: true
+                }
+                if (method === "POST") {
+                    init.body = JSON.stringify(data)
+                }
+
+                fetch(input, init)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Request accepted")
+
+                            response.json()
+                                .then(data => {
+                                    onResponse(data)
+                                })
+                        } else {
+                            throw ("Request rejected: " + response.status)
+                        }
+                    })
             }
 
             sheets.authenticate(false, doRequest);
         }
     },
 
-    spreadsheet: {
-        id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-        range: "en-ru"
-    },
+    sheet: undefined,
 
     /**
      *  Initializes the API client library and sets up sign-in state listeners.
@@ -112,15 +113,15 @@ sheets = {
 
     values: function (onData) {
         sheets.internal.sendRequest("GET",
-            sheets.spreadsheet.id + "/values/" + sheets.spreadsheet.range,
-            "",
+            sheets.sheet.sheet_id + "/values/" + sheets.sheet.sheet_range,
+            undefined,
             undefined,
             onData)
     },
 
     append: function (value) {
         sheets.internal.sendRequest("POST",
-            sheets.spreadsheet.id + "/values/" + sheets.spreadsheet.range + ":append",
+            sheets.sheet.sheet_id + "/values/" + sheets.sheet.sheet_range + ":append",
             "&valueInputOption=USER_ENTERED",
             {values: [[value]]},
             noop

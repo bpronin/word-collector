@@ -1,30 +1,17 @@
-const STORAGE = chrome.storage.local;
-
-STORAGE.clear()
-
 const settings = {
-    get: (key, callback, defaultValue) => {
-        STORAGE.get([key], function (result) {
-            let value = result[key]
-            if (value === undefined){
-                value = defaultValue
-                settings.set(key, value)
-            }
-            callback(value)
-        });
+    storage: chrome.storage.sync,
+
+    setSheet: (sheet) => {
+        settings.storage.set(sheet);
     },
 
-    set: (key, value) => {
-        STORAGE.set({[key]: value}, function () {
-            console.log(key + " value is set to: " + value);
-        });
-    },
-
-    getDataPath(callback) {
-        settings.get("data_path", callback, "default")
-    },
-
-    setDataPath(value) {
-        settings.set("data_path", value)
+    getSheet(callback) {
+        settings.storage.get(["sheet_id", "sheet_range"], callback);
     }
 }
+
+settings.storage.clear()
+settings.setSheet({
+    sheet_id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+    sheet_range: "en-ru"
+})
