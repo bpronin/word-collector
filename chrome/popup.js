@@ -1,56 +1,49 @@
 const OPTIONS_PAGE_URL = chrome.runtime.getURL("options.html")
 
-// let DICTIONARY_PATH  = "default"
-//
-// settings.get("dictionary_path", value => {
-//     DICTIONARY_PATH = value
-// });
+const authSection = document.getElementById("auth_section");
+const optionsSection = document.getElementById("options_section");
+const settingsButton = document.getElementById("settings_button");
+const signInButton = document.getElementById("sign_in_button");
+const sheetEdit = document.getElementById("sheet_editor");
+const rangeEdit = document.getElementById("range_editor");
 
-function signIn() {
-    settings.getDataPath(value => {
-        window.alert(value)
-    });
-
-    // window.alert(DICTIONARY_PATH)
-    // console.log("Signing In...");
-    // browseFile()
-    //     .then((f) => {
-    //     // console.log(f);
-    //     window.alert(f)
-    // });
-    // googleSheetsSignIn();
-
-}
-
-async function browseFile() {
-    const handle = await window.showOpenFilePicker();
-    if (!handle) {
-        // User cancelled, or otherwise failed to open a file.
-        return;
-    }
-
-    // Check if handle exists inside directory our directory handle
-    const relativePaths = await directoryHandle.resolve(handle);
-
-    if (relativePaths === null) {
-        // Not inside directory handle
-    } else {
-        // relativePath is an array of names, giving the relative path
-
-        for (const name of relativePaths) {
-            // log each entry
-            window.alert(name)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        switch (request.action) {
+            case "state_changed":
+                if (request.signedIn) {
+                    authSection.style.display = "none"
+                    optionsSection.style.display = "block"
+                } else {
+                    authSection.style.display = "block"
+                    optionsSection.style.display = "none"
+                }
+                break;
         }
+        sendResponse()
     }
+)
 
-    // let fileHandle;
-    // [fileHandle] = await window.showOpenFilePicker();
-    // const fileData = await fileHandle.getFile();
-    // return fileData;
-}
+settingsButton.addEventListener("click", () => {
+    chrome.tabs.query({url: OPTIONS_PAGE_URL}, tabs => {
+        const tab = tabs[0]
+        if (tab) {
+            chrome.tabs.update(tab.id, {highlighted: true})
+        } else {
+            chrome.tabs.create({url: OPTIONS_PAGE_URL})
+        }
+    })
+})
 
-let settingsButton = document.getElementById("settings_button");
-let signInButton = document.getElementById("sign_in_button");
+signInButton.addEventListener("click", () => {
+    return chrome.runtime.sendMessage({action: "sign_in"})
+})
 
-settingsButton.addEventListener("click", async () => chromeOpenTab(OPTIONS_PAGE_URL))
-signInButton.addEventListener("click", async () => signIn())
+settings.getSheet(sheet => {
+    sheetEdit.innerHTML = sheet.sheet_id
+    rangeEdit.innerHTML = sheet.sheet_range
+})
+
+authSection.style.display = "none"
+optionsSection.style.display = "none"
+
+chrome.runtime.sendMessage({action: "get_state"})

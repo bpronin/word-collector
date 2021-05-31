@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Word collector</title>
+    <title>Words collector</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/popup.css">
 </head>
@@ -9,7 +9,7 @@
 <body id="body">
 
 <div id="header">
-    Word collector
+    Words collector
     <button id="settings_button">Settings</button>
 </div>
 
@@ -21,15 +21,22 @@
         <button id="sign_in_button">Sign In</button>
     </div>
 
-    <div id="history_section">
-        History
-        <div id="history_content"></div>
+    <div id="options_section">
+        <label>Spreadsheet</label>
+        <div id="sheet_editor"></div>
+
+        <label>Page</label>
+        <div id="range_editor"></div>
     </div>
+
+<!--    <div id="history_section">-->
+<!--        History-->
+<!--        <div id="history_content"></div>-->
+<!--    </div>-->
 
 </div>
 
-<script src="util.js"></script>
-<!--<script src="settings.js"></script>-->
+<script src="settings.js"></script>
 <script src="popup.js"></script>
 
 </body>
