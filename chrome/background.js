@@ -11,36 +11,28 @@ function sendMessage(data) {
     });
 }
 
-chrome.contextMenus.create({
-    id: CONTEXT_MENU_ID,
-    title: "Save selection: %s",
-    contexts: ["selection"]
-});
+function onStateChanged(signedIn) {
+    sendMessage({
+        action: "state_changed",
+        signedIn: signedIn
+    });
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: CONTEXT_MENU_ID,
+        title: "Save selection: %s",
+        contexts: ["selection"]
+    });
+})
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        console.log("Saving: '" + info.selectionText + "'");
-
         sheets.append(info.selectionText)
+
+        console.log("Saved: '" + info.selectionText + "'");
     }
 })
-
-chrome.runtime.onInstalled.addListener(() => {
-
-    function onStateChanged(signedIn) {
-        sendMessage({
-            action: "state_changed",
-            signedIn: signedIn
-        });
-    }
-
-    settings.getSheet(sheet => {
-        sheets.sheet = sheet
-        sheets.setup(onStateChanged)
-    })
-
-    console.log("Installed")
-});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -70,4 +62,12 @@ chrome.runtime.onMessage.addListener(
                 throw ("unknown action: " + request.action)
         }
     }
-);
+)
+
+sheets.setup(onStateChanged)
+
+settings.getSheet(sheet => {
+    sheets.sheet = sheet
+})
+
+console.log("Installed")

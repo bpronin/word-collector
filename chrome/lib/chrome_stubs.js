@@ -7,6 +7,8 @@ let chrome = chrome || {
     contextMenus: {
         create: function () {
         },
+        removeAll: function () {
+        },
         onClicked: {
             addListener: function () {
             }
@@ -23,9 +25,11 @@ let chrome = chrome || {
         }
     },
     runtime: {
-        getURL: function () {
+        onInstalled: {
+            addListener: function () {
+            }
         },
-        onInstalled: function () {
+        getURL: function () {
         },
         onMessage: function () {
         },
