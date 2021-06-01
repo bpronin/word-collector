@@ -67,9 +67,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 sheets.setup(onStateChanged)
 
-settings.getSpreadsheet(data => {
-    currentSpreadsheet = data
-    // console.log(currentSpreadsheet)
+settings.getSpreadsheet(spreadsheet => {
+    currentSpreadsheet = spreadsheet
 })
 
 console.log("Installed")

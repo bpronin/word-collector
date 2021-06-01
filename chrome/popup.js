@@ -5,12 +5,12 @@ const optionsSection = document.getElementById("options_section");
 const settingsButton = document.getElementById("settings_button");
 const signInButton = document.getElementById("sign_in_button");
 // const sheetEdit = document.getElementById("sheet_editor");
-const sheetPageEdit = document.getElementById("sheet_page_edit");
+const sheetEdit = document.getElementById("sheet_page_edit");
 
 // let spreadsheet = undefined
 
 function updateSheetPageEditItems(spreadsheet) {
-    sheetPageEdit.innerHTML = ""
+    sheetEdit.innerHTML = ""
 
     for (const sheet of spreadsheet.sheets) {
         const title = sheet.properties.title;
@@ -19,15 +19,15 @@ function updateSheetPageEditItems(spreadsheet) {
         option.value = title;
         option.innerHTML = title
 
-        sheetPageEdit.appendChild(option);
+        sheetEdit.appendChild(option);
     }
 
     updateSheetPageEditSelection()
 }
 
 function updateSheetPageEditSelection() {
-    settings.getSpreadsheet(data => {
-        sheetPageEdit.value = data.spreadsheet_sheet
+    settings.getSpreadsheet(spreadsheet => {
+        sheetEdit.value = spreadsheet.sheet
     })
 }
 

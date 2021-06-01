@@ -4,7 +4,7 @@ const signOutButton = document.getElementById("sign_out_button")
 const dataLabel = document.getElementById("data_label");
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    switch (request.action) {
+        switch (request.action) {
             case "state_changed":
                 if (request.signedIn) {
                     statusLabel.innerHTML = "Signed in"
@@ -37,8 +37,8 @@ signOutButton.addEventListener("click", () => {
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
-    // chrome.runtime.sendMessage({action: "get_data"});
-    chrome.runtime.sendMessage({action: "get_spreadsheet"});
+    chrome.runtime.sendMessage({action: "get_data"});
+    //chrome.runtime.sendMessage({action: "get_spreadsheet"});
 })
 
 chrome.runtime.sendMessage({action: "get_state"});

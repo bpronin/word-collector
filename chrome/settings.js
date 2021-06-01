@@ -1,13 +1,23 @@
 const STORAGE_AREA = "sync"
+const KEY_SHEET_ID = "spreadsheet_id";
+const KEY_SHEET_SHEET = "spreadsheet_sheet";
 
 const settings = {
 
-    setSpreadsheet(sheet) {
-        chrome.storage[STORAGE_AREA].set(sheet)
+    setSpreadsheet(spreadsheet) {
+        chrome.storage[STORAGE_AREA].set({
+            [KEY_SHEET_ID]: spreadsheet.id,
+            [KEY_SHEET_SHEET]: spreadsheet.sheet
+        })
     },
 
     getSpreadsheet(callback) {
-        chrome.storage[STORAGE_AREA].get(["spreadsheet_id", "spreadsheet_sheet"], callback)
+        chrome.storage[STORAGE_AREA].get([KEY_SHEET_ID, KEY_SHEET_SHEET], (data) => {
+            callback({
+                id: data[KEY_SHEET_ID],
+                sheet: data[KEY_SHEET_SHEET]
+            })
+        })
     },
 
     addListener(listener) {
@@ -28,7 +38,7 @@ const settings = {
 chrome.storage[STORAGE_AREA].clear()
 
 settings.setSpreadsheet({
-    "spreadsheet_id": "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-    "spreadsheet_sheet": "en-ru"
-    // "spreadsheet_sheet": "pt-ru"
+    id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+    sheet: "en-ru"
+    // sheet: "pt-ru"
 })

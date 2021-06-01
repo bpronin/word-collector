@@ -111,7 +111,7 @@ sheets = {
 
     getSpreadsheet: function (spreadsheet, onData) {
         sheets.internal.sendRequest("GET",
-            spreadsheet.spreadsheet_id,
+            spreadsheet.id,
             undefined,
             undefined,
             onData)
@@ -119,7 +119,7 @@ sheets = {
 
     getValues: function (spreadsheet, onData) {
         sheets.internal.sendRequest("GET",
-            spreadsheet.spreadsheet_id + "/values/" + spreadsheet.spreadsheet_sheet,
+            spreadsheet.id + "/values/" + spreadsheet.sheet,
             undefined,
             undefined,
             onData)
@@ -127,7 +127,7 @@ sheets = {
 
     appendValue: function (spreadsheet, value) {
         sheets.internal.sendRequest("POST",
-            spreadsheet.spreadsheet_id + "/values/" + spreadsheet.spreadsheet_sheet + ":append",
+            spreadsheet.id + "/values/" + spreadsheet.sheet + ":append",
             "&valueInputOption=USER_ENTERED",
             {values: [[value]]},
             noop
