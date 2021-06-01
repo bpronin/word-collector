@@ -1,6 +1,8 @@
 importScripts("util.js", "settings.js", "google-sheets.js")
 
-const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU";
+const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU"
+
+let currentSpreadsheet = undefined
 
 function onStateChanged(signedIn) {
     chrome.runtime.sendMessage({
@@ -19,7 +21,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        sheets.append(info.selectionText)
+        sheets.appendValue(currentSpreadsheet, info.selectionText)
 
         console.log("Saved: '" + info.selectionText + "'");
     }
@@ -40,9 +42,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse()
                 break
             case "get_data":
-                sheets.values((data) => {
+                sheets.getValues(currentSpreadsheet, (data) => {
                     chrome.runtime.sendMessage({
                         action: "data_received",
+                        data: data
+                    })
+                })
+                sendResponse()
+                break
+            case "get_spreadsheet":
+                sheets.getSpreadsheet(currentSpreadsheet, (data) => {
+                    chrome.runtime.sendMessage({
+                        action: "spreadsheet_received",
                         data: data
                     })
                 })
@@ -56,8 +67,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 sheets.setup(onStateChanged)
 
-settings.getSheet(sheet => {
-    sheets.sheet = sheet
+settings.getSpreadsheet(data => {
+    currentSpreadsheet = data
+    // console.log(currentSpreadsheet)
 })
 
 console.log("Installed")

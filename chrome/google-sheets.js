@@ -48,8 +48,6 @@ sheets = {
         }
     },
 
-    sheet: undefined,
-
     /**
      *  Initializes the API client library and sets up sign-in state listeners.
      */
@@ -111,17 +109,25 @@ sheets = {
         sheets.authenticate(false, doSignOut);
     },
 
-    values: function (onData) {
+    getSpreadsheet: function (spreadsheet, onData) {
         sheets.internal.sendRequest("GET",
-            sheets.sheet.sheet_id + "/values/" + sheets.sheet.sheet_range,
+            spreadsheet.spreadsheet_id,
             undefined,
             undefined,
             onData)
     },
 
-    append: function (value) {
+    getValues: function (spreadsheet, onData) {
+        sheets.internal.sendRequest("GET",
+            spreadsheet.spreadsheet_id + "/values/" + spreadsheet.spreadsheet_sheet,
+            undefined,
+            undefined,
+            onData)
+    },
+
+    appendValue: function (spreadsheet, value) {
         sheets.internal.sendRequest("POST",
-            sheets.sheet.sheet_id + "/values/" + sheets.sheet.sheet_range + ":append",
+            spreadsheet.spreadsheet_id + "/values/" + spreadsheet.spreadsheet_sheet + ":append",
             "&valueInputOption=USER_ENTERED",
             {values: [[value]]},
             noop

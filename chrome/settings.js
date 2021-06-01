@@ -1,17 +1,34 @@
-const settings = {
-    storage: chrome.storage.sync,
+const STORAGE_AREA = "sync"
 
-    setSheet: (sheet) => {
-        settings.storage.set(sheet);
+const settings = {
+
+    setSpreadsheet(sheet) {
+        chrome.storage[STORAGE_AREA].set(sheet)
     },
 
-    getSheet(callback) {
-        settings.storage.get(["sheet_id", "sheet_range"], callback);
+    getSpreadsheet(callback) {
+        chrome.storage[STORAGE_AREA].get(["spreadsheet_id", "spreadsheet_sheet"], callback)
+    },
+
+    addListener(listener) {
+        chrome.storage.onChanged.addListener((changes, area) => {
+            if (area === STORAGE_AREA) {
+                for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
+                    // console.log(
+                    //     `Storage key "${key}" in namespace "${namespace}" changed.`,
+                    //     `Old value was "${oldValue}", new value is "${newValue}".`
+                    // )
+                    listener(key, newValue)
+                }
+            }
+        })
     }
 }
 
-settings.storage.clear()
-settings.setSheet({
-    sheet_id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-    sheet_range: "en-ru"
+chrome.storage[STORAGE_AREA].clear()
+
+settings.setSpreadsheet({
+    "spreadsheet_id": "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+    "spreadsheet_sheet": "en-ru"
+    // "spreadsheet_sheet": "pt-ru"
 })
