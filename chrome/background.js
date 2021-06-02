@@ -2,20 +2,29 @@ importScripts("messages.js", "settings.js", "google-sheets.js")
 
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
-let spreadsheet = {
+let currentSpreadsheet = {
     id: undefined,
     sheet: undefined
 }
 
-function onLoginStateChanged(signedIn) {
-    chrome.runtime.sendMessage({
-        action: ACTION_LOGIN_STATE_CHANGED,
-        data: signedIn
+function loadSettings() {
+    settings.getSpreadsheet(data => {
+        currentSpreadsheet = {
+            id: data[KEY_SHEET_ID],
+            sheet: data[KEY_SHEET_SHEET]
+        }
+    })
+}
+
+function saveSettings() {
+    settings.setSpreadsheet({
+        [KEY_SHEET_ID]: currentSpreadsheet.id,
+        [KEY_SHEET_SHEET]: currentSpreadsheet.sheet
     })
 }
 
 function getData() {
-    sheets.getValues(spreadsheet, (data) => {
+    sheets.getValues(currentSpreadsheet, (data) => {
         chrome.runtime.sendMessage({
             action: ACTION_DATA_RECEIVED,
             data: data
@@ -24,7 +33,7 @@ function getData() {
 }
 
 function getSpreadsheetInfo() {
-    sheets.getSpreadsheet(spreadsheet, (data) => {
+    sheets.getSpreadsheet(currentSpreadsheet, (data) => {
         chrome.runtime.sendMessage({
             action: ACTION_STREADSHEET_RECEIVED,
             data: data
@@ -35,7 +44,19 @@ function getSpreadsheetInfo() {
 function getCurrentSpreadsheet() {
     chrome.runtime.sendMessage({
         action: ACTION_CURRENT_STREADSHEET_RECEIVED,
-        data: spreadsheet
+        data: currentSpreadsheet
+    })
+}
+
+function setCurrentSpreadsheet(spreadsheet) {
+    currentSpreadsheet = spreadsheet
+    saveSettings()
+}
+
+function onLoginStateChanged(signedIn) {
+    chrome.runtime.sendMessage({
+        action: ACTION_LOGIN_STATE_CHANGED,
+        data: signedIn
     })
 }
 
@@ -49,12 +70,11 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        sheets.appendValue(spreadsheet, info.selectionText)
+        sheets.appendValue(currentSpreadsheet, info.selectionText)
 
         console.log("Saved: '" + info.selectionText + "'");
     }
 })
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
@@ -76,6 +96,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_GET_CURRENT_SPREADSHEET:
                 getCurrentSpreadsheet()
                 break
+            case ACTION_SET_CURRENT_SPREADSHEET:
+                setCurrentSpreadsheet(request)
+                break
             default:
                 throw ("unknown action: " + request.action)
         }
@@ -92,13 +115,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //     }
 // })
 
-settings.getSpreadsheet(data => {
-    spreadsheet = {
-        id: data[KEY_SHEET_ID],
-        sheet: data[KEY_SHEET_SHEET]
-    }
-})
 
 sheets.setup(onLoginStateChanged)
+loadSettings()
 
 console.log("Installed")
