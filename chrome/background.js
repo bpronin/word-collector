@@ -25,39 +25,28 @@ function saveSettings() {
 
 function getData() {
     sheets.getValues(currentSpreadsheet, (data) => {
-        chrome.runtime.sendMessage({
-            action: ACTION_DATA_RECEIVED,
-            data: data
-        })
+        sendMessage(ACTION_DATA_CHANGED, data)
     })
 }
 
 function getSpreadsheetInfo() {
     sheets.getSpreadsheet(currentSpreadsheet, (data) => {
-        chrome.runtime.sendMessage({
-            action: ACTION_STREADSHEET_RECEIVED,
-            data: data
-        })
+        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
     })
 }
 
 function getCurrentSpreadsheet() {
-    chrome.runtime.sendMessage({
-        action: ACTION_CURRENT_STREADSHEET_RECEIVED,
-        data: currentSpreadsheet
-    })
+    sendMessage(ACTION_CURRENT_SPREADSHEET_CHANGED, currentSpreadsheet)
 }
 
 function setCurrentSpreadsheet(spreadsheet) {
     currentSpreadsheet = spreadsheet
     saveSettings()
+    sendMessage(ACTION_CURRENT_SPREADSHEET_CHANGED, currentSpreadsheet)
 }
 
 function onLoginStateChanged(signedIn) {
-    chrome.runtime.sendMessage({
-        action: ACTION_LOGIN_STATE_CHANGED,
-        data: signedIn
-    })
+    sendMessage(ACTION_LOGIN_STATE_CHANGED, signedIn)
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -90,14 +79,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_GET_DATA:
                 getData();
                 break
-            case ACTION_GET_SPREADSHEET:
+            case ACTION_GET_SPREADSHEET_INFO:
                 getSpreadsheetInfo()
                 break
             case ACTION_GET_CURRENT_SPREADSHEET:
                 getCurrentSpreadsheet()
                 break
             case ACTION_SET_CURRENT_SPREADSHEET:
-                setCurrentSpreadsheet(request)
+                setCurrentSpreadsheet(request.data)
                 break
             default:
                 throw ("unknown action: " + request.action)
@@ -105,16 +94,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse()
     }
 )
-
-
-// settings.addListener((key, value) => {
-//     if (key === KEY_SHEET_ID) {
-//         spreadsheet.id = value
-//     } else if (key === KEY_SHEET_SHEET) {
-//         spreadsheet.sheet = value
-//     }
-// })
-
 
 sheets.setup(onLoginStateChanged)
 loadSettings()

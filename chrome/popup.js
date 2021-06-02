@@ -5,7 +5,9 @@ const signInButton = document.getElementById("sign_in_button");
 // const sheetEdit = document.getElementById("sheet_editor");
 const sheetEdit = document.getElementById("sheet_page_edit");
 
-function updateSheetPageEditItems(info) {
+let currentSpreadsheet
+
+function updateSheetEditItems(info) {
     sheetEdit.innerHTML = ""
 
     for (const sheet of info.sheets) {
@@ -18,8 +20,18 @@ function updateSheetPageEditItems(info) {
         sheetEdit.appendChild(option);
     }
 
-    chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})
+    sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
     // sheetEdit.value = undefined
+}
+
+function onSheetEditChange() {
+    currentSpreadsheet.sheet = sheetEdit.value
+    sendMessage(ACTION_SET_CURRENT_SPREADSHEET, currentSpreadsheet)
+}
+
+function updateControls() {
+    console.log("CURRENT SHEET:" + JSON.stringify(currentSpreadsheet))
+    sheetEdit.value = currentSpreadsheet.sheet
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -33,12 +45,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     optionsSection.style.display = "none"
                 }
                 break;
-            case ACTION_CURRENT_STREADSHEET_RECEIVED:
-                console.log("CURRENT:" + JSON.stringify(request))
-                sheetEdit.value = request.data.sheet
+            case ACTION_CURRENT_SPREADSHEET_CHANGED:
+                currentSpreadsheet = request.data
+                updateControls()
                 break;
-            case ACTION_STREADSHEET_RECEIVED:
-                updateSheetPageEditItems(request.data)
+            case ACTION_SPREADSHEET_INFO_CHANGED:
+                updateSheetEditItems(request.data)
                 break;
         }
         sendResponse()
@@ -59,12 +71,14 @@ settingsButton.addEventListener("click", () => {
 })
 
 signInButton.addEventListener("click", () => {
-    chrome.runtime.sendMessage({action: ACTION_LOGIN})
+    sendMessage(ACTION_LOGIN)
 })
+
+sheetEdit.onchange = onSheetEditChange
 
 authSection.style.display = "none"
 optionsSection.style.display = "none"
 
-chrome.runtime.sendMessage({action: ACTION_GET_LOGIN_STATE})
-chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET})
+sendMessage(ACTION_GET_LOGIN_STATE)
+sendMessage(ACTION_GET_SPREADSHEET_INFO)
 //chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})

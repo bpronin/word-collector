@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     statusLabel.innerHTML = "Signed out"
                 }
                 break
-            case ACTION_STREADSHEET_RECEIVED:
+            case ACTION_SPREADSHEET_INFO_CHANGED:
                 let titles = []
                 for (const sheet of request.data.sheets) {
                     titles.push(sheet.properties.title)
@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                 dataLabel.innerHTML = JSON.stringify(titles)
                 break
-            case ACTION_DATA_RECEIVED:
+            case ACTION_DATA_CHANGED:
                 dataLabel.innerHTML = JSON.stringify(request.data)
                 break
         }
@@ -29,16 +29,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 )
 
 signInButton.addEventListener("click", () => {
-    chrome.runtime.sendMessage({action: ACTION_LOGIN})
+    sendMessage(ACTION_LOGIN)
 })
 
 signOutButton.addEventListener("click", () => {
-    chrome.runtime.sendMessage({action: ACTION_LOGOUT})
+    sendMessage(ACTION_LOGOUT)
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
-    chrome.runtime.sendMessage({action: ACTION_GET_DATA});
-    // chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET});
+    sendMessage(ACTION_GET_DATA)
+    // sendMessage(ACTION_GET_SPREADSHEET)
 })
 
-chrome.runtime.sendMessage({action: ACTION_GET_LOGIN_STATE});
+sendMessage(ACTION_GET_LOGIN_STATE)
