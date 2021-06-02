@@ -32,7 +32,7 @@ function getSpreadsheetInfo() {
     })
 }
 
-function getCurrentSpreads() {
+function getCurrentSpreadsheet() {
     chrome.runtime.sendMessage({
         action: ACTION_CURRENT_STREADSHEET_RECEIVED,
         data: spreadsheet
@@ -71,10 +71,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 getData();
                 break
             case ACTION_GET_SPREADSHEET:
-                getSpreadsheetInfo();
+                getSpreadsheetInfo()
                 break
             case ACTION_GET_CURRENT_SPREADSHEET:
-                getCurrentSpreadshee();
+                getCurrentSpreadsheet()
                 break
             default:
                 throw ("unknown action: " + request.action)

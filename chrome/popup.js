@@ -18,6 +18,7 @@ function updateSheetPageEditItems(info) {
         sheetEdit.appendChild(option);
     }
 
+    chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})
     // sheetEdit.value = undefined
 }
 
@@ -33,7 +34,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
                 break;
             case ACTION_CURRENT_STREADSHEET_RECEIVED:
-                sheetEdit.value = request.data
+                console.log("CURRENT:" + JSON.stringify(request))
+                sheetEdit.value = request.data.sheet
                 break;
             case ACTION_STREADSHEET_RECEIVED:
                 updateSheetPageEditItems(request.data)
@@ -65,4 +67,4 @@ optionsSection.style.display = "none"
 
 chrome.runtime.sendMessage({action: ACTION_GET_LOGIN_STATE})
 chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET})
-chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})
+//chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})

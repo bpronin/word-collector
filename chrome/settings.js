@@ -32,6 +32,6 @@ chrome.storage[STORAGE_AREA].clear()
 
 settings.setSpreadsheet({
     [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-    [KEY_SHEET_SHEET]: "en-ru"
-    // [KEY_SHEET_SHEET]: "pt-ru"
+    // [KEY_SHEET_SHEET]: "en-ru"
+    [KEY_SHEET_SHEET]: "pt-ru"
 })
