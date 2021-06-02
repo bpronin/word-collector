@@ -1,3 +1,4 @@
+const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg"
 const STORAGE_AREA = "sync"
 
 const KEY_SHEET_ID = "spreadsheet_id";
@@ -17,10 +18,6 @@ const settings = {
         chrome.storage.onChanged.addListener((changes, area) => {
             if (area === STORAGE_AREA) {
                 for (let [key, {oldValue, newValue}] of Object.entries(changes)) {
-                    // console.log(
-                    //     `Storage key "${key}" in namespace "${namespace}" changed.`,
-                    //     `Old value was "${oldValue}", new value is "${newValue}".`
-                    // )
                     listener(key, oldValue, newValue)
                 }
             }
@@ -28,9 +25,9 @@ const settings = {
     }
 }
 
-// chrome.storage[STORAGE_AREA].clear()
-chrome.storage[STORAGE_AREA].set({
-    [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+ chrome.storage[STORAGE_AREA].clear()
+// chrome.storage[STORAGE_AREA].set({
+    // [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
     // [KEY_SHEET_SHEET]: "en-ru"
     // [KEY_SHEET_SHEET]: "pt-ru"
-})
+// })

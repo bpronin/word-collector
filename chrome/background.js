@@ -24,13 +24,13 @@ function saveSettings() {
 }
 
 function getData() {
-    sheets.getValues(currentSpreadsheet, (data) => {
+    gapi.spreadsheets.getValues(currentSpreadsheet, (data) => {
         sendMessage(ACTION_DATA_CHANGED, data)
     })
 }
 
 function getSpreadsheetInfo() {
-    sheets.getSpreadsheet(currentSpreadsheet, (data) => {
+    gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, (data) => {
         sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
     })
 }
@@ -59,7 +59,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        sheets.appendValue(currentSpreadsheet, info.selectionText)
+        gapi.spreadsheets.appendValue(currentSpreadsheet, info.selectionText)
 
         console.log("Saved: '" + info.selectionText + "'");
     }
@@ -68,13 +68,13 @@ chrome.contextMenus.onClicked.addListener(info => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
             case ACTION_GET_LOGIN_STATE:
-                sheets.authenticate(false)
+                gapi.authenticate(false)
                 break
             case ACTION_LOGIN:
-                sheets.signIn()
+                gapi.signIn()
                 break
             case ACTION_LOGOUT:
-                sheets.signOut()
+                gapi.signOut()
                 break
             case ACTION_GET_DATA:
                 getData();
@@ -95,7 +95,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 )
 
-sheets.setup(onLoginStateChanged)
+gapi.setup(onLoginStateChanged)
 loadSettings()
 
 console.log("Installed")

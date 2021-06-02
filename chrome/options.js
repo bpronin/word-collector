@@ -37,8 +37,8 @@ signOutButton.addEventListener("click", () => {
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
-    sendMessage(ACTION_GET_DATA)
-    // sendMessage(ACTION_GET_SPREADSHEET)
+    // sendMessage(ACTION_GET_DATA)
+    sendMessage(ACTION_GET_SPREADSHEET_INFO)
 })
 
 sendMessage(ACTION_GET_LOGIN_STATE)

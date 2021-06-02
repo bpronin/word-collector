@@ -1,17 +1,15 @@
-const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg";
-
-sheets = {
+const gapi = {
     internal: {
         onSignInStatusChanged: undefined,
 
-        sendRequest(method, path, params, data, onResponse) {
+        sendRequest(method, apiUrl, path, params, data, onResponse) {
 
             function doRequest(token) {
                 if (!token) {
                     throw ("Token is undefined")
                 }
 
-                let input = "https://sheets.googleapis.com/v4/spreadsheets/" + path + "?key=" + API_KEY;
+                let input = apiUrl + path + "?key=" + API_KEY;
                 if (params) {
                     input += params
                 }
@@ -44,7 +42,7 @@ sheets = {
                     })
             }
 
-            sheets.authenticate(false, doRequest);
+            gapi.authenticate(false, doRequest);
         }
     },
 
@@ -52,20 +50,20 @@ sheets = {
      *  Initializes the API client library and sets up sign-in state listeners.
      */
     setup(onSignInStatusChanged) {
-        sheets.internal.onSignInStatusChanged = onSignInStatusChanged
+        gapi.internal.onSignInStatusChanged = onSignInStatusChanged
 
         // when this listener is calling ?
         chrome.identity.onSignInChanged.addListener((account, token) => {
-            console.log("Google sheets onSignInChanged: " + token)
+            console.log("Google API onSignInChanged: " + token)
         })
 
-        console.log("Google sheets initialized")
+        console.log("Google API initialized")
     },
 
     authenticate(interactive, onToken) {
         chrome.identity.getAuthToken({interactive: interactive}, token => {
             if (onToken) onToken(token)
-            sheets.internal.onSignInStatusChanged(token !== undefined)
+            gapi.internal.onSignInStatusChanged(token !== undefined)
         })
     },
 
@@ -75,7 +73,7 @@ sheets = {
             if (!token) {
                 console.log("Signing in...")
 
-                sheets.authenticate(true, () => {
+                gapi.authenticate(true, () => {
                     console.log("Token obtained");
                 });
             } else {
@@ -83,7 +81,7 @@ sheets = {
             }
         }
 
-        sheets.authenticate(false, doSignIn)
+        gapi.authenticate(false, doSignIn)
     },
 
     signOut() {
@@ -106,31 +104,39 @@ sheets = {
             }
         }
 
-        sheets.authenticate(false, doSignOut);
+        gapi.authenticate(false, doSignOut);
     },
 
-    getSpreadsheet(spreadsheet, onData) {
-        sheets.internal.sendRequest("GET",
-            spreadsheet.id,
-            undefined,
-            undefined,
-            onData)
-    },
+    spreadsheets: {
+        url: "https://sheets.googleapis.com/v4/spreadsheets/",
 
-    getValues(spreadsheet, onData) {
-        sheets.internal.sendRequest("GET",
-            spreadsheet.id + "/values/" + spreadsheet.sheet,
-            undefined,
-            undefined,
-            onData)
-    },
+        getSpreadsheet(spreadsheet, onData) {
+            gapi.internal.sendRequest("GET",
+                gapi.spreadsheets.url,
+                spreadsheet.id,
+                undefined,
+                undefined,
+                onData)
+        },
 
-    appendValue(spreadsheet, value) {
-        sheets.internal.sendRequest("POST",
-            spreadsheet.id + "/values/" + spreadsheet.sheet + ":append",
-            "&valueInputOption=USER_ENTERED",
-            {values: [[value]]}
-        )
+        getValues(spreadsheet, onData) {
+            gapi.internal.sendRequest("GET",
+                gapi.spreadsheets.url,
+                spreadsheet.id + "/values/" + spreadsheet.sheet,
+                undefined,
+                undefined,
+                onData)
+        },
+
+        appendValue(spreadsheet, value) {
+            gapi.internal.sendRequest("POST",
+                gapi.spreadsheets.url,
+                spreadsheet.id + "/values/" + spreadsheet.sheet + ":append",
+                "&valueInputOption=USER_ENTERED",
+                {values: [[value]]}
+            )
+        }
     }
+
 
 }
