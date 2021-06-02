@@ -1,13 +1,35 @@
-importScripts("util.js", "settings.js", "google-sheets.js")
+importScripts("messages.js", "settings.js", "google-sheets.js")
 
 const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU"
 
-let currentSpreadsheet = undefined
+let spreadsheet = {
+    id: undefined,
+    sheet: undefined
+}
 
-function onStateChanged(signedIn) {
+function onLoginStateChanged(signedIn) {
     chrome.runtime.sendMessage({
-        action: "state_changed",
-        signedIn: signedIn
+        action: ACTION_LOGIN_STATE_CHANGED,
+        signedIn: signedIn,
+        spreadsheet: spreadsheet
+    })
+}
+
+function getData() {
+    sheets.getValues(spreadsheet, (data) => {
+        chrome.runtime.sendMessage({
+            action: ACTION_DATA_RECEIVED,
+            data: data
+        })
+    })
+}
+
+function getSpreadsheet() {
+    sheets.getSpreadsheet(spreadsheet, (data) => {
+        chrome.runtime.sendMessage({
+            action: ACTION_STREADSHEET_RECEIVED,
+            data: data
+        })
     })
 }
 
@@ -21,54 +43,53 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        sheets.appendValue(currentSpreadsheet, info.selectionText)
+        sheets.appendValue(spreadsheet, info.selectionText)
 
         console.log("Saved: '" + info.selectionText + "'");
     }
 })
 
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
-            case "get_state":
+            case ACTION_GET_LOGIN_STATE:
                 sheets.authenticate(false)
-                sendResponse()
                 break
-            case "sign_in":
+            case ACTION_LOGIN:
                 sheets.signIn()
-                sendResponse()
                 break
-            case "sign_out":
+            case ACTION_LOGOUT:
                 sheets.signOut()
-                sendResponse()
                 break
-            case "get_data":
-                sheets.getValues(currentSpreadsheet, (data) => {
-                    chrome.runtime.sendMessage({
-                        action: "data_received",
-                        data: data
-                    })
-                })
-                sendResponse()
+            case ACTION_GET_DATA:
+                getData();
                 break
-            case "get_spreadsheet":
-                sheets.getSpreadsheet(currentSpreadsheet, (data) => {
-                    chrome.runtime.sendMessage({
-                        action: "spreadsheet_received",
-                        data: data
-                    })
-                })
-                sendResponse()
+            case ACTION_GET_SPREADSHEET:
+                getSpreadsheet();
                 break
             default:
                 throw ("unknown action: " + request.action)
         }
+        sendResponse()
     }
 )
 
-sheets.setup(onStateChanged)
 
-settings.getSpreadsheet(spreadsheet => {
-    currentSpreadsheet = spreadsheet
+// settings.addListener((key, value) => {
+//     if (key === KEY_SHEET_ID) {
+//         spreadsheet.id = value
+//     } else if (key === KEY_SHEET_SHEET) {
+//         spreadsheet.sheet = value
+//     }
+// })
+
+settings.getSpreadsheet(data => {
+    spreadsheet = {
+        id: data[KEY_SHEET_ID],
+        sheet: data[KEY_SHEET_SHEET]
+    }
 })
+
+sheets.setup(onLoginStateChanged)
 
 console.log("Installed")

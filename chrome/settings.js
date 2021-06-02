@@ -1,23 +1,16 @@
 const STORAGE_AREA = "sync"
+
 const KEY_SHEET_ID = "spreadsheet_id";
 const KEY_SHEET_SHEET = "spreadsheet_sheet";
 
 const settings = {
 
-    setSpreadsheet(spreadsheet) {
-        chrome.storage[STORAGE_AREA].set({
-            [KEY_SHEET_ID]: spreadsheet.id,
-            [KEY_SHEET_SHEET]: spreadsheet.sheet
-        })
+    setSpreadsheet(data) {
+        chrome.storage[STORAGE_AREA].set(data)
     },
 
     getSpreadsheet(callback) {
-        chrome.storage[STORAGE_AREA].get([KEY_SHEET_ID, KEY_SHEET_SHEET], (data) => {
-            callback({
-                id: data[KEY_SHEET_ID],
-                sheet: data[KEY_SHEET_SHEET]
-            })
-        })
+        chrome.storage[STORAGE_AREA].get([KEY_SHEET_ID, KEY_SHEET_SHEET], callback)
     },
 
     addListener(listener) {
@@ -28,7 +21,7 @@ const settings = {
                     //     `Storage key "${key}" in namespace "${namespace}" changed.`,
                     //     `Old value was "${oldValue}", new value is "${newValue}".`
                     // )
-                    listener(key, newValue)
+                    listener(key, oldValue, newValue)
                 }
             }
         })
@@ -38,7 +31,7 @@ const settings = {
 chrome.storage[STORAGE_AREA].clear()
 
 settings.setSpreadsheet({
-    id: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-    sheet: "en-ru"
-    // sheet: "pt-ru"
+    [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+    [KEY_SHEET_SHEET]: "en-ru"
+    // [KEY_SHEET_SHEET]: "pt-ru"
 })

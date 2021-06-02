@@ -7,12 +7,10 @@ const signInButton = document.getElementById("sign_in_button");
 // const sheetEdit = document.getElementById("sheet_editor");
 const sheetEdit = document.getElementById("sheet_page_edit");
 
-// let spreadsheet = undefined
-
-function updateSheetPageEditItems(spreadsheet) {
+function updateSheetPageEditItems(info) {
     sheetEdit.innerHTML = ""
 
-    for (const sheet of spreadsheet.sheets) {
+    for (const sheet of info.sheets) {
         const title = sheet.properties.title;
 
         const option = document.createElement("option");
@@ -22,18 +20,12 @@ function updateSheetPageEditItems(spreadsheet) {
         sheetEdit.appendChild(option);
     }
 
-    updateSheetPageEditSelection()
-}
-
-function updateSheetPageEditSelection() {
-    settings.getSpreadsheet(spreadsheet => {
-        sheetEdit.value = spreadsheet.sheet
-    })
+    sheetEdit.value = undefined
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
-            case "state_changed":
+            case ACTION_LOGIN_STATE_CHANGED:
                 if (request.signedIn) {
                     authSection.style.display = "none"
                     optionsSection.style.display = "block"
@@ -41,8 +33,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     authSection.style.display = "block"
                     optionsSection.style.display = "none"
                 }
+
+                if (request.speadsheet) {
+                    sheetEdit.value = spreadsheet.sheet
+                }
                 break;
-            case "spreadsheet_received":
+            case ACTION_STREADSHEET_RECEIVED:
                 updateSheetPageEditItems(request.data)
                 break;
         }
@@ -62,11 +58,11 @@ settingsButton.addEventListener("click", () => {
 })
 
 signInButton.addEventListener("click", () => {
-    return chrome.runtime.sendMessage({action: "sign_in"})
+    chrome.runtime.sendMessage({action: ACTION_LOGIN})
 })
 
 authSection.style.display = "none"
 optionsSection.style.display = "none"
 
-chrome.runtime.sendMessage({action: "get_state"})
-chrome.runtime.sendMessage({action: "get_spreadsheet"})
+chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET})
+chrome.runtime.sendMessage({action: ACTION_GET_LOGIN_STATE})

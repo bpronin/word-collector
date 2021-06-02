@@ -4,7 +4,7 @@ sheets = {
     internal: {
         onSignInStatusChanged: undefined,
 
-        sendRequest: function (method, path, params, data, onResponse) {
+        sendRequest(method, path, params, data, onResponse) {
 
             function doRequest(token) {
                 if (!token) {
@@ -36,7 +36,7 @@ sheets = {
 
                             response.json()
                                 .then(data => {
-                                    onResponse(data)
+                                    if (onResponse) onResponse(data)
                                 })
                         } else {
                             throw ("Request rejected: " + response.status)
@@ -51,7 +51,7 @@ sheets = {
     /**
      *  Initializes the API client library and sets up sign-in state listeners.
      */
-    setup: function (onSignInStatusChanged) {
+    setup(onSignInStatusChanged) {
         sheets.internal.onSignInStatusChanged = onSignInStatusChanged
 
         // when this listener is calling ?
@@ -62,14 +62,14 @@ sheets = {
         console.log("Google sheets initialized")
     },
 
-    authenticate: function (interactive, onToken = noop) {
+    authenticate(interactive, onToken) {
         chrome.identity.getAuthToken({interactive: interactive}, token => {
-            onToken(token);
+            if (onToken) onToken(token)
             sheets.internal.onSignInStatusChanged(token !== undefined)
         })
     },
 
-    signIn: function () {
+    signIn() {
 
         function doSignIn(token) {
             if (!token) {
@@ -86,7 +86,7 @@ sheets = {
         sheets.authenticate(false, doSignIn)
     },
 
-    signOut: function () {
+    signOut() {
 
         function doSignOut(token) {
             if (token) {
@@ -109,7 +109,7 @@ sheets = {
         sheets.authenticate(false, doSignOut);
     },
 
-    getSpreadsheet: function (spreadsheet, onData) {
+    getSpreadsheet(spreadsheet, onData) {
         sheets.internal.sendRequest("GET",
             spreadsheet.id,
             undefined,
@@ -117,7 +117,7 @@ sheets = {
             onData)
     },
 
-    getValues: function (spreadsheet, onData) {
+    getValues(spreadsheet, onData) {
         sheets.internal.sendRequest("GET",
             spreadsheet.id + "/values/" + spreadsheet.sheet,
             undefined,
@@ -125,12 +125,11 @@ sheets = {
             onData)
     },
 
-    appendValue: function (spreadsheet, value) {
+    appendValue(spreadsheet, value) {
         sheets.internal.sendRequest("POST",
             spreadsheet.id + "/values/" + spreadsheet.sheet + ":append",
             "&valueInputOption=USER_ENTERED",
-            {values: [[value]]},
-            noop
+            {values: [[value]]}
         )
     }
 
