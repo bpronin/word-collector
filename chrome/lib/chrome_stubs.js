@@ -5,53 +5,53 @@
 
 let chrome = chrome || {
     contextMenus: {
-        create: function () {
+        create() {
         },
-        removeAll: function () {
+        removeAll() {
         },
         onClicked: {
-            addListener: function () {
+            addListener() {
             }
         }
     },
     tabs: {
-        query: function () {
+        query() {
         },
-        update: function () {
+        update() {
         },
-        create: function () {
+        create() {
         },
-        sendMessage: function () {
+        sendMessage() {
         }
     },
     runtime: {
         onInstalled: {
-            addListener: function () {
+            addListener() {
             }
         },
-        getURL: function () {
+        getURL() {
         },
-        onMessage: function () {
+        onMessage() {
         },
-        sendMessage: function () {
+        sendMessage() {
         }
     },
     storage: {
         local: {
-            get: function () {
+            get() {
             },
-            set: function () {
+            set() {
             }
         },
         sync: {
-            get: function () {
+            get() {
             },
-            set: function () {
+            set() {
             }
         }
     },
     extension: {
-        getBackgroundPage: function () {
+        getBackgroundPage() {
         }
     }
 }

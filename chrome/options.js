@@ -37,8 +37,8 @@ signOutButton.addEventListener("click", () => {
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
-    // chrome.runtime.sendMessage({action: ACTION_GET_DATA});
-    chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET});
+    chrome.runtime.sendMessage({action: ACTION_GET_DATA});
+    // chrome.runtime.sendMessage({action: ACTION_GET_SPREADSHEET});
 })
 
 chrome.runtime.sendMessage({action: ACTION_GET_LOGIN_STATE});

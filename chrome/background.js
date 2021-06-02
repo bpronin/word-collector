@@ -1,6 +1,6 @@
 importScripts("messages.js", "settings.js", "google-sheets.js")
 
-const CONTEXT_MENU_ID = "WORD_COLLECTOR_CONTEXT_MENU"
+const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
 let spreadsheet = {
     id: undefined,
@@ -10,8 +10,7 @@ let spreadsheet = {
 function onLoginStateChanged(signedIn) {
     chrome.runtime.sendMessage({
         action: ACTION_LOGIN_STATE_CHANGED,
-        signedIn: signedIn,
-        spreadsheet: spreadsheet
+        data: signedIn
     })
 }
 
@@ -24,12 +23,19 @@ function getData() {
     })
 }
 
-function getSpreadsheet() {
+function getSpreadsheetInfo() {
     sheets.getSpreadsheet(spreadsheet, (data) => {
         chrome.runtime.sendMessage({
             action: ACTION_STREADSHEET_RECEIVED,
             data: data
         })
+    })
+}
+
+function getCurrentSpreads() {
+    chrome.runtime.sendMessage({
+        action: ACTION_CURRENT_STREADSHEET_RECEIVED,
+        data: spreadsheet
     })
 }
 
@@ -65,7 +71,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 getData();
                 break
             case ACTION_GET_SPREADSHEET:
-                getSpreadsheet();
+                getSpreadsheetInfo();
+                break
+            case ACTION_GET_CURRENT_SPREADSHEET:
+                getCurrentSpreadshee();
                 break
             default:
                 throw ("unknown action: " + request.action)
