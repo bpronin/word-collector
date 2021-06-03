@@ -2,15 +2,17 @@ const STORAGE_AREA = "sync"
 
 const KEY_SHEET_ID = "spreadsheet_id";
 const KEY_SHEET_SHEET = "spreadsheet_sheet";
+const KEY_HISTORY = "history";
 
 const settings = {
+    storage: chrome.storage[STORAGE_AREA],
 
-    setSpreadsheet(data) {
-        chrome.storage[STORAGE_AREA].set(data)
+    put(data) {
+        settings.storage.set(data)
     },
 
-    getSpreadsheet(callback) {
-        chrome.storage[STORAGE_AREA].get([KEY_SHEET_ID, KEY_SHEET_SHEET], callback)
+    get(keys, callback) {
+        settings.storage.get(keys, callback)
     },
 
     addListener(listener) {

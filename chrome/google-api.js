@@ -4,15 +4,15 @@ const gapi = {
     internal: {
         onSignInStatusChanged: undefined,
 
-        sendRequest(method, apiUrl, path, params, data, onResponse, onRejected) {
+        sendRequest(method, apiUrl, path, params, body, onResponse, onRejected) {
 
             function doRequest(token) {
-                if (!token) {
+                if (token === undefined) {
                     throw ("Token is undefined")
                 }
 
                 let input = apiUrl + path + "?key=" + API_KEY;
-                if (params) {
+                if (params !== undefined) {
                     input += params
                 }
 
@@ -27,7 +27,7 @@ const gapi = {
                 }
 
                 if (method === "POST") {
-                    init.body = JSON.stringify(data)
+                    init.body = JSON.stringify(body)
                 }
 
                 fetch(input, init)
@@ -37,14 +37,14 @@ const gapi = {
 
                             response.json()
                                 .then(data => {
-                                    if (onResponse) {
+                                    if (onResponse !== undefined) {
                                         onResponse(data)
                                     }
                                 })
                         } else {
                             console.log("Request rejected")
 
-                            if (onRejected) {
+                            if (onRejected !== undefined) {
                                 onRejected()
                             } else
                                 throw ("Request rejected: " + response.status + ". " + input)
@@ -72,14 +72,14 @@ const gapi = {
 
     checkLoggedIn(onToken) {
         chrome.identity.getAuthToken({interactive: false}, token => {
-            if (onToken) onToken(token)
+            if (onToken !== undefined) onToken(token)
         })
     },
 
     login() {
 
         function doLogin(token) {
-            if (!token) {
+            if (token === undefined) {
                 console.log("Signing in...")
 
                 chrome.identity.getAuthToken({interactive: true}, () => {
@@ -98,7 +98,7 @@ const gapi = {
     logout() {
 
         function doLogout(token) {
-            if (token) {
+            if (token!== undefined) {
                 gapi.internal.onSignInStatusChanged(false)
 
                 console.log("Signing out...")
@@ -147,21 +147,22 @@ const gapi = {
             )
         },
 
-        getValues(spreadsheet, limit, onData) {
+        getValues(spreadsheetId, range, onData) {
             gapi.internal.sendRequest("GET",
                 gapi.spreadsheets.url,
-                spreadsheet.id + "/values/" + spreadsheet.sheet,
+                spreadsheetId + "/values/" + range,
                 undefined,
                 undefined,
                 onData)
         },
 
-        appendValue(spreadsheet, value) {
+        appendValue(spreadsheetId, range, value, onComplete) {
             gapi.internal.sendRequest("POST",
                 gapi.spreadsheets.url,
-                spreadsheet.id + "/values/" + spreadsheet.sheet + ":append",
+                spreadsheetId + "/values/" + range + ":append",
                 "&valueInputOption=USER_ENTERED",
-                {values: [[value]]}
+                {values: [[value]]},
+                onComplete
             )
         }
     }
