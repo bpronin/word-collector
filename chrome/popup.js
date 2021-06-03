@@ -12,11 +12,9 @@ function updateSheetEditItems(sheets) {
 
     if (sheets) {
         for (const sheet of sheets) {
-            const title = sheet.properties.title;
-
             const option = document.createElement("option");
-            option.value = title;
-            option.innerHTML = title
+            option.value = sheet.properties.sheetId
+            option.innerHTML = sheet.properties.title
 
             sheetEdit.appendChild(option);
         }

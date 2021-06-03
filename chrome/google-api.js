@@ -47,7 +47,7 @@ const gapi = {
                             if (onRejected) {
                                 onRejected()
                             } else
-                                throw ("Request rejected: " + response.status)
+                                throw ("Request rejected: " + response.status + ". " + input)
                         }
                     })
             }
@@ -136,10 +136,10 @@ const gapi = {
                 onComplete)
         },
 
-        getSpreadsheet(spreadsheet, onData) {
+        getSpreadsheet(spreadsheetId, onData) {
             gapi.internal.sendRequest("GET",
                 gapi.spreadsheets.url,
-                spreadsheet.id,
+                spreadsheetId,
                 undefined,
                 undefined,
                 onData,

@@ -22,11 +22,13 @@ function saveSettings() {
 
 function ensureSpreadsheetExists(onComplete) {
     /* NOTE! Sheet will be found even if it is in trash! (todo: use Drve API to chect that fact)*/
-    console.log("Checking spreadsheet: " + currentSpreadsheet.id)
+    const spreadsheetId = currentSpreadsheet.id;
 
-    gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, data => {
+    console.log("Checking spreadsheet: " + spreadsheetId)
+
+    gapi.spreadsheets.getSpreadsheet(spreadsheetId, data => {
         if (data) {
-            console.log("Existent spreadsheet: " + currentSpreadsheet.id)
+            console.log("Existent spreadsheet: " + spreadsheetId)
 
             onComplete(data)
         } else {
@@ -35,7 +37,7 @@ function ensureSpreadsheetExists(onComplete) {
 
                 setCurrentSpreadsheet({
                     id: data.spreadsheetId,
-                    sheet: data.sheets[0].properties.title
+                    sheet: data.sheets[0].properties.sheetId
                 })
                 onComplete(data)
             })
