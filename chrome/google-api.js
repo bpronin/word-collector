@@ -147,7 +147,7 @@ const gapi = {
             )
         },
 
-        getValues(spreadsheet, onData) {
+        getValues(spreadsheet, limit, onData) {
             gapi.internal.sendRequest("GET",
                 gapi.spreadsheets.url,
                 spreadsheet.id + "/values/" + spreadsheet.sheet,

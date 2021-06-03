@@ -11,5 +11,8 @@ const ACTION_LOGIN = "login"
 const ACTION_LOGOUT = "logout"
 
 function sendMessage(action, data) {
-    chrome.runtime.sendMessage({action: action, data: data})
+    const message = {action: action, data: data};
+    chrome.runtime.sendMessage(message)
+
+    console.log("Message sent:" + JSON.stringify(message))
 }

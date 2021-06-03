@@ -7,11 +7,11 @@ const sheetEdit = document.getElementById("sheet_page_edit");
 
 let currentSpreadsheet
 
-function updateSheetEditItems(info) {
+function updateSheetEditItems(sheets) {
     sheetEdit.innerHTML = ""
 
-    if (info) {
-        for (const sheet of info.sheets) {
+    if (sheets) {
+        for (const sheet of sheets) {
             const title = sheet.properties.title;
 
             const option = document.createElement("option");
@@ -23,8 +23,6 @@ function updateSheetEditItems(info) {
 
         sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
     }
-
-    // sheetEdit.value = undefined
 }
 
 function onSheetEditChange() {
@@ -33,7 +31,6 @@ function onSheetEditChange() {
 }
 
 function updateControls() {
-    console.log("CURRENT SHEET:" + JSON.stringify(currentSpreadsheet))
     sheetEdit.value = currentSpreadsheet.sheet
 }
 
@@ -83,5 +80,6 @@ authSection.style.display = "none"
 optionsSection.style.display = "none"
 
 sendMessage(ACTION_GET_LOGIN_STATE)
+// sendMessage(ACTION_DEBUG)
 sendMessage(ACTION_GET_SPREADSHEET_INFO)
 //chrome.runtime.sendMessage({action: ACTION_GET_CURRENT_SPREADSHEET})

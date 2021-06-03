@@ -51,15 +51,15 @@ function getLoginState() {
 
 function appendSheetData(text) {
     ensureSpreadsheetExists(() => {
-            gapi.spreadsheets.appendValue(currentSpreadsheet, text)
-            console.log("Saved: '" + text + "'")
-        }
-    )
+        gapi.spreadsheets.appendValue(currentSpreadsheet, text)
+
+        console.log("Saved: '" + text + "'")
+    })
 }
 
-function getData() {
+function getHistory() {
     ensureSpreadsheetExists(() =>
-        gapi.spreadsheets.getValues(currentSpreadsheet, (data) => {
+        gapi.spreadsheets.getValues(currentSpreadsheet, 5, data => {
             sendMessage(ACTION_DATA_CHANGED, data)
         })
     )
@@ -67,11 +67,7 @@ function getData() {
 
 function getSpreadsheetInfo() {
     ensureSpreadsheetExists(data =>
-            sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
-
-        // gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, (data) => {
-        //     sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
-        // })
+        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data.sheets)
     )
 }
 
@@ -83,6 +79,8 @@ function setCurrentSpreadsheet(spreadsheet) {
     currentSpreadsheet = spreadsheet
     saveSettings()
     sendMessage(ACTION_CURRENT_SPREADSHEET_CHANGED, currentSpreadsheet)
+
+    console.log("Current spreadsheet: " + JSON.stringify(currentSpreadsheet))
 }
 
 function onLoginStateChanged(signedIn) {
@@ -94,28 +92,28 @@ chrome.runtime.onInstalled.addListener(() => {
         id: CONTEXT_MENU_ID,
         title: "Save selection: %s",
         contexts: ["selection"]
-    });
+    })
 })
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        appendSheetData(info.selectionText);
+        appendSheetData(info.selectionText)
     }
 })
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
-            case ACTION_GET_LOGIN_STATE:
-                getLoginState();
-                break
             case ACTION_LOGIN:
                 gapi.login()
                 break
             case ACTION_LOGOUT:
                 gapi.logout()
                 break
+            case ACTION_GET_LOGIN_STATE:
+                getLoginState()
+                break
             case ACTION_DEBUG:
-                getData();
+                getHistory()
                 break
             case ACTION_GET_SPREADSHEET_INFO:
                 getSpreadsheetInfo()
