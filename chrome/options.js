@@ -1,16 +1,12 @@
-const statusLabel = document.getElementById("status_label")
-const signInButton = document.getElementById("sign_in_button")
-const signOutButton = document.getElementById("sign_out_button")
-const dataLabel = document.getElementById("data_label");
+let currentSpreadsheet
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        const dataLabel = document.getElementById("data_label")
+
         switch (request.action) {
             case ACTION_LOGIN_STATE_CHANGED:
-                if (request.signedIn) {
-                    statusLabel.innerHTML = "Signed in"
-                } else {
-                    statusLabel.innerHTML = "Signed out"
-                }
+                document.getElementById("status_label").innerHTML =
+                    request.signedIn ? "Signed in" : "Signed out"
                 break
             case ACTION_SPREADSHEET_INFO_CHANGED:
                 let titles = []
@@ -26,16 +22,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_HISTORY_CHANGED:
                 dataLabel.innerHTML = JSON.stringify(request.data)
                 break
+            case ACTION_CURRENT_SPREADSHEET_CHANGED:
+                currentSpreadsheet = request.data
+                document.getElementById("sheet_label").innerHTML = JSON.stringify(currentSpreadsheet)
+                break;
         }
         sendResponse()
     }
 )
 
-signInButton.addEventListener("click", () => {
+document.getElementById("sign_in_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
-signOutButton.addEventListener("click", () => {
+document.getElementById("sign_out_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGOUT)
 })
 
@@ -43,4 +43,11 @@ document.getElementById("get_button").addEventListener("click", () => {
     sendMessage(ACTION_GET_HISTORY)
 })
 
+document.getElementById("link_button").addEventListener("click", () => {
+    chrome.tabs.create({
+        url: "https://docs.google.com/spreadsheets/d/" + currentSpreadsheet.id
+    })
+})
+
 sendMessage(ACTION_GET_LOGIN_STATE)
+sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
