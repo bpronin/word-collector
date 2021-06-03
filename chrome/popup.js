@@ -10,17 +10,20 @@ let currentSpreadsheet
 function updateSheetEditItems(info) {
     sheetEdit.innerHTML = ""
 
-    for (const sheet of info.sheets) {
-        const title = sheet.properties.title;
+    if (info) {
+        for (const sheet of info.sheets) {
+            const title = sheet.properties.title;
 
-        const option = document.createElement("option");
-        option.value = title;
-        option.innerHTML = title
+            const option = document.createElement("option");
+            option.value = title;
+            option.innerHTML = title
 
-        sheetEdit.appendChild(option);
+            sheetEdit.appendChild(option);
+        }
+
+        sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
     }
 
-    sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
     // sheetEdit.value = undefined
 }
 

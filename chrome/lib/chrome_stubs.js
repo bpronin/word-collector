@@ -4,6 +4,14 @@
  */
 
 let chrome = chrome || {
+    identity: {
+        getAuthToken() {
+        },
+        onSignInChanged: {
+            addListener() {
+            }
+        }
+    },
     contextMenus: {
         create() {
         },

@@ -1,8 +1,10 @@
+const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg"
+
 const gapi = {
     internal: {
         onSignInStatusChanged: undefined,
 
-        sendRequest(method, apiUrl, path, params, data, onResponse) {
+        sendRequest(method, apiUrl, path, params, data, onResponse, onRejected) {
 
             function doRequest(token) {
                 if (!token) {
@@ -23,6 +25,7 @@ const gapi = {
                     contentType: "json",
                     async: true
                 }
+
                 if (method === "POST") {
                     init.body = JSON.stringify(data)
                 }
@@ -34,15 +37,22 @@ const gapi = {
 
                             response.json()
                                 .then(data => {
-                                    if (onResponse) onResponse(data)
+                                    if (onResponse) {
+                                        onResponse(data)
+                                    }
                                 })
                         } else {
-                            throw ("Request rejected: " + response.status)
+                            console.log("Request rejected")
+
+                            if (onRejected) {
+                                onRejected()
+                            } else
+                                throw ("Request rejected: " + response.status)
                         }
                     })
             }
 
-            gapi.authenticate(false, doRequest);
+            gapi.checkLoggedIn(doRequest)
         }
     },
 
@@ -60,55 +70,71 @@ const gapi = {
         console.log("Google API initialized")
     },
 
-    authenticate(interactive, onToken) {
-        chrome.identity.getAuthToken({interactive: interactive}, token => {
+    checkLoggedIn(onToken) {
+        chrome.identity.getAuthToken({interactive: false}, token => {
             if (onToken) onToken(token)
-            gapi.internal.onSignInStatusChanged(token !== undefined)
         })
     },
 
-    signIn() {
+    login() {
 
-        function doSignIn(token) {
+        function doLogin(token) {
             if (!token) {
                 console.log("Signing in...")
 
-                gapi.authenticate(true, () => {
-                    console.log("Token obtained");
-                });
+                chrome.identity.getAuthToken({interactive: true}, () => {
+                    console.log("Token obtained")
+
+                    gapi.internal.onSignInStatusChanged(true)
+                })
             } else {
-                console.log("Using cached token");
+                console.log("Using cached token")
             }
         }
 
-        gapi.authenticate(false, doSignIn)
+        gapi.checkLoggedIn(doLogin)
     },
 
-    signOut() {
+    logout() {
 
-        function doSignOut(token) {
+        function doLogout(token) {
             if (token) {
+                gapi.internal.onSignInStatusChanged(false)
+
                 console.log("Signing out...")
 
                 chrome.identity.removeCachedAuthToken({token: token}, () => {
-                    console.log("Token removed from cache");
-                });
+                    console.log("Token removed from cache")
+                })
 
                 fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
                     .then(response => {
                             if (response.ok) {
-                                console.log("Token revoked");
+                                console.log("Token revoked")
                             }
                         }
                     )
             }
         }
 
-        gapi.authenticate(false, doSignOut);
+        gapi.checkLoggedIn(doLogout)
     },
 
     spreadsheets: {
         url: "https://sheets.googleapis.com/v4/spreadsheets/",
+
+        createSpreadsheet(onComplete) {
+            gapi.internal.sendRequest("POST",
+                gapi.spreadsheets.url,
+                "",
+                undefined,
+                {
+                    properties: {
+                        title: "words-collector"
+                    }
+                },
+                onComplete)
+        },
 
         getSpreadsheet(spreadsheet, onData) {
             gapi.internal.sendRequest("GET",
@@ -116,7 +142,9 @@ const gapi = {
                 spreadsheet.id,
                 undefined,
                 undefined,
-                onData)
+                onData,
+                () => onData(undefined)
+            )
         },
 
         getValues(spreadsheet, onData) {
@@ -137,6 +165,5 @@ const gapi = {
             )
         }
     }
-
 
 }

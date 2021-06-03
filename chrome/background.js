@@ -1,11 +1,8 @@
-importScripts("messages.js", "settings.js", "google-sheets.js")
+importScripts("messages.js", "settings.js", "google-api.js")
 
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
-let currentSpreadsheet = {
-    id: undefined,
-    sheet: undefined
-}
+let currentSpreadsheet
 
 function loadSettings() {
     settings.getSpreadsheet(data => {
@@ -23,16 +20,59 @@ function saveSettings() {
     })
 }
 
-function getData() {
-    gapi.spreadsheets.getValues(currentSpreadsheet, (data) => {
-        sendMessage(ACTION_DATA_CHANGED, data)
+function ensureSpreadsheetExists(onComplete) {
+    /* NOTE! Sheet will be found even if it is in trash! (todo: use Drve API to chect that fact)*/
+    console.log("Checking spreadsheet: " + currentSpreadsheet.id)
+
+    gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, data => {
+        if (data) {
+            console.log("Existent spreadsheet: " + currentSpreadsheet.id)
+
+            onComplete(data)
+        } else {
+            gapi.spreadsheets.createSpreadsheet(data => {
+                console.log("New spreadsheet created:" + JSON.stringify(data))
+
+                setCurrentSpreadsheet({
+                    id: data.spreadsheetId,
+                    sheet: data.sheets[0].properties.title
+                })
+                onComplete(data)
+            })
+        }
     })
 }
 
-function getSpreadsheetInfo() {
-    gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, (data) => {
-        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
+function getLoginState() {
+    gapi.checkLoggedIn(token => {
+        sendMessage(ACTION_LOGIN_STATE_CHANGED, token !== undefined)
     })
+}
+
+function appendSheetData(text) {
+    ensureSpreadsheetExists(() => {
+            gapi.spreadsheets.appendValue(currentSpreadsheet, text)
+            console.log("Saved: '" + text + "'")
+        }
+    )
+}
+
+function getData() {
+    ensureSpreadsheetExists(() =>
+        gapi.spreadsheets.getValues(currentSpreadsheet, (data) => {
+            sendMessage(ACTION_DATA_CHANGED, data)
+        })
+    )
+}
+
+function getSpreadsheetInfo() {
+    ensureSpreadsheetExists(data =>
+            sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
+
+        // gapi.spreadsheets.getSpreadsheet(currentSpreadsheet, (data) => {
+        //     sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
+        // })
+    )
 }
 
 function getCurrentSpreadsheet() {
@@ -59,24 +99,22 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        gapi.spreadsheets.appendValue(currentSpreadsheet, info.selectionText)
-
-        console.log("Saved: '" + info.selectionText + "'");
+        appendSheetData(info.selectionText);
     }
 })
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
             case ACTION_GET_LOGIN_STATE:
-                gapi.authenticate(false)
+                getLoginState();
                 break
             case ACTION_LOGIN:
-                gapi.signIn()
+                gapi.login()
                 break
             case ACTION_LOGOUT:
-                gapi.signOut()
+                gapi.logout()
                 break
-            case ACTION_GET_DATA:
+            case ACTION_DEBUG:
                 getData();
                 break
             case ACTION_GET_SPREADSHEET_INFO:
