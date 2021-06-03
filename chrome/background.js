@@ -3,6 +3,7 @@ importScripts("messages.js", "settings.js", "google-api.js")
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
 let currentSpreadsheet
+let maxHistorySize = 5
 
 function loadSettings() {
     settings.get([KEY_SHEET_ID, KEY_SHEET_SHEET], data => {
@@ -18,12 +19,6 @@ function saveSettings() {
         [KEY_SHEET_ID]: currentSpreadsheet.id,
         [KEY_SHEET_SHEET]: currentSpreadsheet.sheet
     })
-}
-
-function saveHistory(text, data) {
-    console.log("Saving history: " + text+ " "+JSON.stringify(data))
-
-    // settings.appendHistory(text, data)
 }
 
 function ensureSpreadsheetExists(onComplete) {
@@ -74,8 +69,8 @@ function getSpreadsheetRange(info, sheetId, defaultSheetId) {
 function appendSheetData(text) {
     ensureSpreadsheetExists(info => {
         const range = getSpreadsheetRange(info, currentSpreadsheet.sheet, 0)
-        gapi.spreadsheets.appendValue(currentSpreadsheet.id, range, text, data => {
-            saveHistory(text, data)
+        gapi.spreadsheets.appendValue(currentSpreadsheet.id, range, text, () => {
+            appendHistory(text)
 
             console.log("Saved: '" + text + "'")
         })
@@ -114,6 +109,27 @@ function onLoginStateChanged(signedIn) {
     sendMessage(ACTION_LOGIN_STATE_CHANGED, signedIn)
 }
 
+function appendHistory(text) {
+    settings.get(KEY_HISTORY, data => {
+        const history = data[KEY_HISTORY];
+        if (history === undefined) {
+            data[KEY_HISTORY] = [text]
+        } else {
+            history.unshift(text)
+            while (history.length > maxHistorySize) {
+                history.pop()
+            }
+        }
+        settings.put(data)
+    })
+}
+
+function getHistory() {
+    settings.get(KEY_HISTORY, data => {
+        sendMessage(ACTION_HISTORY_CHANGED, data)
+    })
+}
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: CONTEXT_MENU_ID,
@@ -130,6 +146,9 @@ chrome.contextMenus.onClicked.addListener(info => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
+            case ACTION_DEBUG:
+                getData()
+                break
             case ACTION_LOGIN:
                 gapi.login()
                 break
@@ -139,8 +158,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_GET_LOGIN_STATE:
                 getLoginState()
                 break
-            case ACTION_DEBUG:
-                getData()
+            case ACTION_GET_HISTORY:
+                getHistory()
                 break
             case ACTION_GET_SPREADSHEET_INFO:
                 getSpreadsheetInfo()

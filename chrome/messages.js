@@ -9,6 +9,8 @@ const ACTION_DEBUG = "debug"
 const ACTION_DATA_CHANGED = "data-changed"
 const ACTION_LOGIN = "login"
 const ACTION_LOGOUT = "logout"
+const ACTION_GET_HISTORY = "get-history"
+const ACTION_HISTORY_CHANGED = "history-changed"
 
 function sendMessage(action, data) {
     const message = {action: action, data: data};

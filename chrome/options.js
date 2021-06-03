@@ -23,6 +23,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_DATA_CHANGED:
                 dataLabel.innerHTML = JSON.stringify(request.data)
                 break
+            case ACTION_HISTORY_CHANGED:
+                dataLabel.innerHTML = JSON.stringify(request.data)
+                break
         }
         sendResponse()
     }
@@ -37,7 +40,7 @@ signOutButton.addEventListener("click", () => {
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
-    sendMessage(ACTION_DEBUG)
+    sendMessage(ACTION_GET_HISTORY)
 })
 
 sendMessage(ACTION_GET_LOGIN_STATE)
