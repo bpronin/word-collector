@@ -1,5 +1,5 @@
-const ACTION_GET_SPREADSHEET_INFO = "get-spreadsheet"
-const ACTION_SPREADSHEET_INFO_CHANGED = "spreadsheet-changed"
+const ACTION_GET_SPREADSHEET_INFO = "get-spreadsheet-info"
+const ACTION_SPREADSHEET_INFO_CHANGED = "spreadsheet-info-changed"
 const ACTION_GET_CURRENT_SPREADSHEET = "get-current-spreadsheet"
 const ACTION_SET_CURRENT_SPREADSHEET = "set-current-spreadsheet"
 const ACTION_CURRENT_SPREADSHEET_CHANGED = "current-spreadsheet-changed"

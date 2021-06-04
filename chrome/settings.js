@@ -2,6 +2,8 @@ const KEY_SHEET_ID = "spreadsheet_id";
 const KEY_SHEET_SHEET = "spreadsheet_sheet";
 const KEY_HISTORY = "history";
 
+const TEXT_SAVE_SELECTION = "Save selection: %s";
+
 const settings = {
     storage: chrome.storage.sync,
 
@@ -27,8 +29,8 @@ const settings = {
 // settings.storage.clear()
 //settings.storage.remove(KEY_HISTORY)
 
-// chrome.storage[STORAGE_AREA].set({
-//     [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
-//     [KEY_SHEET_SHEET]: "en-ru"
-//     // [KEY_SHEET_SHEET]: "pt-ru"
+// settings.storage.set({
+//     // [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
+//     [KEY_SHEET_ID]: "1z3faT6I-nCJmhXKVK54KeP5ZMFnQMc8Xr9DaM_IlooY",
+//     [KEY_SHEET_SHEET]: 0
 // })

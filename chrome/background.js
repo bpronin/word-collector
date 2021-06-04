@@ -128,20 +128,20 @@ function updateHistory(text) {
             history.unshift(item)
         }
         settings.put(data)
-        sendMessage(ACTION_HISTORY_CHANGED, data)
+        sendMessage(ACTION_HISTORY_CHANGED, data.history)
     })
 }
 
 function getHistory() {
     settings.get(KEY_HISTORY, data => {
-        sendMessage(ACTION_HISTORY_CHANGED, data)
+        sendMessage(ACTION_HISTORY_CHANGED, data.history)
     })
 }
 
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: CONTEXT_MENU_ID,
-        title: "Save selection: %s",
+        title: TEXT_SAVE_SELECTION,
         contexts: ["selection"]
     })
 })

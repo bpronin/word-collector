@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_HISTORY_CHANGED:
                 const list = document.getElementById("history_list");
                 list.innerHTML = ""
-                for (const item of request.data.history) {
+                for (const item of request.data) {
                     const row = document.createElement("div")
                     row.innerHTML = item
                     list.appendChild(row);

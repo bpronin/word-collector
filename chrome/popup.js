@@ -20,16 +20,23 @@ function openUniqueTab(url) {
     })
 }
 
-function getSpreadsheetUrl() {
-    return "https://docs.google.com/spreadsheets/d/" + currentSpreadsheet.id
+function onLoginStateChanged(loggedIn) {
+    setVisible(authSection, !loggedIn)
+    setVisible(optionsSection, loggedIn)
+    if (loggedIn) {
+        sendMessage(ACTION_GET_SPREADSHEET_INFO)
+    }
 }
 
-function updateControls() {
+function onCurrentSpreadsheetChanged(spreadsheet) {
+    currentSpreadsheet = spreadsheet
     sheetEdit.value = currentSpreadsheet.sheet
-    spreadsheetLink.setAttribute("href", getSpreadsheetUrl())
+    spreadsheetLink.setAttribute("href", "https://docs.google.com/spreadsheets/d/" + currentSpreadsheet.id)
 }
 
-function updateSheetEditItems() {
+function onSpreadsheetInfoChanged(info) {
+    spreadsheetSheetsInfo = info
+
     sheetEdit.innerHTML = ""
 
     for (const sheet of spreadsheetSheetsInfo) {
@@ -41,9 +48,10 @@ function updateSheetEditItems() {
     }
 
     sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+    sendMessage(ACTION_GET_HISTORY)
 }
 
-function updateHistoryList(items = []) {
+function onHistoryChanged(history) {
 
     function onRowClick(item) {
         const sheetInfo = spreadsheetSheetsInfo.find((sheet) => {
@@ -59,49 +67,39 @@ function updateHistoryList(items = []) {
 
     const list = document.getElementById("history_list");
     list.innerHTML = ""  /*todo: update, do not rebuild all rows */
-    for (let index = 0; index < items.length; index++) {
-        const item = items[index];
+    for (let index = 0; index < history.length; index++) {
+        const item = history[index];
 
         const row = document.createElement("div")
         row.tabIndex = 0 /* makes row tabbale */
         row.className = "list_item"
-        row.setAttribute("item_index", index)
-        row.addEventListener("click", () => onRowClick(item))
         row.innerHTML = item.text
+        row.addEventListener("click", () => onRowClick(item))
 
         list.appendChild(row);
     }
 }
 
-function onSheetEditChange() {
-    currentSpreadsheet.sheet = sheetEdit.value
-    sendMessage(ACTION_SET_CURRENT_SPREADSHEET, currentSpreadsheet)
-}
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        switch (request.action) {
-            case ACTION_LOGIN_STATE_CHANGED:
-                setVisible(authSection, !request.data)
-                setVisible(optionsSection, request.data)
-                break
-            case ACTION_CURRENT_SPREADSHEET_CHANGED:
-                currentSpreadsheet = request.data
-                updateControls()
-                break
-            case ACTION_SPREADSHEET_INFO_CHANGED:
-                spreadsheetSheetsInfo = request.data
-                updateSheetEditItems()
-                break
-            case ACTION_HISTORY_CHANGED:
-                updateHistoryList(request.data.history)
-                break
-        }
-        sendResponse()
+    switch (request.action) {
+        case ACTION_LOGIN_STATE_CHANGED:
+            onLoginStateChanged(request.data);
+            break
+        case ACTION_SPREADSHEET_INFO_CHANGED:
+            onSpreadsheetInfoChanged(request.data)
+            break
+        case ACTION_CURRENT_SPREADSHEET_CHANGED:
+            onCurrentSpreadsheetChanged(request.data)
+            break
+        case ACTION_HISTORY_CHANGED:
+            onHistoryChanged(request.data)
+            break
     }
-)
+    sendResponse()
+})
 
-spreadsheetLink.addEventListener("click", () => {
-    openUniqueTab(getSpreadsheetUrl())
+spreadsheetLink.addEventListener("click", (event) => {
+    openUniqueTab(event.target.href)
 })
 
 document.getElementById("settings_button").addEventListener("click", () => {
@@ -112,12 +110,11 @@ document.getElementById("login_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
-sheetEdit.onchange = onSheetEditChange
+sheetEdit.addEventListener('change', (event) => {
+    currentSpreadsheet.sheet = event.target.value
+    sendMessage(ACTION_SET_CURRENT_SPREADSHEET, currentSpreadsheet)
+})
 
 setVisible(authSection, false)
 setVisible(optionsSection, false)
-
 sendMessage(ACTION_GET_LOGIN_STATE)
-// sendMessage(ACTION_DEBUG)
-sendMessage(ACTION_GET_SPREADSHEET_INFO)
-sendMessage(ACTION_GET_HISTORY)
