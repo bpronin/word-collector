@@ -20,7 +20,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 dataLabel.innerHTML = JSON.stringify(request.data)
                 break
             case ACTION_HISTORY_CHANGED:
-                dataLabel.innerHTML = JSON.stringify(request.data)
+                const list = document.getElementById("history_list");
+                list.innerHTML = ""
+                for (const item of request.data.history) {
+                    const row = document.createElement("div")
+                    row.innerHTML = item
+                    list.appendChild(row);
+                }
                 break
             case ACTION_CURRENT_SPREADSHEET_CHANGED:
                 currentSpreadsheet = request.data
@@ -51,3 +57,4 @@ document.getElementById("link_button").addEventListener("click", () => {
 
 sendMessage(ACTION_GET_LOGIN_STATE)
 sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+sendMessage(ACTION_GET_HISTORY)

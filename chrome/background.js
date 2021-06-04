@@ -3,7 +3,7 @@ importScripts("messages.js", "settings.js", "google-api.js")
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
 let currentSpreadsheet
-let maxHistorySize = 5
+let maxHistorySize = 10
 
 function loadSettings() {
     settings.get([KEY_SHEET_ID, KEY_SHEET_SHEET], data => {
@@ -121,6 +121,7 @@ function appendHistory(text) {
             }
         }
         settings.put(data)
+        sendMessage(ACTION_HISTORY_CHANGED, data)
     })
 }
 

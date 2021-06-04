@@ -15,18 +15,21 @@
 
 <div id="content">
 
-    <div id="auth_section">
+    <div id="login_section">
         <div>Sign in to Google Spreadsheets</div>
         <br/>
-        <button id="sign_in_button">Sign In</button>
+        <button id="login_button">Sign In</button>
     </div>
 
     <div id="options_section">
-<!--        <label>Spreadsheet</label>-->
-<!--        <div id="sheet_editor"></div>-->
-
-        <label for="sheet_page_edit">Page</label>
-        <select id="sheet_page_edit"></select>
+        <div>
+            <label for="sheet_edit">Sheet</label>
+            <select id="sheet_edit"></select>
+        </div>
+        <div>
+            <label for="history_list">History</label>
+            <div id="history_list" class="bordered"></div>
+        </div>
     </div>
 
 </div>

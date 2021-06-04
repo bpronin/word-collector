@@ -1,9 +1,8 @@
-const authSection = document.getElementById("auth_section");
-const optionsSection = document.getElementById("options_section");
-const settingsButton = document.getElementById("settings_button");
-const signInButton = document.getElementById("sign_in_button");
-// const sheetEdit = document.getElementById("sheet_editor");
-const sheetEdit = document.getElementById("sheet_page_edit");
+const authSection = document.getElementById("login_section")
+const optionsSection = document.getElementById("options_section")
+const settingsButton = document.getElementById("settings_button")
+const loginButton = document.getElementById("login_button")
+const sheetEdit = document.getElementById("sheet_edit")
 
 let currentSpreadsheet
 
@@ -68,7 +67,7 @@ settingsButton.addEventListener("click", () => {
     })
 })
 
-signInButton.addEventListener("click", () => {
+loginButton.addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 

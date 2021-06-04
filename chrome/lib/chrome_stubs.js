@@ -39,7 +39,9 @@ let chrome = chrome || {
         },
         getURL() {
         },
-        onMessage() {
+        onMessage: {
+            addListener() {
+            }
         },
         sendMessage() {
         }

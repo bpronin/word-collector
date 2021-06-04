@@ -13,3 +13,27 @@
     /*align-items: center;*/
     /*transition: 0.3s ease opacity;*/
 }
+
+button {
+    min-width: 48px;
+    min-height: 28px;
+    cursor: pointer;
+}
+
+select {
+    min-width: 64px;
+    min-height: 28px;
+    border-color: #d7d6d6;
+    margin-left: 8px;
+}
+
+label {
+    min-width: 100px;
+    min-height: 28px;
+}
+
+.bordered {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d6d6;
+}
