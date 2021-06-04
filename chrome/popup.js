@@ -6,20 +6,6 @@ const spreadsheetLink = document.getElementById("spreadsheet_link")
 let currentSpreadsheet
 let spreadsheetSheetsInfo
 
-function setVisible(component, visible) {
-    component.style.display = visible ? "block" : "none"
-}
-
-function openUniqueTab(url) {
-    chrome.tabs.query({url: url + "*"}, tabs => {
-        if (tabs.length > 0) {
-            chrome.tabs.update(tabs[0].id, {highlighted: true})
-        } else {
-            chrome.tabs.create({url: url})
-        }
-    })
-}
-
 function onLoginStateChanged(loggedIn) {
     setVisible(authSection, !loggedIn)
     setVisible(optionsSection, loggedIn)
@@ -31,7 +17,7 @@ function onLoginStateChanged(loggedIn) {
 function onCurrentSpreadsheetChanged(spreadsheet) {
     currentSpreadsheet = spreadsheet
     sheetEdit.value = currentSpreadsheet.sheet
-    spreadsheetLink.setAttribute("href", "https://docs.google.com/spreadsheets/d/" + currentSpreadsheet.id)
+    spreadsheetLink.setAttribute("href", URL_GOOGLE_SPREADSHEETS + currentSpreadsheet.id)
 }
 
 function onSpreadsheetInfoChanged(info) {

@@ -5,8 +5,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         switch (request.action) {
             case ACTION_LOGIN_STATE_CHANGED:
-                document.getElementById("status_label").innerHTML =
-                    request.signedIn ? "Signed in" : "Signed out"
+                document.getElementById("status_label").innerHTML = request.data ? "Signed in" : "Signed out"
+                sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+                sendMessage(ACTION_GET_HISTORY)
                 break
             case ACTION_SPREADSHEET_INFO_CHANGED:
                 let titles = []
@@ -50,11 +51,7 @@ document.getElementById("get_button").addEventListener("click", () => {
 })
 
 document.getElementById("link_button").addEventListener("click", () => {
-    chrome.tabs.create({
-        url: "https://docs.google.com/spreadsheets/d/" + currentSpreadsheet.id
-    })
+    openUniqueTab(URL_GOOGLE_SPREADSHEETS + currentSpreadsheet.id)
 })
 
 sendMessage(ACTION_GET_LOGIN_STATE)
-sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
-sendMessage(ACTION_GET_HISTORY)
