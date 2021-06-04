@@ -1,23 +1,20 @@
-.image-button {
-    /*padding: 0;*/
-    width: 24px;
-    height: 24px;
-    /*margin-right: 16px;*/
-    /*background-color: rgba(255, 255, 255, 0.13);*/
-    /*opacity: 0.5;*/
-    /*border: 0;*/
-    /*cursor: pointer;*/
-    /*border-radius: 50%;*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*transition: 0.3s ease opacity;*/
-}
-
 button {
     min-width: 48px;
     min-height: 28px;
     cursor: pointer;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d6d6;
+}
+
+button:hover {
+    filter: brightness(95%);
+    border-color: #b4b0b0;
+}
+
+button:active {
+    filter: brightness(105%);
+    border-color: #b4b0b0;
 }
 
 select {
@@ -32,7 +29,21 @@ label {
     min-height: 28px;
 }
 
-.section {
+.image-button {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.image-button:hover {
+    filter: brightness(95%);
+}
+
+.image-button:active {
+    filter: brightness(105%);
+}
+
+.sub_section {
     padding-top: 16px;
 }
 

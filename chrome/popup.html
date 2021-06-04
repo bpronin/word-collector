@@ -10,24 +10,22 @@
 
 <div id="header">
     Words collector
-    <button id="settings_button">Settings</button>
+    <img id="settings_button" class="image-button" src="icons/settings.svg" alt="Settings">
 </div>
 
 <div id="content">
 
-    <div id="login_section" class="section">
-        <div>Sign in to Google Spreadsheets</div>
-        <br/>
-        <button id="login_button">Sign In</button>
+    <div id="login_section">
+        <button id="login_button">Sign in to Google Spreadsheets</button>
     </div>
 
     <div id="options_section">
-        <div class="section">
-            <label for="sheet_edit">Add to sheet</label>
+        <div class="sub_section">
+            <label for="sheet_edit">Add words to sheet</label>
             <select id="sheet_edit"></select>
         </div>
-        <div class="section">
-            <label for="history_list">History</label>
+        <div class="sub_section">
+            <label for="history_list">Words history</label>
             <div id="history_list" class="bordered"></div>
         </div>
         <a id="spreadsheet_link">Open spreadsheet in browser</a>

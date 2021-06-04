@@ -6,6 +6,10 @@ const spreadsheetLink = document.getElementById("spreadsheet_link")
 let currentSpreadsheet
 let spreadsheetSheetsInfo
 
+function setVisible(component, visible) {
+    component.style.display = visible ? "block" : "none"
+}
+
 function openUniqueTab(url) {
     chrome.tabs.query({url: url + "*"}, tabs => {
         if (tabs.length > 0) {
@@ -28,17 +32,15 @@ function updateControls() {
 function updateSheetEditItems() {
     sheetEdit.innerHTML = ""
 
-    if (spreadsheetSheetsInfo !== undefined) {
-        for (const sheet of spreadsheetSheetsInfo) {
-            const option = document.createElement("option")
-            option.value = sheet.properties.sheetId
-            option.innerHTML = sheet.properties.title
+    for (const sheet of spreadsheetSheetsInfo) {
+        const option = document.createElement("option")
+        option.value = sheet.properties.sheetId
+        option.innerHTML = sheet.properties.title
 
-            sheetEdit.appendChild(option)
-        }
-
-        sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+        sheetEdit.appendChild(option)
     }
+
+    sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
 }
 
 function updateHistoryList(items = []) {
@@ -79,13 +81,8 @@ function onSheetEditChange() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
             case ACTION_LOGIN_STATE_CHANGED:
-                if (request.data) {
-                    authSection.style.display = "none"
-                    optionsSection.style.display = "block"
-                } else {
-                    authSection.style.display = "block"
-                    optionsSection.style.display = "none"
-                }
+                setVisible(authSection, !request.data)
+                setVisible(optionsSection, request.data)
                 break
             case ACTION_CURRENT_SPREADSHEET_CHANGED:
                 currentSpreadsheet = request.data
@@ -117,8 +114,8 @@ document.getElementById("login_button").addEventListener("click", () => {
 
 sheetEdit.onchange = onSheetEditChange
 
-// authSection.style.display = "none"
-// optionsSection.style.display = "none"
+setVisible(authSection, false)
+setVisible(optionsSection, false)
 
 sendMessage(ACTION_GET_LOGIN_STATE)
 // sendMessage(ACTION_DEBUG)
