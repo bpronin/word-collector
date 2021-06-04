@@ -3,7 +3,7 @@ importScripts("messages.js", "settings.js", "google-api.js")
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
 let currentSpreadsheet
-let maxHistorySize = 10
+let maxHistorySize = 100
 
 function loadSettings() {
     settings.get([KEY_SHEET_ID, KEY_SHEET_SHEET], data => {
@@ -70,7 +70,7 @@ function appendSheetData(text) {
     ensureSpreadsheetExists(info => {
         const range = getSpreadsheetRange(info, currentSpreadsheet.sheet, 0)
         gapi.spreadsheets.appendValue(currentSpreadsheet.id, range, text, () => {
-            appendHistory(text)
+            updateHistory(text)
 
             console.log("Saved: '" + text + "'")
         })
@@ -109,16 +109,23 @@ function onLoginStateChanged(signedIn) {
     sendMessage(ACTION_LOGIN_STATE_CHANGED, signedIn)
 }
 
-function appendHistory(text) {
+function updateHistory(text) {
     settings.get(KEY_HISTORY, data => {
         const history = data[KEY_HISTORY];
+
+        let item = {
+            text: text,
+            sheet: currentSpreadsheet.sheet,
+            time: Date.now()
+        }
+
         if (history === undefined) {
-            data[KEY_HISTORY] = [text]
+            data[KEY_HISTORY] = [item]
         } else {
-            history.unshift(text)
             while (history.length > maxHistorySize) {
                 history.pop()
             }
+            history.unshift(item)
         }
         settings.put(data)
         sendMessage(ACTION_HISTORY_CHANGED, data)

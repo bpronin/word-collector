@@ -25,7 +25,7 @@ const settings = {
 }
 
 // settings.storage.clear()
-// settings.storage.remove(KEY_HISTORY)
+//settings.storage.remove(KEY_HISTORY)
 
 // chrome.storage[STORAGE_AREA].set({
 //     [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",

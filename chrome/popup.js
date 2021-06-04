@@ -4,6 +4,7 @@ const sheetEdit = document.getElementById("sheet_edit")
 const spreadsheetLink = document.getElementById("spreadsheet_link")
 
 let currentSpreadsheet
+let spreadsheetSheetsInfo
 
 function openUniqueTab(url) {
     chrome.tabs.query({url: url + "*"}, tabs => {
@@ -24,11 +25,11 @@ function updateControls() {
     spreadsheetLink.setAttribute("href", getSpreadsheetUrl())
 }
 
-function updateSheetEditItems(sheets) {
+function updateSheetEditItems() {
     sheetEdit.innerHTML = ""
 
-    if (sheets) {
-        for (const sheet of sheets) {
+    if (spreadsheetSheetsInfo !== undefined) {
+        for (const sheet of spreadsheetSheetsInfo) {
             const option = document.createElement("option")
             option.value = sheet.properties.sheetId
             option.innerHTML = sheet.properties.title
@@ -37,6 +38,36 @@ function updateSheetEditItems(sheets) {
         }
 
         sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+    }
+}
+
+function updateHistoryList(items = []) {
+
+    function onRowClick(item) {
+        const sheetInfo = spreadsheetSheetsInfo.find((sheet) => {
+            return sheet.properties.sheetId === parseInt(item.sheet)
+        })
+
+        window.alert(
+            "Text: " + item.text + "\n" +
+            "Sheet: " + sheetInfo.properties.title + "\n" +
+            "Time: " + new Date(item.time).toUTCString()
+        )
+    }
+
+    const list = document.getElementById("history_list");
+    list.innerHTML = ""  /*todo: update, do not rebuild all rows */
+    for (let index = 0; index < items.length; index++) {
+        const item = items[index];
+
+        const row = document.createElement("div")
+        row.tabIndex = 0 /* makes row tabbale */
+        row.className = "list_item"
+        row.setAttribute("item_index", index)
+        row.addEventListener("click", () => onRowClick(item))
+        row.innerHTML = item.text
+
+        list.appendChild(row);
     }
 }
 
@@ -61,7 +92,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 updateControls()
                 break
             case ACTION_SPREADSHEET_INFO_CHANGED:
-                updateSheetEditItems(request.data)
+                spreadsheetSheetsInfo = request.data
+                updateSheetEditItems()
+                break
+            case ACTION_HISTORY_CHANGED:
+                updateHistoryList(request.data.history)
                 break
         }
         sendResponse()
@@ -82,9 +117,10 @@ document.getElementById("login_button").addEventListener("click", () => {
 
 sheetEdit.onchange = onSheetEditChange
 
-authSection.style.display = "none"
-optionsSection.style.display = "none"
+// authSection.style.display = "none"
+// optionsSection.style.display = "none"
 
 sendMessage(ACTION_GET_LOGIN_STATE)
 // sendMessage(ACTION_DEBUG)
 sendMessage(ACTION_GET_SPREADSHEET_INFO)
+sendMessage(ACTION_GET_HISTORY)
