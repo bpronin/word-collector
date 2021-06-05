@@ -2,44 +2,37 @@ importScripts("messages.js", "settings.js", "google-api.js")
 
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
-let currentSpreadsheet
+let spreadsheetId
+let spreadsheetSheet
 let maxHistorySize = 100
 
 function loadSettings() {
     settings.get([KEY_SHEET_ID, KEY_SHEET_SHEET], data => {
-        currentSpreadsheet = {
-            id: data[KEY_SHEET_ID],
-            sheet: data[KEY_SHEET_SHEET]
-        }
+        spreadsheetId = data[KEY_SHEET_ID]
+        spreadsheetSheet = data[KEY_SHEET_SHEET]
     })
 }
 
 function saveSettings() {
     settings.put({
-        [KEY_SHEET_ID]: currentSpreadsheet.id,
-        [KEY_SHEET_SHEET]: currentSpreadsheet.sheet
+        [KEY_SHEET_ID]: spreadsheetId,
+        [KEY_SHEET_SHEET]: spreadsheetSheet
     })
 }
 
 function ensureSpreadsheetExists(onComplete) {
-    /* NOTE! Sheet will be found even if it is in trash! (todo: use Drve API to chect that fact)*/
-    const spreadsheetId = currentSpreadsheet.id;
-
-    console.log("Checking spreadsheet: " + spreadsheetId)
-
+    /* NOTE! Sheet will be found even if it is in trash! (todo: use Drive API to check that fact)*/
     gapi.spreadsheets.getSpreadsheet(spreadsheetId, data => {
         if (data !== undefined) {
-            console.log("Existent spreadsheet: " + spreadsheetId)
+            console.log("Using existing spreadsheet: " + spreadsheetId)
 
             onComplete(data)
         } else {
             gapi.spreadsheets.createSpreadsheet(data => {
-                console.log("New spreadsheet created:" + JSON.stringify(data))
+                console.log("New spreadsheet created:" + data.spreadsheetId)
 
-                setCurrentSpreadsheet({
-                    id: data.spreadsheetId,
-                    sheet: data.sheets[0].properties.sheetId
-                })
+                spreadsheetId = data.spreadsheetId
+                setCurrentSheet(data.sheets[0].properties.sheetId)
                 onComplete(data)
             })
         }
@@ -68,8 +61,8 @@ function getSpreadsheetRange(info, sheetId, defaultSheetId) {
 
 function appendSheetData(text) {
     ensureSpreadsheetExists(info => {
-        const range = getSpreadsheetRange(info, currentSpreadsheet.sheet, 0)
-        gapi.spreadsheets.appendValue(currentSpreadsheet.id, range, text, () => {
+        const range = getSpreadsheetRange(info, spreadsheetSheet, 0)
+        gapi.spreadsheets.appendValue(spreadsheetId, range, text, () => {
             updateHistory(text)
 
             console.log("Saved: '" + text + "'")
@@ -79,8 +72,8 @@ function appendSheetData(text) {
 
 function getData() {
     ensureSpreadsheetExists(info => {
-            const range = getSpreadsheetRange(info, currentSpreadsheet.sheet, 0)
-            gapi.spreadsheets.getValues(currentSpreadsheet.id, range, data => {
+            const range = getSpreadsheetRange(info, spreadsheetSheet, 0)
+            gapi.spreadsheets.getValues(spreadsheetId, range, data => {
                 sendMessage(ACTION_DATA_CHANGED, data)
             })
         }
@@ -93,16 +86,16 @@ function getSpreadsheetInfo() {
     )
 }
 
-function getCurrentSpreadsheet() {
-    sendMessage(ACTION_CURRENT_SPREADSHEET_CHANGED, currentSpreadsheet)
+function getCurrentSheet() {
+    sendMessage(ACTION_CURRENT_SHEET_CHANGED, spreadsheetSheet)
 }
 
-function setCurrentSpreadsheet(spreadsheet) {
-    currentSpreadsheet = spreadsheet
+function setCurrentSheet(sheet) {
+    spreadsheetSheet = sheet
     saveSettings()
-    sendMessage(ACTION_CURRENT_SPREADSHEET_CHANGED, currentSpreadsheet)
+    sendMessage(ACTION_CURRENT_SHEET_CHANGED, spreadsheetSheet)
 
-    console.log("Current spreadsheet: " + JSON.stringify(currentSpreadsheet))
+    console.log("Current sheet: " + spreadsheetSheet)
 }
 
 function onLoginStateChanged(signedIn) {
@@ -115,7 +108,7 @@ function updateHistory(text) {
 
         let item = {
             text: text,
-            sheet: currentSpreadsheet.sheet,
+            sheet: spreadsheetSheet,
             time: Date.now()
         }
 
@@ -173,10 +166,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 getSpreadsheetInfo()
                 break
             case ACTION_GET_CURRENT_SPREADSHEET:
-                getCurrentSpreadsheet()
+                getCurrentSheet()
                 break
-            case ACTION_SET_CURRENT_SPREADSHEET:
-                setCurrentSpreadsheet(request.data)
+            case ACTION_SET_CURRENT_SHEET:
+                setCurrentSheet(request.data)
                 break
             default:
                 throw ("unknown action: " + request.action)

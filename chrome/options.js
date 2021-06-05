@@ -4,8 +4,8 @@ const $spreadsheetMoreButton = $("spreadsheet_more_button")
 
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
+let spreadsheetSheet
 let spreadsheetInfo
-let currentSpreadsheet
 
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
@@ -38,8 +38,8 @@ function onLoginStateChanged(loggedIn) {
     }
 }
 
-function onCurrentSpreadsheetChanged(spreadsheet) {
-    currentSpreadsheet = spreadsheet
+function onCurrentSheetChanged(sheet) {
+    spreadsheetSheet = sheet
 }
 
 function onSpreadsheetInfoChanged(info) {
@@ -57,18 +57,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_SPREADSHEET_INFO_CHANGED:
                 onSpreadsheetInfoChanged(request.data)
                 break
-            case ACTION_CURRENT_SPREADSHEET_CHANGED:
-                onCurrentSpreadsheetChanged(request.data);
+            case ACTION_CURRENT_SHEET_CHANGED:
+                onCurrentSheetChanged(request.data);
                 break;
             // case ACTION_HISTORY_CHANGED:
-                // const list = $("history_list");
-                // list.innerHTML = ""
-                // for (const item of request.data) {
-                //     const row = document.createElement("div")
-                //     row.innerHTML = item
-                //     list.appendChild(row);
-                // }
-                // break
+            // const list = $("history_list");
+            // list.innerHTML = ""
+            // for (const item of request.data) {
+            //     const row = document.createElement("div")
+            //     row.innerHTML = item
+            //     list.appendChild(row);
+            // }
+            // break
         }
         sendResponse()
     }
@@ -87,6 +87,13 @@ $logoutButton.addEventListener("click", () => {
 $spreadsheetMoreButton.addEventListener("click", () => {
     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
     updateSpreadsheetSection()
+})
+
+$("change_spreadsheet-button").addEventListener("click", () => {
+    const newSpreadsheetId = prompt("Enter spreadsheet ID", spreadsheetId)
+    if (newSpreadsheetId) {
+        sendMessage(ACTION_SET_SPREADSHEET, newSpreadsheetId)
+    }
 })
 
 updateLoginSection()

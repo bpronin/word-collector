@@ -3,8 +3,7 @@ const $optionsSection = $("options_sections")
 const $sheetEdit = $("sheet_edit")
 const $spreadsheetLink = $("spreadsheet_link")
 
-let currentSpreadsheet
-let spreadsheetInfo
+let spreadsheetSheets
 
 function onLoginStateChanged(loggedIn) {
     setVisible($authSection, !loggedIn)
@@ -14,24 +13,25 @@ function onLoginStateChanged(loggedIn) {
     }
 }
 
-function onCurrentSpreadsheetChanged(spreadsheet) {
-    currentSpreadsheet = spreadsheet
-    $sheetEdit.value = currentSpreadsheet.sheet
-    $spreadsheetLink.setAttribute("href", spreadsheetUrl(currentSpreadsheet.id))
+function onCurrentSheetChanged(sheet) {
+    $sheetEdit.value = sheet
 }
 
-function onSpreadsheetInfoChanged(info) {
-    spreadsheetInfo = info
+function onSpreadsheetChanged(info) {
+    spreadsheetSheets = info.sheets
 
     $sheetEdit.innerHTML = ""
 
-    for (const sheet of spreadsheetInfo.sheets) {
+    for (const sheet of spreadsheetSheets) {
+
         const option = document.createElement("option")
         option.value = sheet.properties.sheetId
         option.innerHTML = sheet.properties.title
 
         $sheetEdit.appendChild(option)
     }
+
+    $spreadsheetLink.setAttribute("href", spreadsheetUrl(info.spreadsheetId))
 
     sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
     sendMessage(ACTION_GET_HISTORY)
@@ -40,14 +40,16 @@ function onSpreadsheetInfoChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const sheetInfo = spreadsheetInfo.sheets.find((sheet) => {
+        const sheet = spreadsheetSheets.find((sheet) => {
             return sheet.properties.sheetId === parseInt(item.sheet)
         })
 
+        const title = sheet ? sheet.properties.title : R("[removed]")
+
         window.alert(
-            "Text: " + item.text + "\n" +
-            "Sheet: " + sheetInfo.properties.title + "\n" +
-            "Time: " + new Date(item.time).toUTCString()
+            R("Text: ") + item.text + "\n" +
+            R("Sheet: ") + title + "\n" +
+            R("Time: ") + new Date(item.time).toUTCString()
         )
     }
 
@@ -72,10 +74,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             onLoginStateChanged(request.data);
             break
         case ACTION_SPREADSHEET_INFO_CHANGED:
-            onSpreadsheetInfoChanged(request.data)
+            onSpreadsheetChanged(request.data)
             break
-        case ACTION_CURRENT_SPREADSHEET_CHANGED:
-            onCurrentSpreadsheetChanged(request.data)
+        case ACTION_CURRENT_SHEET_CHANGED:
+            onCurrentSheetChanged(request.data)
             break
         case ACTION_HISTORY_CHANGED:
             onHistoryChanged(request.data)
@@ -97,8 +99,7 @@ $("login_button").addEventListener("click", () => {
 })
 
 $sheetEdit.addEventListener('change', (event) => {
-    currentSpreadsheet.sheet = event.target.value
-    sendMessage(ACTION_SET_CURRENT_SPREADSHEET, currentSpreadsheet)
+    sendMessage(ACTION_SET_CURRENT_SHEET, event.target.value)
 })
 
 setVisible($authSection, false)

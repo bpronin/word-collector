@@ -1,13 +1,22 @@
-
 function $(componentId) {
     return document.getElementById(componentId)
 }
+
+/**
+ * Resource string
+ * @param stringId
+ * @returns {*}
+ */
+function R(stringId) {
+    return stringId   /*todo: implement */
+}
+
 function setVisible(component, visible) {
     component.style.display = visible ? "block" : "none"
 }
 
 function spreadsheetUrl(spreadsheetId) {
-    return  "https://docs.google.com/spreadsheets/d/" + spreadsheetId
+    return "https://docs.google.com/spreadsheets/d/" + spreadsheetId
 }
 
 function openUniqueTab(url) {
