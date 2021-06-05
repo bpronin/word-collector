@@ -1,14 +1,14 @@
-const authSection = $("login_section")
-const optionsSection = $("options_section")
-const sheetEdit = $("sheet_edit")
-const spreadsheetLink = $("spreadsheet_link")
+const $authSection = $("login_section")
+const $optionsSection = $("options_section")
+const $sheetEdit = $("sheet_edit")
+const $spreadsheetLink = $("spreadsheet_link")
 
 let currentSpreadsheet
 let spreadsheetInfo
 
 function onLoginStateChanged(loggedIn) {
-    setVisible(authSection, !loggedIn)
-    setVisible(optionsSection, loggedIn)
+    setVisible($authSection, !loggedIn)
+    setVisible($optionsSection, loggedIn)
     if (loggedIn) {
         sendMessage(ACTION_GET_SPREADSHEET_INFO)
     }
@@ -16,21 +16,21 @@ function onLoginStateChanged(loggedIn) {
 
 function onCurrentSpreadsheetChanged(spreadsheet) {
     currentSpreadsheet = spreadsheet
-    sheetEdit.value = currentSpreadsheet.sheet
-    spreadsheetLink.setAttribute("href", URL_GOOGLE_SPREADSHEETS + currentSpreadsheet.id)
+    $sheetEdit.value = currentSpreadsheet.sheet
+    $spreadsheetLink.setAttribute("href", spreadsheetUrl(currentSpreadsheet.id))
 }
 
 function onSpreadsheetInfoChanged(info) {
     spreadsheetInfo = info
 
-    sheetEdit.innerHTML = ""
+    $sheetEdit.innerHTML = ""
 
     for (const sheet of spreadsheetInfo.sheets) {
         const option = document.createElement("option")
         option.value = sheet.properties.sheetId
         option.innerHTML = sheet.properties.title
 
-        sheetEdit.appendChild(option)
+        $sheetEdit.appendChild(option)
     }
 
     sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
@@ -51,8 +51,8 @@ function onHistoryChanged(history) {
         )
     }
 
-    const list = $("history_list");
-    list.innerHTML = ""  /*todo: update, do not rebuild all rows */
+    const $historyList = $("history_list");
+    $historyList.innerHTML = ""  /*todo: update, do not rebuild all rows */
     for (let index = 0; index < history.length; index++) {
         const item = history[index];
 
@@ -62,7 +62,7 @@ function onHistoryChanged(history) {
         row.innerHTML = item.text
         row.addEventListener("click", () => onRowClick(item))
 
-        list.appendChild(row);
+        $historyList.appendChild(row);
     }
 }
 
@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse()
 })
 
-spreadsheetLink.addEventListener("click", (event) => {
+$spreadsheetLink.addEventListener("click", (event) => {
     openUniqueTab(event.target.href)
 })
 
@@ -96,11 +96,11 @@ $("login_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
-sheetEdit.addEventListener('change', (event) => {
+$sheetEdit.addEventListener('change', (event) => {
     currentSpreadsheet.sheet = event.target.value
     sendMessage(ACTION_SET_CURRENT_SPREADSHEET, currentSpreadsheet)
 })
 
-setVisible(authSection, false)
-setVisible(optionsSection, false)
+setVisible($authSection, false)
+setVisible($optionsSection, false)
 sendMessage(ACTION_GET_LOGIN_STATE)

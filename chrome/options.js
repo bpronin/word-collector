@@ -1,14 +1,16 @@
-const spreadsheetMoreButton = $("spreadsheet_more_button")
+const $loginButton = $("login_button");
+const $logoutButton = $("logout_button");
+const $spreadsheetMoreButton = $("spreadsheet_more_button")
 
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
+let spreadsheetInfo
 let currentSpreadsheet
 
-let spreadsheetInfo
 function updateLoginSection() {
-    setVisible($("login_section"), !accountLoggedIn)
+    setVisible($loginButton, !accountLoggedIn)
+    setVisible($logoutButton, accountLoggedIn)
     setVisible($("options_section"), accountLoggedIn)
-
 }
 
 function updateSpreadsheetSection() {
@@ -16,14 +18,16 @@ function updateSpreadsheetSection() {
     const idEdit = $("spreadsheet_id_label")
     if (spreadsheetInfo) {
         nameLabel.innerHTML = spreadsheetInfo.properties.title
+        nameLabel.setAttribute("href", spreadsheetUrl(spreadsheetInfo.spreadsheetId))
         idEdit.innerHTML = spreadsheetInfo.spreadsheetId
     } else {
         nameLabel.innerHTML = ""
+        nameLabel.setAttribute("href", "")
         idEdit.innerHTML = ""
     }
 
     setVisible($("spreadsheet_more_section"), spreadsheetMoreSectionVisible)
-    spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? "expand_less" : "expand_more"
+    $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? "expand_less" : "expand_more"
 }
 
 function onLoginStateChanged(loggedIn) {
@@ -56,45 +60,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             case ACTION_CURRENT_SPREADSHEET_CHANGED:
                 onCurrentSpreadsheetChanged(request.data);
                 break;
-            case ACTION_DATA_CHANGED:
-                const dataLabel = $("data_label")
-                dataLabel.innerHTML = JSON.stringify(request.data)
-                break
-            case ACTION_HISTORY_CHANGED:
-                const list = $("history_list");
-                list.innerHTML = ""
-                for (const item of request.data) {
-                    const row = document.createElement("div")
-                    row.innerHTML = item
-                    list.appendChild(row);
-                }
-                break
+            // case ACTION_HISTORY_CHANGED:
+                // const list = $("history_list");
+                // list.innerHTML = ""
+                // for (const item of request.data) {
+                //     const row = document.createElement("div")
+                //     row.innerHTML = item
+                //     list.appendChild(row);
+                // }
+                // break
         }
         sendResponse()
     }
 )
 
-$("login_button").addEventListener("click", () => {
+$loginButton.addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
-$("logout_button").addEventListener("click", () => {
+$logoutButton.addEventListener("click", () => {
     if (confirm("Sign out from Google spreadsheets?")) {
         sendMessage(ACTION_LOGOUT)
     }
 })
 
-spreadsheetMoreButton.addEventListener("click", () => {
+$spreadsheetMoreButton.addEventListener("click", () => {
     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
     updateSpreadsheetSection()
-})
-
-$("get_button").addEventListener("click", () => {
-    sendMessage(ACTION_GET_HISTORY)
-})
-
-$("link_button").addEventListener("click", () => {
-    openUniqueTab(URL_GOOGLE_SPREADSHEETS + currentSpreadsheet.id)
 })
 
 updateLoginSection()

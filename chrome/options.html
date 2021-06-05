@@ -10,48 +10,30 @@
 </head>
 <body>
 
-<br>
-<button id="get_button">Get</button>
-<br>
-<button id="put_button">Put</button>
-<br>
-<button id="link_button">Open spreadsheet in browser</button>
-<div id="status_label">???</div>
-<div id="data_label">???</div>
-<hr>
-<div id="history_list" style="overflow-y: scroll; height:100px;"></div>
-<hr>
-
 <div class="settings-header">Words Collector settings</div>
 
 <div class="settings-content">
     <div class="settings-sections">
-        <div id="login_section" class="setting-section">
-            <div class="setting-title">Google account</div>
-            <div class="setting-row">
-                <button id="login_button">Sign in to Google spreadsheets</button>
-            </div>
-        </div>
         <div id="options_section">
-            <div class="setting-section">
-                <div class="setting-title">Google account</div>
-                <div class="setting-row">
-                    <div id="login_label">%CURRENT USER%</div>
-                    <div id="logout_button" class="font-button material-icons">logout</div>
-                </div>
-            </div>
             <div class="setting-section">
                 <div class="setting-title">Spreadsheet</div>
                 <div class="setting-row">
-                    <div id="spreadsheet_name_label">%SPREADSHEET NAME%</div>
-                    <div id="spreadsheet_more_button" class="font-button material-icons">expand_more</div>
+                    <a id="spreadsheet_name_label" href="https://spreadsheet"> %SPREADSHEET NAME% </a>
+                    <span id="spreadsheet_more_button" class="font-button material-icons">expand_more</span>
                 </div>
                 <div id="spreadsheet_more_section">
                     <div class="setting-title">Spreadsheet ID</div>
                     <div class="setting-row">
-                        <div id="spreadsheet_id_label">%SPREADSHEET ID%</div>
+                        <span id="spreadsheet_id_label">%SPREADSHEET ID%</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div id="login_section" class="setting-section">
+            <div class="setting-title">Google account</div>
+            <div class="setting-row">
+                <button id="login_button">Sign in to Google spreadsheets</button>
+                <button id="logout_button" class="dangerous-button">Sign out from Google spreadsheets</button>
             </div>
         </div>
     </div>

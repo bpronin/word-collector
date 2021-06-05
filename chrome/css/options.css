@@ -3,9 +3,10 @@ body {
 }
 
 .settings-header {
-    /*background-color: #678ab4;*/
+    color: #6e6e6e;
+    /*background-color: royalblue;*/
     font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
     padding: 8px;
@@ -21,7 +22,8 @@ body {
 
 .settings-sections {
     background-color: #FFFFFF;
-    width: 66%;
+    width: 50%;
+    min-width: 600px;
     border-color: #C8C8C8;
     border-width: 1px;
     border-style: solid;

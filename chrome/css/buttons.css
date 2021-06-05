@@ -1,3 +1,9 @@
+.dangerous-button {
+    color: #eae9e9;
+    background-color: crimson;
+    border-color: #9c1c1c;
+}
+
 .font-button {
     width: 24px;
     height: 24px;
