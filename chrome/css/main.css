@@ -35,6 +35,25 @@ label {
     min-height: 28px;
 }
 
+/*textarea {*/
+/*    resize: none;*/
+/*    white-space: nowrap;*/
+/*    font-size: 14px;*/
+/*    overflow-x: scroll; !* or hidden *!*/
+/*    border-style: solid;*/
+/*    border-width: 1px;*/
+/*    border-color: #d7d6d6;*/
+/*    border-radius: 0;*/
+/*}*/
+
+input {
+    padding: 7px 4px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d7d6d6;
+    border-radius: 0;
+}
+
 .sub_section {
     padding-top: 12px;
 }

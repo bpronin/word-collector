@@ -15,15 +15,15 @@ function updateLoginSection() {
 
 function updateSpreadsheetSection() {
     const nameLabel = $("spreadsheet_name_label")
-    const idEdit = $("spreadsheet_id_label")
+    const idEdit = $("spreadsheet_id_edit")
     if (spreadsheetInfo) {
         nameLabel.innerHTML = spreadsheetInfo.properties.title
         nameLabel.setAttribute("href", spreadsheetUrl(spreadsheetInfo.spreadsheetId))
-        idEdit.innerHTML = spreadsheetInfo.spreadsheetId
+        idEdit.value = spreadsheetInfo.spreadsheetId
     } else {
         nameLabel.innerHTML = ""
         nameLabel.setAttribute("href", "")
-        idEdit.innerHTML = ""
+        idEdit.value = ""
     }
 
     setVisible($("spreadsheet_more_section"), spreadsheetMoreSectionVisible)
