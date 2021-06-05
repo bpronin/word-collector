@@ -3,6 +3,8 @@
 
 <head>
     <title>Word Collector settings</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons" >
+    <link rel="stylesheet" href="css/buttons.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/options.css">
 </head>
@@ -10,33 +12,39 @@
 
 <button id="sign_in_button">Sign in</button>
 <br>
-<button id="sign_out_button">Sign out</button>
-<br>
+<!--<button id="sign_out_button">Sign out</button>-->
+<!--<br>-->
 <button id="get_button">Get</button>
 <br>
 <button id="put_button">Put</button>
 <br>
 <button id="link_button">Open spreadsheet in browser</button>
 <div id="status_label">???</div>
-<div id="sheet_label">???</div>
 <div id="data_label">???</div>
 <hr>
 <div id="history_list" style="overflow-y: scroll; height:100px;"></div>
 <hr>
 
-<!--<div class="settings-header">Words Collector settings</div>-->
+<div class="settings-header">Words Collector settings</div>
 
-<!--<div class="settings-content">-->
-<!--    <div class="settings-sections">-->
-<!--        <div class="setting-section">-->
-<!--            <div class="setting-title">File path</div>-->
-<!--            <div class="setting-row">-->
-<!--                <div id="filename_label" class="setting-label">%PATH%</div>-->
-<!--                <button id="filename_button" class="setting-button">A</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="settings-content">
+    <div class="settings-sections">
+        <div class="setting-section">
+            <div class="setting-title">Google account</div>
+            <div class="setting-row">
+                <div id="login_label">%CURRENT USER%</div>
+                <div id="logout_button" class="font-button material-icons">logout</div>
+            </div>
+        </div>
+        <div class="setting-section">
+            <div class="setting-title">Spreadsheet</div>
+            <div class="setting-row">
+                <div id="sheet_label">%SHEET_ID%</div>
+                <div id="sheet_button" class="font-button material-icons">more_vert</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 

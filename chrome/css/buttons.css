@@ -1,0 +1,31 @@
+.font-button {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    user-select: none;
+    color: #000000;
+}
+
+.font-button:hover {
+    color: #868686;
+}
+
+.font-button:active {
+    color: #c6c6c6;
+}
+
+.font-button-inverted {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    user-select: none;
+    color: #FFFFFF;
+}
+
+.font-button-inverted:hover {
+    color: #c6c6c6;
+}
+
+.font-button-inverted:active {
+    color: #000000;
+}

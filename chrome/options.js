@@ -42,8 +42,10 @@ document.getElementById("sign_in_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
-document.getElementById("sign_out_button").addEventListener("click", () => {
-    sendMessage(ACTION_LOGOUT)
+document.getElementById("logout_button").addEventListener("click", () => {
+    if (confirm("Sign out from Google spreadsheets?")) {
+        sendMessage(ACTION_LOGOUT)
+    }
 })
 
 document.getElementById("get_button").addEventListener("click", () => {
