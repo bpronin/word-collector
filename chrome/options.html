@@ -14,24 +14,28 @@
 
 <div class="settings-content">
     <div class="settings-sections">
-        <div id="options_section">
+        <div id="options_sections">
+
             <div class="setting-section">
-                <div class="setting-title">Spreadsheet</div>
-                <div class="setting-row">
+                <div class="setting-row-title">Spreadsheet</div>
+                <div class="setting-row-content">
                     <a id="spreadsheet_name_label" href="https://spreadsheet"> %SPREADSHEET NAME% </a>
                     <span id="spreadsheet_more_button" class="font-button material-icons">expand_more</span>
                 </div>
+
                 <div id="spreadsheet_more_section">
-                    <div class="setting-title"><label for="spreadsheet_id_edit">Spreadsheet ID</label></div>
-                    <div class="setting-row">
+                    <div class="setting-row-title"><label for="spreadsheet_id_edit">Spreadsheet ID</label></div>
+                    <div class="setting-row-content">
                         <input type="text" id="spreadsheet_id_edit" size="60" value="%SPREADSHEET ID%"/>
                     </div>
                 </div>
             </div>
+
         </div>
+
         <div id="login_section" class="setting-section">
-            <div class="setting-title">Google account</div>
-            <div class="setting-row">
+            <div class="setting-row-title">Google account</div>
+            <div class="setting-row-content">
                 <button id="login_button">Sign in to Google spreadsheets</button>
                 <button id="logout_button" class="dangerous-button">Sign out from Google spreadsheets</button>
             </div>

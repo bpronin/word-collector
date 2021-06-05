@@ -1,6 +1,7 @@
 body {
     width: 300px;
     margin: 0;
+    font-size: 14px;
 }
 
 #header {
@@ -17,7 +18,7 @@ body {
     margin: 12px;
 }
 
-#options_section {
+#options_sections {
     width: 100%;
 }
 
@@ -30,9 +31,8 @@ body {
     width: 100%;
     height: 120px;
     margin-top: 4px;
-    /*margin-bottom: 8px;*/
     overflow-y: scroll;
-    font-size: 12px;
+    font-size: smaller;
 }
 
 #sheet_edit {

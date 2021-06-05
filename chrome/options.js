@@ -10,7 +10,7 @@ let currentSpreadsheet
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
     setVisible($logoutButton, accountLoggedIn)
-    setVisible($("options_section"), accountLoggedIn)
+    setVisible($("options_sections"), accountLoggedIn)
 }
 
 function updateSpreadsheetSection() {

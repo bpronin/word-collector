@@ -1,19 +1,18 @@
 body {
-    background-color: #F4F4F4;
+    margin: 0;
+    background-color: whitesmoke;
+    font-size: 14px;
 }
 
 .settings-header {
-    color: #6e6e6e;
-    /*background-color: royalblue;*/
-    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
-    font-size: 20px;
+    color: dimgrey;
+    font-size: large;
     font-weight: bold;
     text-align: center;
-    padding: 8px;
+    padding: 24px;
 }
 
 .settings-content {
-    padding: 8px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -21,32 +20,31 @@ body {
 }
 
 .settings-sections {
-    background-color: #FFFFFF;
+    background-color: white;
     width: 50%;
     min-width: 600px;
-    border-color: #C8C8C8;
+    border-color: lightgrey;
     border-width: 1px;
     border-style: solid;
     border-bottom: none;
-    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
-    font-size: 14px;
 }
 
 .setting-section {
-    border-bottom-color: #C8C8C8;
+    border-bottom-color: lightgrey;
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    padding: 16px;
+    padding: 24px;
 }
 
-.setting-title {
-    color: #6e6e6e;
+.setting-row-title {
+    color: dimgrey;
+    padding-top: 12px;
     padding-bottom: 8px;
     width: 100%;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
-.setting-row {
+.setting-row-content {
     display: flex;
     justify-content: space-between
 }

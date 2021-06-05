@@ -1,5 +1,5 @@
 const $authSection = $("login_section")
-const $optionsSection = $("options_section")
+const $optionsSection = $("options_sections")
 const $sheetEdit = $("sheet_edit")
 const $spreadsheetLink = $("spreadsheet_link")
 
