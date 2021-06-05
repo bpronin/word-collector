@@ -18,15 +18,17 @@ function onCurrentSheetChanged(sheet) {
 }
 
 function onSpreadsheetChanged(info) {
-    spreadsheetSheets = info.sheets
+    spreadsheetSheets = {}
 
     $sheetEdit.innerHTML = ""
 
-    for (const sheet of spreadsheetSheets) {
+    for (const sheet of info.sheets) {
+        const id = sheet.properties.sheetId
+        spreadsheetSheets[id] = sheet.properties.title
 
         const option = document.createElement("option")
-        option.value = sheet.properties.sheetId
-        option.innerHTML = sheet.properties.title
+        option.value = id
+        option.innerHTML = spreadsheetSheets[id]
 
         $sheetEdit.appendChild(option)
     }
@@ -40,11 +42,7 @@ function onSpreadsheetChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const sheet = spreadsheetSheets.find((sheet) => {
-            return sheet.properties.sheetId === parseInt(item.sheet)
-        })
-
-        const title = sheet ? sheet.properties.title : R("[removed]")
+        const title = spreadsheetSheets[item.sheet] || R("[removed]")
 
         window.alert(
             R("Text: ") + item.text + "\n" +
