@@ -13,13 +13,6 @@ function loadSettings() {
     })
 }
 
-function saveSettings() {
-    settings.put({
-        [KEY_SHEET_ID]: spreadsheetId,
-        [KEY_SHEET_SHEET]: spreadsheetSheet
-    })
-}
-
 function ensureSpreadsheetExists(onComplete) {
     /* NOTE! Sheet will be found even if it is in trash! (todo: use Drive API to check that fact)*/
     gapi.spreadsheets.getSpreadsheet(spreadsheetId, data => {
@@ -28,24 +21,24 @@ function ensureSpreadsheetExists(onComplete) {
 
             onComplete(data)
         } else {
-            gapi.spreadsheets.createSpreadsheet(data => {
-                console.log("New spreadsheet created:" + data.spreadsheetId)
+            gapi.spreadsheets.createSpreadsheet(info => {
+                console.log("New spreadsheet created:" + info.spreadsheetId)
 
-                spreadsheetId = data.spreadsheetId
-                setCurrentSheet(data.sheets[0].properties.sheetId)
-                onComplete(data)
+                spreadsheetId = info.spreadsheetId
+                spreadsheetSheet = info.sheets[0].properties.sheetId
+
+                settings.put({
+                    [KEY_SHEET_ID]: spreadsheetId,
+                    [KEY_SHEET_SHEET]: spreadsheetSheet
+                })
+
+                onComplete(info)
             })
         }
     })
 }
 
-function getLoginState() {
-    gapi.checkLoggedIn(token => {
-        sendMessage(ACTION_LOGIN_STATE_CHANGED, token !== undefined)
-    })
-}
-
-function getSpreadsheetRange(info, sheetId, defaultSheetId) {
+function formatSpreadsheetRange(info, sheetId, defaultSheetId) {
     const sheet = info.sheets.find(element => {
         return element.properties.sheetId === parseInt(sheetId)
     })
@@ -53,15 +46,21 @@ function getSpreadsheetRange(info, sheetId, defaultSheetId) {
     if (sheet !== undefined) {
         return sheet.properties.title
     } else if (defaultSheetId !== undefined) {
-        return getSpreadsheetRange(info, defaultSheetId)
+        return formatSpreadsheetRange(info, defaultSheetId)
     } else {
         throw "Invalid sheet id:" + sheetId
     }
 }
 
-function appendSheetData(text) {
+function getLoginState() {
+    gapi.checkLoggedIn(token => {
+        sendMessage(MSG_LOGIN_STATE_CHANGED, token !== undefined)
+    })
+}
+
+function appendValue(text) {
     ensureSpreadsheetExists(info => {
-        const range = getSpreadsheetRange(info, spreadsheetSheet, 0)
+        const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
         gapi.spreadsheets.appendValue(spreadsheetId, range, text, () => {
             updateHistory(text)
 
@@ -72,34 +71,52 @@ function appendSheetData(text) {
 
 function getData() {
     ensureSpreadsheetExists(info => {
-            const range = getSpreadsheetRange(info, spreadsheetSheet, 0)
+            const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
             gapi.spreadsheets.getValues(spreadsheetId, range, data => {
-                sendMessage(ACTION_DATA_CHANGED, data)
+                sendMessage(MSG_DATA_CHANGED, data)
             })
         }
     )
 }
 
-function getSpreadsheetInfo() {
+function getSpreadshee() {
     ensureSpreadsheetExists(data =>
-        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
+        sendMessage(MSG_SPREADSHEET_CHANGED, data)
     )
 }
 
+function setSpreadsheet(newSpreadsheetId) {
+    /* NOTE! Sheet will be found even if it is in trash! (todo: use Drive API to check that fact)*/
+    gapi.spreadsheets.getSpreadsheet(newSpreadsheetId, info => {
+
+        if (info) {
+            console.log("Found spreadsheet: " + newSpreadsheetId)
+
+            spreadsheetId = info.spreadsheetId
+            spreadsheetSheet = info.sheets[0].properties.sheetId
+
+            settings.put({
+                [KEY_SHEET_ID]: spreadsheetId,
+                [KEY_SHEET_SHEET]: spreadsheetSheet
+            })
+        } else {
+            console.log("Spreadsheet not found: " + newSpreadsheetId)
+        }
+
+        sendMessage(MSG_SPREADSHEET_CHANGED, info)
+    })
+}
+
 function getCurrentSheet() {
-    sendMessage(ACTION_CURRENT_SHEET_CHANGED, spreadsheetSheet)
+    sendMessage(MSG_CURRENT_SHEET_CHANGED, spreadsheetSheet)
 }
 
 function setCurrentSheet(sheet) {
     spreadsheetSheet = sheet
-    saveSettings()
-    sendMessage(ACTION_CURRENT_SHEET_CHANGED, spreadsheetSheet)
+    settings.put({[KEY_SHEET_SHEET]: spreadsheetSheet})
+    sendMessage(MSG_CURRENT_SHEET_CHANGED, spreadsheetSheet)
 
     console.log("Current sheet: " + spreadsheetSheet)
-}
-
-function onLoginStateChanged(signedIn) {
-    sendMessage(ACTION_LOGIN_STATE_CHANGED, signedIn)
 }
 
 function updateHistory(text) {
@@ -121,14 +138,18 @@ function updateHistory(text) {
             history.unshift(item)
         }
         settings.put(data)
-        sendMessage(ACTION_HISTORY_CHANGED, data.history)
+        sendMessage(MSG_HISTORY_CHANGED, data.history)
     })
 }
 
 function getHistory() {
     settings.get(KEY_HISTORY, data => {
-        sendMessage(ACTION_HISTORY_CHANGED, data.history)
+        sendMessage(MSG_HISTORY_CHANGED, data.history)
     })
+}
+
+function onLoginStateChanged(signedIn) {
+    sendMessage(MSG_LOGIN_STATE_CHANGED, signedIn)
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -141,34 +162,37 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(info => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        appendSheetData(info.selectionText)
+        appendValue(info.selectionText)
     }
 })
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
-            case ACTION_DEBUG:
+            case MSG_DEBUG:
                 getData()
                 break
-            case ACTION_LOGIN:
+            case MSG_LOGIN:
                 gapi.login()
                 break
-            case ACTION_LOGOUT:
+            case MSG_LOGOUT:
                 gapi.logout()
                 break
-            case ACTION_GET_LOGIN_STATE:
+            case MSG_GET_LOGIN_STATE:
                 getLoginState()
                 break
-            case ACTION_GET_HISTORY:
+            case MSG_GET_HISTORY:
                 getHistory()
                 break
-            case ACTION_GET_SPREADSHEET_INFO:
-                getSpreadsheetInfo()
+            case MSG_GET_SPREADSHEET:
+                getSpreadshee()
                 break
-            case ACTION_GET_CURRENT_SPREADSHEET:
+            case MSG_SET_SPREADSHEET:
+                setSpreadsheet(request.data)
+                break
+            case MSG_GET_CURRENT_SHEET:
                 getCurrentSheet()
                 break
-            case ACTION_SET_CURRENT_SHEET:
+            case MSG_SET_CURRENT_SHEET:
                 setCurrentSheet(request.data)
                 break
             default:

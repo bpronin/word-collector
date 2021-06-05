@@ -5,6 +5,7 @@ const $spreadsheetMoreButton = $("spreadsheet_more_button")
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
 let spreadsheetId
+let spreadsheetTitle
 
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
@@ -12,7 +13,7 @@ function updateLoginSection() {
     setVisible($("options_sections"), accountLoggedIn)
 }
 
-function updateSpreadsheetSection(spreadsheetTitle) {
+function updateSpreadsheetSection() {
     const nameLabel = $("spreadsheet_name_label")
     const idLabel = $("spreadsheet_id_label")
     if (spreadsheetId) {
@@ -33,7 +34,7 @@ function onLoginStateChanged(loggedIn) {
     accountLoggedIn = loggedIn
     updateLoginSection()
     if (accountLoggedIn) {
-        sendMessage(ACTION_GET_SPREADSHEET_INFO)
+        sendMessage(MSG_GET_SPREADSHEET)
     }
 }
 
@@ -41,20 +42,25 @@ function onCurrentSheetChanged(sheet) {
 }
 
 function onSpreadsheetInfoChanged(info) {
-    spreadsheetId = info.spreadsheetId
-    updateSpreadsheetSection(info.properties.title)
-    sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
+    if (info) {
+        spreadsheetId = info.spreadsheetId
+        spreadsheetTitle = info.properties.title
+        updateSpreadsheetSection()
+        sendMessage(MSG_GET_CURRENT_SHEET)
+    } else {
+        alert(R("Spreadsheet does not exists."))
+    }
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         switch (request.action) {
-            case ACTION_LOGIN_STATE_CHANGED:
+            case MSG_LOGIN_STATE_CHANGED:
                 onLoginStateChanged(request.data)
                 break
-            case ACTION_SPREADSHEET_INFO_CHANGED:
+            case MSG_SPREADSHEET_CHANGED:
                 onSpreadsheetInfoChanged(request.data)
                 break
-            case ACTION_CURRENT_SHEET_CHANGED:
+            case MSG_CURRENT_SHEET_CHANGED:
                 onCurrentSheetChanged(request.data);
                 break;
         }
@@ -63,12 +69,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 )
 
 $loginButton.addEventListener("click", () => {
-    sendMessage(ACTION_LOGIN)
+    sendMessage(MSG_LOGIN)
 })
 
 $logoutButton.addEventListener("click", () => {
-    if (confirm("Sign out from Google spreadsheets?")) {
-        sendMessage(ACTION_LOGOUT)
+    if (confirm(R("Sign out from Google spreadsheets?"))) {
+        sendMessage(MSG_LOGOUT)
     }
 })
 
@@ -78,12 +84,12 @@ $spreadsheetMoreButton.addEventListener("click", () => {
 })
 
 $("change_spreadsheet-button").addEventListener("click", () => {
-    const newSpreadsheetId = prompt("Enter spreadsheet ID", spreadsheetId)
+    const newSpreadsheetId = prompt(R("Enter spreadsheet ID"), spreadsheetId)
     if (newSpreadsheetId) {
-        sendMessage(ACTION_SET_SPREADSHEET, newSpreadsheetId)
+        sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)
     }
 })
 
 updateLoginSection()
 updateSpreadsheetSection()
-sendMessage(ACTION_GET_LOGIN_STATE)
+sendMessage(MSG_GET_LOGIN_STATE)

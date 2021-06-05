@@ -9,7 +9,7 @@ function onLoginStateChanged(loggedIn) {
     setVisible($authSection, !loggedIn)
     setVisible($optionsSection, loggedIn)
     if (loggedIn) {
-        sendMessage(ACTION_GET_SPREADSHEET_INFO)
+        sendMessage(MSG_GET_SPREADSHEET)
     }
 }
 
@@ -35,8 +35,8 @@ function onSpreadsheetChanged(info) {
 
     $spreadsheetLink.setAttribute("href", spreadsheetUrl(info.spreadsheetId))
 
-    sendMessage(ACTION_GET_CURRENT_SPREADSHEET)
-    sendMessage(ACTION_GET_HISTORY)
+    sendMessage(MSG_GET_CURRENT_SHEET)
+    sendMessage(MSG_GET_HISTORY)
 }
 
 function onHistoryChanged(history) {
@@ -68,16 +68,16 @@ function onHistoryChanged(history) {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
-        case ACTION_LOGIN_STATE_CHANGED:
+        case MSG_LOGIN_STATE_CHANGED:
             onLoginStateChanged(request.data);
             break
-        case ACTION_SPREADSHEET_INFO_CHANGED:
+        case MSG_SPREADSHEET_CHANGED:
             onSpreadsheetChanged(request.data)
             break
-        case ACTION_CURRENT_SHEET_CHANGED:
+        case MSG_CURRENT_SHEET_CHANGED:
             onCurrentSheetChanged(request.data)
             break
-        case ACTION_HISTORY_CHANGED:
+        case MSG_HISTORY_CHANGED:
             onHistoryChanged(request.data)
             break
     }
@@ -93,13 +93,13 @@ $("settings_button").addEventListener("click", () => {
 })
 
 $("login_button").addEventListener("click", () => {
-    sendMessage(ACTION_LOGIN)
+    sendMessage(MSG_LOGIN)
 })
 
 $sheetEdit.addEventListener('change', (event) => {
-    sendMessage(ACTION_SET_CURRENT_SHEET, event.target.value)
+    sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
 })
 
 setVisible($authSection, false)
 setVisible($optionsSection, false)
-sendMessage(ACTION_GET_LOGIN_STATE)
+sendMessage(MSG_GET_LOGIN_STATE)
