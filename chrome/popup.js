@@ -4,7 +4,7 @@ const sheetEdit = document.getElementById("sheet_edit")
 const spreadsheetLink = document.getElementById("spreadsheet_link")
 
 let currentSpreadsheet
-let spreadsheetSheetsInfo
+let spreadsheetInfo
 
 function onLoginStateChanged(loggedIn) {
     setVisible(authSection, !loggedIn)
@@ -21,11 +21,11 @@ function onCurrentSpreadsheetChanged(spreadsheet) {
 }
 
 function onSpreadsheetInfoChanged(info) {
-    spreadsheetSheetsInfo = info
+    spreadsheetInfo = info
 
     sheetEdit.innerHTML = ""
 
-    for (const sheet of spreadsheetSheetsInfo) {
+    for (const sheet of spreadsheetInfo.sheets) {
         const option = document.createElement("option")
         option.value = sheet.properties.sheetId
         option.innerHTML = sheet.properties.title
@@ -40,7 +40,7 @@ function onSpreadsheetInfoChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const sheetInfo = spreadsheetSheetsInfo.find((sheet) => {
+        const sheetInfo = spreadsheetInfo.sheets.find((sheet) => {
             return sheet.properties.sheetId === parseInt(item.sheet)
         })
 

@@ -89,7 +89,7 @@ function getData() {
 
 function getSpreadsheetInfo() {
     ensureSpreadsheetExists(data =>
-        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data.sheets)
+        sendMessage(ACTION_SPREADSHEET_INFO_CHANGED, data)
     )
 }
 
