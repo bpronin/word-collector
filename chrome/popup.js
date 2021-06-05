@@ -1,7 +1,7 @@
-const authSection = document.getElementById("login_section")
-const optionsSection = document.getElementById("options_section")
-const sheetEdit = document.getElementById("sheet_edit")
-const spreadsheetLink = document.getElementById("spreadsheet_link")
+const authSection = $("login_section")
+const optionsSection = $("options_section")
+const sheetEdit = $("sheet_edit")
+const spreadsheetLink = $("spreadsheet_link")
 
 let currentSpreadsheet
 let spreadsheetInfo
@@ -51,7 +51,7 @@ function onHistoryChanged(history) {
         )
     }
 
-    const list = document.getElementById("history_list");
+    const list = $("history_list");
     list.innerHTML = ""  /*todo: update, do not rebuild all rows */
     for (let index = 0; index < history.length; index++) {
         const item = history[index];
@@ -88,11 +88,11 @@ spreadsheetLink.addEventListener("click", (event) => {
     openUniqueTab(event.target.href)
 })
 
-document.getElementById("settings_button").addEventListener("click", () => {
+$("settings_button").addEventListener("click", () => {
     openUniqueTab(chrome.runtime.getURL("options.html"))
 })
 
-document.getElementById("login_button").addEventListener("click", () => {
+$("login_button").addEventListener("click", () => {
     sendMessage(ACTION_LOGIN)
 })
 
