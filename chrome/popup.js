@@ -34,7 +34,7 @@ function onSpreadsheetChanged(info) {
         $sheetEdit.appendChild(option)
     }
 
-    $spreadsheetLink.setAttribute("href", spreadsheetUrl(info.spreadsheetId))
+    $spreadsheetLink.href = spreadsheetUrl(info.spreadsheetId)
     $sheetEdit.disabled = false
     $historyList.disabled = false
 

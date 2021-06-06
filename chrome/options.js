@@ -18,11 +18,11 @@ function updateSpreadsheetSection() {
     const idLabel = $("spreadsheet_id_label")
     if (spreadsheetId) {
         nameLabel.innerHTML = spreadsheetTitle
-        nameLabel.setAttribute("href", spreadsheetUrl(spreadsheetId))
+        nameLabel.href = spreadsheetUrl(spreadsheetId)
         idLabel.innerHTML = spreadsheetId
     } else {
         nameLabel.innerHTML = ""
-        nameLabel.setAttribute("href", "")
+        nameLabel.href = ""
         idLabel.innerHTML = ""
     }
 
@@ -48,7 +48,7 @@ function onSpreadsheetInfoChanged(info) {
         updateSpreadsheetSection()
         sendMessage(MSG_GET_CURRENT_SHEET)
     } else {
-        alert(R("Spreadsheet does not exists."))
+        alert(R("Specified spreadsheet does not exists."))
     }
 }
 

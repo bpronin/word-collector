@@ -79,7 +79,7 @@ function getData() {
     )
 }
 
-function getSpreadshee() {
+function getSpreadsheet() {
     ensureSpreadsheetExists(data =>
         sendMessage(MSG_SPREADSHEET_CHANGED, data)
     )
@@ -125,6 +125,7 @@ function updateHistory(text) {
 
         let item = {
             text: text,
+            spreadsheetId: spreadsheetId,
             sheet: spreadsheetSheet,
             time: Date.now()
         }
@@ -184,7 +185,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 getHistory()
                 break
             case MSG_GET_SPREADSHEET:
-                getSpreadshee()
+                getSpreadsheet()
                 break
             case MSG_SET_SPREADSHEET:
                 setSpreadsheet(request.data)
