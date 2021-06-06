@@ -1,12 +1,12 @@
 body {
     width: 300px;
     margin: 0;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 #header {
-    background-color: #808080;
-    color: #fff;
+    background-color: gray;
+    color: white;
     font-weight: bolder;
     padding: 4px 8px;
     display: flex;
