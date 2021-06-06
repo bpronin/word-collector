@@ -72,7 +72,7 @@ function onSpreadsheetChanged(info) {
         updateSpreadsheetSheetSection()
         sendMessage(MSG_GET_CURRENT_SHEET)
     } else {
-        alert(R("Specified spreadsheet does not exists."))
+        alert(RR("Specified spreadsheet does not exists."))
     }
 }
 
@@ -81,7 +81,7 @@ $loginButton.addEventListener("click", async () => {
 })
 
 $logoutButton.addEventListener("click", async () => {
-    if (confirm(R("Sign out from Google spreadsheets?"))) {
+    if (confirm(RR("Sign out from Google spreadsheets?"))) {
         sendMessage(MSG_LOGOUT)
     }
 })
@@ -92,7 +92,7 @@ $spreadsheetMoreButton.addEventListener("click", async () => {
 })
 
 $("change_spreadsheet-button").addEventListener("click", async () => {
-    const newSpreadsheetId = prompt(R("Enter spreadsheet ID"), spreadsheetId)
+    const newSpreadsheetId = prompt(RR("Enter spreadsheet ID"), spreadsheetId)
     if (newSpreadsheetId) {
         sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)
     }
@@ -118,6 +118,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     }
 )
 
+localizeHtml()
 updateLoginSection()
 updateSpreadsheetSection()
 updateSpreadsheetSheetSection()

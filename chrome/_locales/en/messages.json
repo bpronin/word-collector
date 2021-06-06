@@ -1,0 +1,50 @@
+{
+  "app_title": {
+    "message": "Words collector",
+    "description": "Application title."
+  },
+  "app_settings": {
+    "message": "Words collector settings",
+    "description": "Options page title."
+  },
+  "spreadsheet": {
+    "message": "Spreadsheet",
+    "description": "Option title."
+  },
+  "spreadsheet_id": {
+    "message": "Spreadsheet ID",
+    "description": "Option title."
+  },
+  "spreadsheet_sheet": {
+    "message": "Sheet",
+    "description": "Option title."
+  },
+  "google_account": {
+    "message": "Google account",
+    "description": "Option title."
+  },
+  "add_text_to_sheet": {
+    "message": "Add text to sheet",
+    "description": "TODO:"
+  },
+  "change": {
+    "message": "Change",
+    "description": "Option button title"
+  },
+  "open_spreadsheet_in_browser": {
+    "message": "Open spreadsheet in browser",
+    "description": "TODO:"
+  },
+  "history": {
+    "message": "History",
+    "description": "TODO:"
+  },
+  "sign_in_to_google": {
+    "message": "Sign in to Google Spreadsheets",
+    "description": "TODO:"
+  },
+  "sign_out_from_google": {
+    "message": "Sign out from Google Spreadsheets",
+    "description": "TODO:"
+  }
+}

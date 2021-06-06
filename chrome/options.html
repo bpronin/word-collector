@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Word Collector settings</title>
+    <title i18n="app_settings"></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
     <link rel="stylesheet" href="css/buttons.css">
     <link rel="stylesheet" href="css/main.css">
@@ -10,44 +10,40 @@
 </head>
 <body>
 
-<div class="settings-header">Words Collector settings</div>
+<div class="settings-header" i18n="app_settings"></div>
 
 <div class="settings-content">
     <div class="settings-sections">
         <div id="options_sections">
-
             <div class="setting-section">
-                <div class="setting-row-title">Spreadsheet</div>
+                <div class="setting-row-title" i18n="spreadsheet"></div>
                 <div class="setting-row-content">
-                    <a id="spreadsheet_name_label" href="https://spreadsheet"> %SPREADSHEET NAME% </a>
+                    <a id="spreadsheet_name_label" href="https://spreadsheet"></a>
                     <span id="spreadsheet_more_button" class="font-button material-icons">expand_more</span>
                 </div>
-
                 <div id="spreadsheet_more_section">
-                    <div class="setting-row-title"> Spreadsheet ID</div>
+                    <div class="setting-row-title" i18n="spreadsheet_id"></div>
                     <div class="setting-row-content">
-                        <span id="spreadsheet_id_label">%SPREADSHEET ID%</span>
-                        <button id="change_spreadsheet-button">Change</button>
+                        <span id="spreadsheet_id_label"></span>
+                        <button id="change_spreadsheet-button" i18n="change"></button>
                     </div>
                 </div>
             </div>
-
             <div class="setting-section">
-                <div class="setting-row-title">Spreadsheet sheet</div>
+                <div class="setting-row-title" i18n="spreadsheet_sheet"></div>
                 <div class="setting-row-content">
                     <div>
-                        <label for="sheet_edit">Add new words to</label>
+                        <label for="sheet_edit" i18n="add_text_to_sheet"></label>
                         <select id="sheet_edit"></select>
                     </div>
                 </div>
             </div>
         </div>
-
         <div id="login_section" class="setting-section">
-            <div class="setting-row-title">Google account</div>
+            <div class="setting-row-title" i18n="google_account"></div>
             <div class="setting-row-content">
-                <button id="login_button">Sign in to Google Spreadsheets</button>
-                <button id="logout_button" class="dangerous-button">Sign out from Google spreadsheets</button>
+                <button id="login_button" i18n="sign_in_to_google"></button>
+                <button id="logout_button" class="dangerous-button" i18n="sign_out_from_google"></button>
             </div>
         </div>
     </div>
@@ -55,9 +51,9 @@
 
 </body>
 
-<script src="util.js"></script>
-<script src="resources.js"></script>
-<script src="messages.js"></script>
-<script src="options.js"></script>
+<script src="js/util.js"></script>
+<script src="js/resources.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/options.js"></script>
 
 </html>

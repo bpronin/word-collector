@@ -44,14 +44,14 @@ function onSpreadsheetChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const spreadsheet = item.spreadsheetId || R("[unknown]")
-        const title = spreadsheetSheets[item.sheet] || (R("[removed ID:") + item.sheet + "]")
+        const spreadsheet = item.spreadsheetId || RR("[unknown]")
+        const title = spreadsheetSheets[item.sheet] || (RR("[removed ID:") + item.sheet + "]")
 
         window.alert(
-            R("Text: ") + item.text + "\n" +
-            R("Spreadsheet: ") + spreadsheet + "\n" +
-            R("Sheet: ") + title + "\n" +
-            R("Time: ") + new Date(item.time).toUTCString()
+            RR("Text: ") + item.text + "\n" +
+            RR("Spreadsheet: ") + spreadsheet + "\n" +
+            RR("Sheet: ") + title + "\n" +
+            RR("Time: ") + new Date(item.time).toUTCString()
         )
     }
 
@@ -105,6 +105,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     sendResponse()
 })
 
+localizeHtml()
 setVisible($authSection, false)
 setVisible($optionsSection, false)
 $sheetEdit.disabled = true

@@ -33,7 +33,7 @@ const gapi = {
                 fetch(input, init)
                     .then(response => {
                         if (response.ok) {
-                            console.log("Request accepted")
+                            // console.log("Request accepted")
 
                             response.json()
                                 .then(data => {

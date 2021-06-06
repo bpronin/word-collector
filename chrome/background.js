@@ -1,4 +1,4 @@
-importScripts("messages.js", "settings.js", "resources.js", "google-api.js")
+importScripts("js/resources.js", "js/messages.js", "js/settings.js", "js/google-api.js")
 
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
@@ -159,11 +159,15 @@ function onLoginStateChanged(loggedIn) {
     if (loggedIn) {
         chrome.contextMenus.create({
             id: CONTEXT_MENU_ID,
-            title: R("Save to collection"),
+            title: i18n.save_to_collection[navigator.language],
             contexts: ["selection"]
         })
+
+        console.log("Menu item created")
     } else {
         chrome.contextMenus.remove(CONTEXT_MENU_ID)
+
+        console.log("Menu item removed")
     }
 
     sendMessage(MSG_LOGIN_STATE_CHANGED, loggedIn)
@@ -210,20 +214,10 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     }
 })
 
-/* This block will be called once at extension installation */
-// chrome.runtime.onInstalled.addListener(() => {
-//     console.log("Installed")
-// })
-
-gapi.setup(onLoginStateChanged)
 loadSettings()
+gapi.setup(onLoginStateChanged)
+gapi.checkLoggedIn(token => {
+    onLoginStateChanged(token !== undefined)
+})
 
 console.log("Initialized")
-
-// todo:if(chrome.runtime.lastError) {
-//     // Something went wrong
-//     console.warn("Whoops.. " + chrome.runtime.lastError.message);
-//     // Maybe explain that to the user too?
-// } else {
-//     // No errors, you can use entry
-// }

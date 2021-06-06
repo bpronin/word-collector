@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Words collector</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons" >
+    <title i18n="app_title"></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
     <link rel="stylesheet" href="css/buttons.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/popup.css">
@@ -11,36 +11,36 @@
 <body>
 
 <div id="header">
-    Words collector
+    <span i18n="app_title"></span>
     <div id="settings_button" class="font-button-inverted material-icons">settings</div>
 </div>
 
 <div id="content">
 
     <div id="login_section">
-        <button id="login_button">Sign in to Google Spreadsheets</button>
+        <button id="login_button" i18n="sign_in_to_google"></button>
     </div>
 
     <div id="options_sections">
         <div>
-            <label for="sheet_edit">Add words to sheet</label>
+            <label for="sheet_edit" i18n="add_text_to_sheet"></label>
             <select id="sheet_edit"></select>
         </div>
         <div class="sub_section">
-            <label for="history_list">Words history</label>
+            <label for="history_list" i18n="history"></label>
             <div id="history_list" class="bordered"></div>
         </div>
         <div class="sub_section">
-            <a id="spreadsheet_link" href="?">Open words spreadsheet in browser</a>
+            <a id="spreadsheet_link" href="?" i18n="open_spreadsheet_in_browser"></a>
         </div>
     </div>
 
 </div>
 
-<script src="util.js"></script>
-<script src="resources.js"></script>
-<script src="messages.js"></script>
-<script src="popup.js"></script>
+<script src="js/util.js"></script>
+<script src="js/resources.js"></script>
+<script src="js/messages.js"></script>
+<script src="js/popup.js"></script>
 
 </body>
 </html>

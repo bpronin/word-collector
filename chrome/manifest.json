@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "name": "Words Collector",
   "description": "Collects words",
+  "default_locale": "en",
   "permissions": [
     "contextMenus",
     "tabs",

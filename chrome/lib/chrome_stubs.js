@@ -68,6 +68,10 @@ let chrome = chrome || {
     extension: {
         getBackgroundPage() {
         }
+    },
+    i18n: {
+        getMessage() {
+        }
     }
 }
 
