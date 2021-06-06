@@ -70,7 +70,7 @@ function onHistoryChanged(history) {
     }
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     switch (request.action) {
         case MSG_LOGIN_STATE_CHANGED:
             onLoginStateChanged(request.data);
@@ -88,19 +88,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse()
 })
 
-$spreadsheetLink.addEventListener("click", (event) => {
+$spreadsheetLink.addEventListener("click", async (event) => {
     openUniqueTab(event.target.href)
 })
 
-$("settings_button").addEventListener("click", () => {
+$("settings_button").addEventListener("click", async () => {
     openUniqueTab(chrome.runtime.getURL("options.html"))
 })
 
-$("login_button").addEventListener("click", () => {
+$("login_button").addEventListener("click", async () => {
     sendMessage(MSG_LOGIN)
 })
 
-$sheetEdit.addEventListener('change', (event) => {
+$sheetEdit.addEventListener('change', async (event) => {
     sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
 })
 

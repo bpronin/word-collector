@@ -52,7 +52,7 @@ function onSpreadsheetInfoChanged(info) {
     }
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         switch (request.action) {
             case MSG_LOGIN_STATE_CHANGED:
                 onLoginStateChanged(request.data)
@@ -68,22 +68,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 )
 
-$loginButton.addEventListener("click", () => {
+$loginButton.addEventListener("click", async () => {
     sendMessage(MSG_LOGIN)
 })
 
-$logoutButton.addEventListener("click", () => {
+$logoutButton.addEventListener("click", async () => {
     if (confirm(R("Sign out from Google spreadsheets?"))) {
         sendMessage(MSG_LOGOUT)
     }
 })
 
-$spreadsheetMoreButton.addEventListener("click", () => {
+$spreadsheetMoreButton.addEventListener("click", async () => {
     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
     updateSpreadsheetSection()
 })
 
-$("change_spreadsheet-button").addEventListener("click", () => {
+$("change_spreadsheet-button").addEventListener("click", async () => {
     const newSpreadsheetId = prompt(R("Enter spreadsheet ID"), spreadsheetId)
     if (newSpreadsheetId) {
         sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)

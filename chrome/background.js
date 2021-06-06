@@ -13,27 +13,33 @@ function loadSettings() {
     })
 }
 
+function createSpreadsheet(onComplete) {
+    gapi.spreadsheets.createSpreadsheet(info => {
+        console.log("New spreadsheet created:" + info.spreadsheetId)
+
+        spreadsheetId = info.spreadsheetId
+        spreadsheetSheet = info.sheets[0].properties.sheetId
+
+        settings.put({
+            [KEY_SHEET_ID]: spreadsheetId,
+            [KEY_SHEET_SHEET]: spreadsheetSheet
+        })
+
+        onComplete(info)
+    })
+}
+
 function ensureSpreadsheetExists(onComplete) {
     /* NOTE! Sheet will be found even if it is in trash! (todo: use Drive API to check that fact)*/
-    gapi.spreadsheets.getSpreadsheet(spreadsheetId, data => {
-        if (data !== undefined) {
+    gapi.spreadsheets.getSpreadsheet(spreadsheetId, info => {
+        if (info) {
             console.log("Using existing spreadsheet: " + spreadsheetId)
 
-            onComplete(data)
+            onComplete(info)
         } else {
-            gapi.spreadsheets.createSpreadsheet(info => {
-                console.log("New spreadsheet created:" + info.spreadsheetId)
+            console.log("Spreadsheet does not exists:" + spreadsheetId)
 
-                spreadsheetId = info.spreadsheetId
-                spreadsheetSheet = info.sheets[0].properties.sheetId
-
-                settings.put({
-                    [KEY_SHEET_ID]: spreadsheetId,
-                    [KEY_SHEET_SHEET]: spreadsheetSheet
-                })
-
-                onComplete(info)
-            })
+            createSpreadsheet(onComplete);
         }
     })
 }
@@ -153,21 +159,19 @@ function onLoginStateChanged(signedIn) {
     sendMessage(MSG_LOGIN_STATE_CHANGED, signedIn)
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: CONTEXT_MENU_ID,
-        title: TEXT_SAVE_SELECTION,
-        contexts: ["selection"]
-    })
+chrome.contextMenus.create({
+    id: CONTEXT_MENU_ID,
+    title: TEXT_SAVE_SELECTION,
+    contexts: ["selection"]
 })
 
-chrome.contextMenus.onClicked.addListener(info => {
+chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
         appendValue(info.selectionText)
     }
 })
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         switch (request.action) {
             case MSG_DEBUG:
                 getData()
@@ -202,6 +206,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse()
     }
 )
+
+// chrome.runtime.onInstalled.addListener(() => {
+// })
 
 gapi.setup(onLoginStateChanged)
 loadSettings()
