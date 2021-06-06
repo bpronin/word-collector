@@ -45,10 +45,12 @@ function onSpreadsheetChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const title = spreadsheetSheets[item.sheet] || R("[removed]")
+        const spreadsheet = item.spreadsheetId || R("[unknown]")
+        const title = spreadsheetSheets[item.sheet] || (R("[removed ID:") + item.sheet + "]")
 
         window.alert(
             R("Text: ") + item.text + "\n" +
+            R("Spreadsheet: ") + spreadsheet + "\n" +
             R("Sheet: ") + title + "\n" +
             R("Time: ") + new Date(item.time).toUTCString()
         )
