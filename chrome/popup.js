@@ -2,6 +2,7 @@ const $authSection = $("login_section")
 const $optionsSection = $("options_sections")
 const $sheetEdit = $("sheet_edit")
 const $spreadsheetLink = $("spreadsheet_link")
+const $historyList = $("history_list")
 
 let spreadsheetSheets
 
@@ -34,6 +35,8 @@ function onSpreadsheetChanged(info) {
     }
 
     $spreadsheetLink.setAttribute("href", spreadsheetUrl(info.spreadsheetId))
+    $sheetEdit.disabled = false
+    $historyList.disabled = false
 
     sendMessage(MSG_GET_CURRENT_SHEET)
     sendMessage(MSG_GET_HISTORY)
@@ -51,7 +54,6 @@ function onHistoryChanged(history) {
         )
     }
 
-    const $historyList = $("history_list");
     $historyList.innerHTML = ""  /*todo: update, do not rebuild all rows */
     for (let index = 0; index < history.length; index++) {
         const item = history[index];
@@ -102,4 +104,7 @@ $sheetEdit.addEventListener('change', (event) => {
 
 setVisible($authSection, false)
 setVisible($optionsSection, false)
+$sheetEdit.disabled = true
+$historyList.disabled = true
+
 sendMessage(MSG_GET_LOGIN_STATE)
