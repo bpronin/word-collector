@@ -44,14 +44,14 @@ function onSpreadsheetChanged(info) {
 function onHistoryChanged(history) {
 
     function onRowClick(item) {
-        const spreadsheet = item.spreadsheetId || RR("[unknown]")
-        const title = spreadsheetSheets[item.sheet] || (RR("[removed ID:") + item.sheet + "]")
+        const spreadsheet = item.spreadsheetId || ("[" + R("unknown") + "]")
+        const title = spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
 
         window.alert(
-            RR("Text: ") + item.text + "\n" +
-            RR("Spreadsheet: ") + spreadsheet + "\n" +
-            RR("Sheet: ") + title + "\n" +
-            RR("Time: ") + new Date(item.time).toUTCString()
+            R("text") + ": " + item.text + "\n" +
+            R("spreadsheet") + ": " + spreadsheet + "\n" +
+            R("spreadsheet_sheet") + ": " + title + "\n" +
+            R("time") + ": " + new Date(item.time).toUTCString()
         )
     }
 

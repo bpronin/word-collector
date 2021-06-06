@@ -1,6 +1,82 @@
 {
-  "words_collector_settings": {
-    "message": "Настройки Words collector",
-    "description": "Options page title."
+  "app_name": {
+    "message": "Words Collector",
+    "description": "Application title"
+  },
+  "app_description": {
+    "message": "Позволяет сохранять выделенный текст в Google таблице",
+    "description": "Application description"
+  },
+  "app_settings": {
+    "message": "Настройки Words Collector",
+    "description": "Options page title"
+  },
+  "spreadsheet": {
+    "message": "Таблица",
+    "description": "Option title"
+  },
+  "spreadsheet_id": {
+    "message": "ID таблицы",
+    "description": "Option title"
+  },
+  "spreadsheet_sheet": {
+    "message": "Лист",
+    "description": "Option title"
+  },
+  "google_account": {
+    "message": "Аккаунт Google",
+    "description": "Option title"
+  },
+  "add_text_to_sheet": {
+    "message": "Добавлять текс на лист",
+    "description": "TODO:"
+  },
+  "change": {
+    "message": "Изменить",
+    "description": "Option button title"
+  },
+  "open_spreadsheet_in_browser": {
+    "message": "Открыть таблицу в браузере",
+    "description": "TODO:"
+  },
+  "history": {
+    "message": "История",
+    "description": "TODO:"
+  },
+  "sign_in_to_google": {
+    "message": "Войти в Google Таблицы",
+    "description": "TODO:"
+  },
+  "sign_out_from_google": {
+    "message": "Выйти из Google Таблиц",
+    "description": "TODO:"
+  },
+  "sign_out_from_google_question": {
+    "message": "Выйти из Google Таблиц?",
+    "description": "TODO:"
+  },
+  "text": {
+    "message": "Текст",
+    "description": "Text title"
+  },
+  "time": {
+    "message": "Время",
+    "description": "Time title"
+  },
+  "enter_spreadsheet_id": {
+    "message": "Новый ID таблицы",
+    "description": "TODO:"
+  },
+  "specified_spreadsheet_does_not_exists": {
+    "message": "Таблицы с указанным ID не существует.",
+    "description": "TODO:"
+  },
+  "unknown": {
+    "message": "неизвестно",
+    "description": "Unknown item name"
+  },
+  "removed_id": {
+    "message": "удалено",
+    "description": "Item name if removed"
   }
 }

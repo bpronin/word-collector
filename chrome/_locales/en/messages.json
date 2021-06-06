@@ -1,27 +1,31 @@
 {
-  "app_title": {
-    "message": "Words collector",
-    "description": "Application title."
+  "app_name": {
+    "message": "Words Collector",
+    "description": "Application title"
+  },
+  "app_description": {
+    "message": "Allows to save selected text to Google spreadsheet",
+    "description": "Application description"
   },
   "app_settings": {
-    "message": "Words collector settings",
-    "description": "Options page title."
+    "message": "Words Collector settings",
+    "description": "Options page title"
   },
   "spreadsheet": {
     "message": "Spreadsheet",
-    "description": "Option title."
+    "description": "Option title"
   },
   "spreadsheet_id": {
     "message": "Spreadsheet ID",
-    "description": "Option title."
+    "description": "Option title"
   },
   "spreadsheet_sheet": {
     "message": "Sheet",
-    "description": "Option title."
+    "description": "Option title"
   },
   "google_account": {
     "message": "Google account",
-    "description": "Option title."
+    "description": "Option title"
   },
   "add_text_to_sheet": {
     "message": "Add text to sheet",
@@ -46,5 +50,33 @@
   "sign_out_from_google": {
     "message": "Sign out from Google Spreadsheets",
     "description": "TODO:"
+  },
+  "sign_out_from_google_question": {
+    "message": "Sign out from Google Spreadsheets?",
+    "description": "TODO:"
+  },
+  "text": {
+    "message": "Text",
+    "description": "Text title"
+  },
+  "time": {
+    "message": "Time",
+    "description": "Time title"
+  },
+  "enter_spreadsheet_id": {
+    "message": "Enter spreadsheet ID",
+    "description": "TODO:"
+  },
+  "specified_spreadsheet_does_not_exists": {
+    "message": "Specified spreadsheet does not exists.",
+    "description": "TODO:"
+  },
+  "unknown": {
+    "message": "unknown",
+    "description": "Unknown item name"
+  },
+  "removed_id": {
+    "message": "removed",
+    "description": "Item name if removed"
   }
 }

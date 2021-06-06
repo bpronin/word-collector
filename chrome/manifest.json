@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "name": "Words Collector",
-  "description": "Collects words",
+  "name": "__MSG_app_name__",
+  "description": "__MSG_app_description__",
   "default_locale": "en",
   "permissions": [
     "contextMenus",
