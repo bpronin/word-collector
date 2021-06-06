@@ -2,15 +2,6 @@ function $(componentId) {
     return document.getElementById(componentId)
 }
 
-/**
- * Resource string
- * @param stringId
- * @returns {*}
- */
-function R(stringId) {
-    return stringId   /*todo: implement */
-}
-
 function setVisible(component, visible) {
     component.style.display = visible ? "block" : "none"
 }

@@ -20,9 +20,7 @@ function onCurrentSheetChanged(sheet) {
 
 function onSpreadsheetChanged(info) {
     spreadsheetSheets = {}
-
     $sheetEdit.innerHTML = ""
-
     for (const sheet of info.sheets) {
         const id = sheet.properties.sheetId
         spreadsheetSheets[id] = sheet.properties.title
@@ -33,10 +31,11 @@ function onSpreadsheetChanged(info) {
 
         $sheetEdit.appendChild(option)
     }
+    $sheetEdit.disabled = false
 
     $spreadsheetLink.href = spreadsheetUrl(info.spreadsheetId)
-    $sheetEdit.disabled = false
-    $historyList.disabled = false
+
+    $historyList.disabled = true
 
     sendMessage(MSG_GET_CURRENT_SHEET)
     sendMessage(MSG_GET_HISTORY)
@@ -68,7 +67,25 @@ function onHistoryChanged(history) {
 
         $historyList.appendChild(row);
     }
+
+    $historyList.disabled = false
 }
+
+$spreadsheetLink.addEventListener("click", async (event) => {
+    openUniqueTab(event.target.href)
+})
+
+$("settings_button").addEventListener("click", async () => {
+    openUniqueTab(chrome.runtime.getURL("options.html"))
+})
+
+$("login_button").addEventListener("click", async () => {
+    sendMessage(MSG_LOGIN)
+})
+
+$sheetEdit.addEventListener('change', async (event) => {
+    sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
+})
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     switch (request.action) {
@@ -86,22 +103,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             break
     }
     sendResponse()
-})
-
-$spreadsheetLink.addEventListener("click", async (event) => {
-    openUniqueTab(event.target.href)
-})
-
-$("settings_button").addEventListener("click", async () => {
-    openUniqueTab(chrome.runtime.getURL("options.html"))
-})
-
-$("login_button").addEventListener("click", async () => {
-    sendMessage(MSG_LOGIN)
-})
-
-$sheetEdit.addEventListener('change', async (event) => {
-    sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
 })
 
 setVisible($authSection, false)

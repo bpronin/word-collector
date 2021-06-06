@@ -1,4 +1,4 @@
-importScripts("messages.js", "settings.js", "google-api.js")
+importScripts("messages.js", "settings.js", "resources.js", "google-api.js")
 
 const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
 
@@ -155,14 +155,53 @@ function getHistory() {
     })
 }
 
-function onLoginStateChanged(signedIn) {
-    sendMessage(MSG_LOGIN_STATE_CHANGED, signedIn)
+function onLoginStateChanged(loggedIn) {
+    if (loggedIn) {
+        chrome.contextMenus.create({
+            id: CONTEXT_MENU_ID,
+            title: R("Save to collection"),
+            contexts: ["selection"]
+        })
+    } else {
+        chrome.contextMenus.remove(CONTEXT_MENU_ID)
+    }
+
+    sendMessage(MSG_LOGIN_STATE_CHANGED, loggedIn)
 }
 
-chrome.contextMenus.create({
-    id: CONTEXT_MENU_ID,
-    title: TEXT_SAVE_SELECTION,
-    contexts: ["selection"]
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    switch (request.action) {
+        case MSG_DEBUG:
+            getData()
+            break
+        case MSG_LOGIN:
+            gapi.login()
+            break
+        case MSG_LOGOUT:
+            gapi.logout()
+            break
+        case MSG_GET_LOGIN_STATE:
+            getLoginState()
+            break
+        case MSG_GET_HISTORY:
+            getHistory()
+            break
+        case MSG_GET_SPREADSHEET:
+            getSpreadsheet()
+            break
+        case MSG_SET_SPREADSHEET:
+            setSpreadsheet(request.data)
+            break
+        case MSG_GET_CURRENT_SHEET:
+            getCurrentSheet()
+            break
+        case MSG_SET_CURRENT_SHEET:
+            setCurrentSheet(request.data)
+            break
+        default:
+            throw ("Unknown action: " + request.action)
+    }
+    sendResponse()
 })
 
 chrome.contextMenus.onClicked.addListener(async (info) => {
@@ -171,46 +210,20 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
     }
 })
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-        switch (request.action) {
-            case MSG_DEBUG:
-                getData()
-                break
-            case MSG_LOGIN:
-                gapi.login()
-                break
-            case MSG_LOGOUT:
-                gapi.logout()
-                break
-            case MSG_GET_LOGIN_STATE:
-                getLoginState()
-                break
-            case MSG_GET_HISTORY:
-                getHistory()
-                break
-            case MSG_GET_SPREADSHEET:
-                getSpreadsheet()
-                break
-            case MSG_SET_SPREADSHEET:
-                setSpreadsheet(request.data)
-                break
-            case MSG_GET_CURRENT_SHEET:
-                getCurrentSheet()
-                break
-            case MSG_SET_CURRENT_SHEET:
-                setCurrentSheet(request.data)
-                break
-            default:
-                throw ("unknown action: " + request.action)
-        }
-        sendResponse()
-    }
-)
-
+/* This block will be called once at extension installation */
 // chrome.runtime.onInstalled.addListener(() => {
+//     console.log("Installed")
 // })
 
 gapi.setup(onLoginStateChanged)
 loadSettings()
 
-console.log("Installed")
+console.log("Initialized")
+
+// todo:if(chrome.runtime.lastError) {
+//     // Something went wrong
+//     console.warn("Whoops.. " + chrome.runtime.lastError.message);
+//     // Maybe explain that to the user too?
+// } else {
+//     // No errors, you can use entry
+// }

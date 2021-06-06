@@ -72,7 +72,7 @@ const gapi = {
 
     checkLoggedIn(onToken) {
         chrome.identity.getAuthToken({interactive: false}, token => {
-            if (onToken !== undefined) onToken(token)
+            onToken(token)
         })
     },
 
