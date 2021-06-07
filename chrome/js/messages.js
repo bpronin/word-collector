@@ -12,6 +12,7 @@ const MSG_SET_CURRENT_SHEET = "set-current-sheet"
 const MSG_CURRENT_SHEET_CHANGED = "current-sheet-changed"
 
 const MSG_GET_HISTORY = "get-history"
+const MSG_CLEAR_HISTORY = "clear-history"
 const MSG_HISTORY_CHANGED = "history-changed"
 
 const MSG_DATA_CHANGED = "data-changed"

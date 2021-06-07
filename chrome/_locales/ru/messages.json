@@ -28,12 +28,16 @@
     "description": "Option title"
   },
   "add_text_to_sheet": {
-    "message": "Добавлять текс на лист",
+    "message": "Добавлять текст на лист",
     "description": "TODO:"
   },
   "change": {
     "message": "Изменить",
     "description": "Option button title"
+  },
+  "clear_history": {
+    "message": "Очистить историю",
+    "description": "Clear history option button title"
   },
   "open_spreadsheet_in_browser": {
     "message": "Открыть таблицу в браузере",
@@ -51,9 +55,13 @@
     "message": "Выйти из Google Таблиц",
     "description": "TODO:"
   },
-  "sign_out_from_google_question": {
-    "message": "Выйти из Google Таблиц?",
-    "description": "TODO:"
+  "sign_out_from_google_alert": {
+    "message": "Выйдя из Google Таблиц вы не сможете использовать Words Collector.",
+    "description": "Confirmation message"
+  },
+  "clear_history_alert": {
+    "message": "Информация об истории будет удалена.",
+    "description": "Confirmation message"
   },
   "text": {
     "message": "Текст",
@@ -75,7 +83,7 @@
     "message": "неизвестно",
     "description": "Unknown item name"
   },
-  "removed_id": {
+  "removed": {
     "message": "удалено",
     "description": "Item name if removed"
   }

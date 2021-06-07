@@ -155,6 +155,12 @@ function getHistory() {
     })
 }
 
+function clearHistory() {
+    settings.remove(KEY_HISTORY, () => {
+        sendMessage(MSG_HISTORY_CHANGED)
+    })
+}
+
 function onLoginStateChanged(loggedIn) {
     if (loggedIn) {
         chrome.contextMenus.create({
@@ -201,6 +207,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             break
         case MSG_SET_CURRENT_SHEET:
             setCurrentSheet(request.data)
+            break
+        case MSG_CLEAR_HISTORY:
+            clearHistory()
             break
         default:
             throw ("Unknown action: " + request.action)

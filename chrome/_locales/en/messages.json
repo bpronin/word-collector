@@ -35,6 +35,10 @@
     "message": "Change",
     "description": "Option button title"
   },
+  "clear_history": {
+    "message": "Clear history",
+    "description": "Clear history option button title"
+  },
   "open_spreadsheet_in_browser": {
     "message": "Open spreadsheet in browser",
     "description": "TODO:"
@@ -51,9 +55,13 @@
     "message": "Sign out from Google Spreadsheets",
     "description": "TODO:"
   },
-  "sign_out_from_google_question": {
-    "message": "Sign out from Google Spreadsheets?",
-    "description": "TODO:"
+  "sign_out_from_google_alert": {
+    "message": "Signing out from Google Spreadsheets you won't be able to use Words Collector.",
+    "description": "Confirmation message"
+  },
+  "clear_history_alert": {
+    "message": "All history data will be lost.",
+    "description": "Confirmation message"
   },
   "text": {
     "message": "Text",
@@ -75,7 +83,7 @@
     "message": "unknown",
     "description": "Unknown item name"
   },
-  "removed_id": {
+  "removed": {
     "message": "removed",
     "description": "Item name if removed"
   }

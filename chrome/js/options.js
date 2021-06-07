@@ -2,9 +2,11 @@ const $loginButton = $("login_button");
 const $logoutButton = $("logout_button");
 const $spreadsheetMoreButton = $("spreadsheet_more_button")
 const $sheetEdit = $("sheet_edit")
+const $historyMoreButton = $("history_more_button")
 
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
+let historyMoreSectionVisible = false
 let spreadsheetId
 let spreadsheetTitle
 let spreadsheetSheets
@@ -30,6 +32,11 @@ function updateSpreadsheetSection() {
 
     setVisible($("spreadsheet_more_section"), spreadsheetMoreSectionVisible)
     $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? "expand_less" : "expand_more"
+}
+
+function updateHistorySection() {
+    setVisible($("history_more_section"), historyMoreSectionVisible)
+    $historyMoreButton.innerHTML = historyMoreSectionVisible ? "expand_less" : "expand_more"
 }
 
 function updateSpreadsheetSheetSection() {
@@ -58,6 +65,61 @@ function onCurrentSheetChanged(sheet) {
     $sheetEdit.value = sheet
 }
 
+function onHistoryChanged(history) {
+
+    function spreadsheetName(item) {
+        return item.spreadsheetId || ("[" + R("unknown") + "]")
+    }
+
+    function sheetName(item) {
+        return spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
+    }
+
+    function formatTime(item) {
+        return new Date(item.time).toLocaleString()
+    }
+
+    function onRowClick(item) {
+        window.alert(
+            R("text") + ": " + item.text + "\n" +
+            R("spreadsheet") + ": " + spreadsheetName(item) + "\n" +
+            R("spreadsheet_sheet") + ": " + sheetName(item) + "\n" +
+            R("time") + ": " + formatTime(item)
+        )
+    }
+
+    const $historyList = $("history_list")
+    $historyList.innerHTML = ""  /*todo: update, instead of rebuild all rows */
+
+    if (history) {
+        for (const item of history) {
+            const $row = document.createElement("div")
+            $row.tabIndex = 0 /* makes row tabbale */
+            $row.className = "list_item"
+            $row.addEventListener("click", () => onRowClick(item))
+
+            const $colText = document.createElement("div")
+            $colText.className = "list_column_60"
+            $colText.innerHTML = item.text
+
+            const $colSheet = document.createElement("div")
+            $colSheet.className = "list_column_20"
+            $colSheet.innerHTML = sheetName(item)
+
+            const $colTime = document.createElement("div")
+            $colTime.className = "list_column_20"
+            $colTime.innerHTML = formatTime(item)
+
+            $row.appendChild($colText)
+            $row.appendChild($colSheet)
+            $row.appendChild($colTime)
+            $historyList.appendChild($row)
+        }
+    }
+
+    $historyList.disabled = false
+}
+
 function onSpreadsheetChanged(info) {
     if (info) {
         spreadsheetId = info.spreadsheetId
@@ -81,7 +143,7 @@ $loginButton.addEventListener("click", async () => {
 })
 
 $logoutButton.addEventListener("click", async () => {
-    if (confirm(R("sign_out_from_google_question"))) {
+    if (confirm(R("sign_out_from_google_alert"))) {
         sendMessage(MSG_LOGOUT)
     }
 })
@@ -102,6 +164,18 @@ $sheetEdit.addEventListener("change", async (event) => {
     sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
 })
 
+$historyMoreButton.addEventListener("click", async () => {
+    historyMoreSectionVisible = !historyMoreSectionVisible
+    updateHistorySection()
+    sendMessage(MSG_GET_HISTORY)
+})
+
+$("clear_history_button").addEventListener("click", async () => {
+    if (confirm(R("clear_history_alert"))) {
+        sendMessage(MSG_CLEAR_HISTORY)
+    }
+})
+
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         switch (request.action) {
             case MSG_LOGIN_STATE_CHANGED:
@@ -113,6 +187,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             case MSG_CURRENT_SHEET_CHANGED:
                 onCurrentSheetChanged(request.data);
                 break;
+            case MSG_HISTORY_CHANGED:
+                onHistoryChanged(request.data)
+                break
         }
         sendResponse()
     }
@@ -122,5 +199,6 @@ localizeHtml()
 updateLoginSection()
 updateSpreadsheetSection()
 updateSpreadsheetSheetSection()
+updateHistorySection()
 
 sendMessage(MSG_GET_LOGIN_STATE)

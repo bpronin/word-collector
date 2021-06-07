@@ -43,29 +43,38 @@ function onSpreadsheetChanged(info) {
 
 function onHistoryChanged(history) {
 
-    function onRowClick(item) {
-        const spreadsheet = item.spreadsheetId || ("[" + R("unknown") + "]")
-        const title = spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
+    function spreadsheetName(item) {
+        return item.spreadsheetId || ("[" + R("unknown") + "]")
+    }
 
+    function sheetName(item) {
+        return spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
+    }
+
+    function formatTime(item) {
+        return new Date(item.time).toLocaleString()
+    }
+
+    function onRowClick(item) {
         window.alert(
             R("text") + ": " + item.text + "\n" +
-            R("spreadsheet") + ": " + spreadsheet + "\n" +
-            R("spreadsheet_sheet") + ": " + title + "\n" +
-            R("time") + ": " + new Date(item.time).toUTCString()
+            R("spreadsheet") + ": " + spreadsheetName(item) + "\n" +
+            R("spreadsheet_sheet") + ": " + sheetName(item) + "\n" +
+            R("time") + ": " + formatTime(item)
         )
     }
 
-    $historyList.innerHTML = ""  /*todo: update, do not rebuild all rows */
-    for (let index = 0; index < history.length; index++) {
-        const item = history[index];
+    $historyList.innerHTML = ""  /*todo: update, instead of rebuild all rows */
+    if (history) {
+        for (const item of history) {
+            const row = document.createElement("div")
+            row.tabIndex = 0 /* makes row tabbale */
+            row.className = "list_item"
+            row.innerHTML = item.text
+            row.addEventListener("click", () => onRowClick(item))
 
-        const row = document.createElement("div")
-        row.tabIndex = 0 /* makes row tabbale */
-        row.className = "list_item"
-        row.innerHTML = item.text
-        row.addEventListener("click", () => onRowClick(item))
-
-        $historyList.appendChild(row);
+            $historyList.appendChild(row);
+        }
     }
 
     $historyList.disabled = false

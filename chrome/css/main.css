@@ -75,8 +75,18 @@ input {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: whitesmoke;
+    display: flex;
+    align-items: center;
 }
 
 .list_item:hover {
-    background-color: lightgrey;
+    background-color: whitesmoke;
+}
+
+.list_column_60 {
+    width: 60%
+}
+
+.list_column_20 {
+    width: 20%
 }

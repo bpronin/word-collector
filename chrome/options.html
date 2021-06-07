@@ -38,12 +38,23 @@
                     </div>
                 </div>
             </div>
+            <div class="setting-section">
+                <div class="setting-row-title" i18n="history"></div>
+                <div class="setting-row-content">
+                    <button id="clear_history_button" class="text-action-button" i18n="clear_history"></button>
+                    <span id="history_more_button" class="font-button material-icons">expand_more</span>
+                </div>
+                <div id="history_more_section">
+                    <div id="history_list"></div>
+                </div>
+            </div>
         </div>
         <div id="login_section" class="setting-section">
             <div class="setting-row-title" i18n="google_account"></div>
             <div class="setting-row-content">
-                <button id="login_button" i18n="sign_in_to_google"></button>
-                <button id="logout_button" class="dangerous-button" i18n="sign_out_from_google"></button>
+                <button id="login_button" class="text-action-button" i18n="sign_in_to_google"></button>
+                <button id="logout_button" class="text-action-button dangerous-button"
+                        i18n="sign_out_from_google"></button>
             </div>
         </div>
     </div>

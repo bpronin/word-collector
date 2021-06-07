@@ -5,14 +5,20 @@ const KEY_HISTORY = "history";
 const settings = {
     storage: chrome.storage.sync,
 
+    get(keys, callback) {
+        settings.storage.get(keys, callback)
+    },
+
     put(data) {
         settings.storage.set(data)
 
-        console.log("Setting saved: " + JSON.stringify(data))
+        console.log("Settings saved: " + JSON.stringify(data))
     },
 
-    get(keys, callback) {
-        settings.storage.get(keys, callback)
+    remove(keys, callback) {
+        settings.storage.remove(keys, callback)
+
+        console.log("Settings removed: " + JSON.stringify(keys))
     }
 
     // addListener(listener) {
@@ -27,7 +33,7 @@ const settings = {
 }
 
 // settings.storage.clear()
-//settings.storage.remove(KEY_HISTORY)
+//settings.remove(KEY_HISTORY)
 
 // settings.storage.set({
 //     // [KEY_SHEET_ID]: "1-hrhHEqa9-eVIkTV4yU9TJ0EaTLYhiZExY7OZwNGGQY",
