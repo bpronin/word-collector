@@ -1,7 +1,13 @@
-
-/* Place here localized strings that cannot be loaded be chrome.i18n.getMessage()
-    due to asynchronous context (like background.js) */
+/* Localized strings that cannot be loaded be chrome.i18n.getMessage()
+    due to asynchronous context (like in background.js) */
 const i18n = {
+    get(key) {
+        const s = i18n[key]
+        if (!s) {
+            throw "String resource not found: " + key
+        }
+        return s[navigator.language] || s["en"]
+    },
     save_to_collection: {
         en: "Save to collection",
         ru: "Сохранить в коллекции"
@@ -9,8 +15,8 @@ const i18n = {
 }
 
 function R(key) {
-    let s = chrome.i18n.getMessage(key);
-    if (!s){
+    const s = chrome.i18n.getMessage(key);
+    if (!s) {
         throw "String resource not found: " + key
     }
     return s

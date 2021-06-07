@@ -159,7 +159,7 @@ function onLoginStateChanged(loggedIn) {
     if (loggedIn) {
         chrome.contextMenus.create({
             id: CONTEXT_MENU_ID,
-            title: i18n.save_to_collection[navigator.language],
+            title: i18n.get("save_to_collection"),
             contexts: ["selection"]
         })
 
