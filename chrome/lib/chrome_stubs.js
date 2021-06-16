@@ -72,6 +72,14 @@ let chrome = chrome || {
     i18n: {
         getMessage() {
         }
+    },
+    windows: {
+        create() {
+        }
+    },
+    scripting: {
+        executeScript() {
+        }
     }
 }
 
@@ -81,12 +89,12 @@ menuInfo = {
 }
 
 spreadsheetInfo = {
-    spreadsheetId: "",
+    spreadsheetId: '',
     properties: {
-        title: "",
-        locale: "",
-        autoRecalc: "",
-        timeZone: "",
+        title: '',
+        locale: '',
+        autoRecalc: '',
+        timeZone: '',
         defaultFormat: {},
         spreadsheetTheme: {}
     },
@@ -94,9 +102,9 @@ spreadsheetInfo = {
         {
             properties: {
                 sheetId: 0,
-                title: "",
+                title: '',
                 index: 0,
-                sheetType: "",
+                sheetType: '',
                 gridProperties: {
                     rowCount: 0,
                     columnCount: 0
@@ -104,5 +112,5 @@ spreadsheetInfo = {
             }
         }
     ],
-    spreadsheetUrl: ""
+    spreadsheetUrl: ''
 }

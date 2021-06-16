@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg"
+const API_KEY = 'AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg'
 
 const gapi = {
     internal: {
@@ -8,10 +8,10 @@ const gapi = {
 
             function doRequest(token) {
                 if (token === undefined) {
-                    throw ("Token is undefined")
+                    throw ('Token is undefined')
                 }
 
-                let input = apiUrl + path + "?key=" + API_KEY;
+                let input = apiUrl + path + '?key=' + API_KEY;
                 if (params !== undefined) {
                     input += params
                 }
@@ -19,21 +19,21 @@ const gapi = {
                 const init = {
                     method: method,
                     headers: {
-                        "Authorization": "Bearer " + token,
-                        "Content-Type": "application/json"
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
                     },
-                    contentType: "json",
+                    contentType: 'json',
                     async: true
                 }
 
-                if (method === "POST") {
+                if (method === 'POST') {
                     init.body = JSON.stringify(body)
                 }
 
                 fetch(input, init)
                     .then(response => {
                         if (response.ok) {
-                            // console.log("Request accepted")
+                            // console.log('Request accepted')
 
                             response.json()
                                 .then(data => {
@@ -42,12 +42,12 @@ const gapi = {
                                     }
                                 })
                         } else {
-                            console.log("Request rejected")
+                            console.log('Request rejected')
 
                             if (onRejected !== undefined) {
                                 onRejected()
                             } else
-                                throw ("Request rejected: " + response.status + ". " + input)
+                                throw ('Request rejected: ' + response.status + '. ' + input)
                         }
                     })
             }
@@ -64,10 +64,10 @@ const gapi = {
 
         // when this listener is calling ?
         chrome.identity.onSignInChanged.addListener((account, token) => {
-            console.log("Google API onSignInChanged: " + token)
+            console.log('Google API onSignInChanged: ' + token)
         })
 
-        console.log("Google API initialized")
+        console.log('Google API initialized')
     },
 
     checkLoggedIn(onToken) {
@@ -80,15 +80,15 @@ const gapi = {
 
         function doLogin(token) {
             if (token === undefined) {
-                console.log("Signing in...")
+                console.log('Signing in...')
 
                 chrome.identity.getAuthToken({interactive: true}, () => {
-                    console.log("Token obtained")
+                    console.log('Token obtained')
 
                     gapi.internal.onSignInStatusChanged(true)
                 })
             } else {
-                console.log("Using cached token")
+                console.log('Using cached token')
             }
         }
 
@@ -101,16 +101,16 @@ const gapi = {
             if (token!== undefined) {
                 gapi.internal.onSignInStatusChanged(false)
 
-                console.log("Signing out...")
+                console.log('Signing out...')
 
                 chrome.identity.removeCachedAuthToken({token: token}, () => {
-                    console.log("Token removed from cache")
+                    console.log('Token removed from cache')
                 })
 
-                fetch("https://accounts.google.com/o/oauth2/revoke?token=" + token)
+                fetch('https://accounts.google.com/o/oauth2/revoke?token=' + token)
                     .then(response => {
                             if (response.ok) {
-                                console.log("Token revoked")
+                                console.log('Token revoked')
                             }
                         }
                     )
@@ -121,23 +121,23 @@ const gapi = {
     },
 
     spreadsheets: {
-        url: "https://sheets.googleapis.com/v4/spreadsheets/",
+        url: 'https://sheets.googleapis.com/v4/spreadsheets/',
 
         createSpreadsheet(onComplete) {
-            gapi.internal.sendRequest("POST",
+            gapi.internal.sendRequest('POST',
                 gapi.spreadsheets.url,
-                "",
+                '',
                 undefined,
                 {
                     properties: {
-                        title: "words-collector"
+                        title: 'words-collector'
                     }
                 },
                 onComplete)
         },
 
         getSpreadsheet(spreadsheetId, onData) {
-            gapi.internal.sendRequest("GET",
+            gapi.internal.sendRequest('GET',
                 gapi.spreadsheets.url,
                 spreadsheetId,
                 undefined,
@@ -148,19 +148,19 @@ const gapi = {
         },
 
         getValues(spreadsheetId, range, onData) {
-            gapi.internal.sendRequest("GET",
+            gapi.internal.sendRequest('GET',
                 gapi.spreadsheets.url,
-                spreadsheetId + "/values/" + range,
+                spreadsheetId + '/values/' + range,
                 undefined,
                 undefined,
                 onData)
         },
 
         appendValue(spreadsheetId, range, value, onComplete) {
-            gapi.internal.sendRequest("POST",
+            gapi.internal.sendRequest('POST',
                 gapi.spreadsheets.url,
-                spreadsheetId + "/values/" + range + ":append",
-                "&valueInputOption=USER_ENTERED",
+                spreadsheetId + '/values/' + range + ':append',
+                '&valueInputOption=USER_ENTERED',
                 {values: [[value]]},
                 onComplete
             )

@@ -1,6 +1,6 @@
-importScripts("js/resources.js", "js/messages.js", "js/settings.js", "js/google-api.js")
+importScripts('js/resources.js', 'js/messages.js', 'js/settings.js', 'js/google-api.js')
 
-const CONTEXT_MENU_ID = "WORDS_COLLECTOR_CONTEXT_MENU"
+const CONTEXT_MENU_ID = 'WORDS_COLLECTOR_CONTEXT_MENU'
 
 let spreadsheetId
 let spreadsheetSheet
@@ -15,7 +15,7 @@ function loadSettings() {
 
 function createSpreadsheet(onComplete) {
     gapi.spreadsheets.createSpreadsheet(info => {
-        console.log("New spreadsheet created:" + info.spreadsheetId)
+        console.log('New spreadsheet created:' + info.spreadsheetId)
 
         spreadsheetId = info.spreadsheetId
         spreadsheetSheet = info.sheets[0].properties.sheetId
@@ -33,11 +33,11 @@ function ensureSpreadsheetExists(onComplete) {
     /* NOTE! Sheet will be found even if it is in trash! (todo: use Drive API to check that fact)*/
     gapi.spreadsheets.getSpreadsheet(spreadsheetId, info => {
         if (info) {
-            console.log("Using existing spreadsheet: " + spreadsheetId)
+            console.log('Using existing spreadsheet: ' + spreadsheetId)
 
             onComplete(info)
         } else {
-            console.log("Spreadsheet does not exists:" + spreadsheetId)
+            console.log('Spreadsheet does not exists:' + spreadsheetId)
 
             createSpreadsheet(onComplete);
         }
@@ -54,7 +54,7 @@ function formatSpreadsheetRange(info, sheetId, defaultSheetId) {
     } else if (defaultSheetId !== undefined) {
         return formatSpreadsheetRange(info, defaultSheetId)
     } else {
-        throw "Invalid sheet id:" + sheetId
+        throw 'Invalid sheet id:' + sheetId
     }
 }
 
@@ -64,13 +64,16 @@ function getLoginState() {
     })
 }
 
-function appendValue(text) {
+function sendValueToSpreadsheet(data) {
+    console.log('Saving: ' + JSON.stringify(data))
+
     ensureSpreadsheetExists(info => {
         const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
-        gapi.spreadsheets.appendValue(spreadsheetId, range, text, () => {
-            updateHistory(text)
 
-            console.log("Saved: '" + text + "'")
+        gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
+            updateHistory(data.text)
+
+            console.log('Saved: ' + data.text)
         })
     })
 }
@@ -96,7 +99,7 @@ function setSpreadsheet(newSpreadsheetId) {
     gapi.spreadsheets.getSpreadsheet(newSpreadsheetId, info => {
 
         if (info) {
-            console.log("Found spreadsheet: " + newSpreadsheetId)
+            console.log('Found spreadsheet: ' + newSpreadsheetId)
 
             spreadsheetId = info.spreadsheetId
             spreadsheetSheet = info.sheets[0].properties.sheetId
@@ -106,7 +109,7 @@ function setSpreadsheet(newSpreadsheetId) {
                 [KEY_SHEET_SHEET]: spreadsheetSheet
             })
         } else {
-            console.log("Spreadsheet not found: " + newSpreadsheetId)
+            console.log('Spreadsheet not found: ' + newSpreadsheetId)
         }
 
         sendMessage(MSG_SPREADSHEET_CHANGED, info)
@@ -122,7 +125,7 @@ function setCurrentSheet(sheet) {
     settings.put({[KEY_SHEET_SHEET]: spreadsheetSheet})
     sendMessage(MSG_CURRENT_SHEET_CHANGED, spreadsheetSheet)
 
-    console.log("Current sheet: " + spreadsheetSheet)
+    console.log('Current sheet: ' + spreadsheetSheet)
 }
 
 function updateHistory(text) {
@@ -165,15 +168,15 @@ function onLoginStateChanged(loggedIn) {
     if (loggedIn) {
         chrome.contextMenus.create({
             id: CONTEXT_MENU_ID,
-            title: i18n.get("save_to_collection"),
-            contexts: ["selection"]
+            title: i18n.get('save_to_collection'),
+            contexts: ['selection']
         })
 
-        console.log("Menu item created")
+        console.log('Menu item created')
     } else {
         chrome.contextMenus.remove(CONTEXT_MENU_ID)
 
-        console.log("Menu item removed")
+        console.log('Menu item removed')
     }
 
     sendMessage(MSG_LOGIN_STATE_CHANGED, loggedIn)
@@ -211,15 +214,30 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         case MSG_CLEAR_HISTORY:
             clearHistory()
             break
+        case MSG_EDIT_TRANSLATION_COMPLETE:
+            sendValueToSpreadsheet(request.data)
+            break
         default:
-            throw ("Unknown action: " + request.action)
+            throw ('Unknown action: ' + request.action)
     }
     sendResponse()
 })
 
+function showEditDialog(text) {
+    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+
+        chrome.storage.local.set({last_selected_text: text}) /* passing param to injected script */
+
+        chrome.scripting.executeScript({
+            target: {tabId: tabs[0].id},
+            files: ['edit-dialog.js']
+        })
+    })
+}
+
 chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        appendValue(info.selectionText)
+        showEditDialog(info.selectionText)
     }
 })
 
@@ -229,4 +247,4 @@ gapi.checkLoggedIn(token => {
     onLoginStateChanged(token !== undefined)
 })
 
-console.log("Initialized")
+console.log('Initialized')

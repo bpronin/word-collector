@@ -1,8 +1,8 @@
-const $loginButton = $("login_button");
-const $logoutButton = $("logout_button");
-const $spreadsheetMoreButton = $("spreadsheet_more_button")
-const $sheetEdit = $("sheet_edit")
-const $historyMoreButton = $("history_more_button")
+const $loginButton = $('login_button');
+const $logoutButton = $('logout_button');
+const $spreadsheetMoreButton = $('spreadsheet_more_button')
+const $sheetEdit = $('sheet_edit')
+const $historyMoreButton = $('history_more_button')
 
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
@@ -14,36 +14,36 @@ let spreadsheetSheets
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
     setVisible($logoutButton, accountLoggedIn)
-    setVisible($("options_sections"), accountLoggedIn)
+    setVisible($('options_sections'), accountLoggedIn)
 }
 
 function updateSpreadsheetSection() {
-    const nameLabel = $("spreadsheet_name_label")
-    const idLabel = $("spreadsheet_id_label")
+    const nameLabel = $('spreadsheet_name_label')
+    const idLabel = $('spreadsheet_id_label')
     if (spreadsheetId) {
         nameLabel.innerHTML = spreadsheetTitle
         nameLabel.href = spreadsheetUrl(spreadsheetId)
         idLabel.innerHTML = spreadsheetId
     } else {
-        nameLabel.innerHTML = ""
-        nameLabel.href = ""
-        idLabel.innerHTML = ""
+        nameLabel.innerHTML = ''
+        nameLabel.href = ''
+        idLabel.innerHTML = ''
     }
 
-    setVisible($("spreadsheet_more_section"), spreadsheetMoreSectionVisible)
-    $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? "expand_less" : "expand_more"
+    setVisible($('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
+    $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
 function updateHistorySection() {
-    setVisible($("history_more_section"), historyMoreSectionVisible)
-    $historyMoreButton.innerHTML = historyMoreSectionVisible ? "expand_less" : "expand_more"
+    setVisible($('history_more_section'), historyMoreSectionVisible)
+    $historyMoreButton.innerHTML = historyMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
 function updateSpreadsheetSheetSection() {
-    $sheetEdit.innerHTML = ""
+    $sheetEdit.innerHTML = ''
     if (spreadsheetSheets) {
         Object.keys(spreadsheetSheets).forEach(id => {
-            const option = document.createElement("option")
+            const option = document.createElement('option')
             option.value = id
             option.innerHTML = spreadsheetSheets[id]
             $sheetEdit.appendChild(option)
@@ -68,11 +68,11 @@ function onCurrentSheetChanged(sheet) {
 function onHistoryChanged(history) {
 
     function spreadsheetName(item) {
-        return item.spreadsheetId || ("[" + R("unknown") + "]")
+        return item.spreadsheetId || ('[' + R('unknown') + ']')
     }
 
     function sheetName(item) {
-        return spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
+        return spreadsheetSheets[item.sheet] || ('[' + R('removed') + ' ID: ' + item.sheet + ']')
     }
 
     function formatTime(item) {
@@ -81,33 +81,33 @@ function onHistoryChanged(history) {
 
     function onRowClick(item) {
         window.alert(
-            R("text") + ": " + item.text + "\n" +
-            R("spreadsheet") + ": " + spreadsheetName(item) + "\n" +
-            R("spreadsheet_sheet") + ": " + sheetName(item) + "\n" +
-            R("time") + ": " + formatTime(item)
+            R('text') + ': ' + item.text + '\n' +
+            R('spreadsheet') + ': ' + spreadsheetName(item) + '\n' +
+            R('spreadsheet_sheet') + ': ' + sheetName(item) + '\n' +
+            R('time') + ': ' + formatTime(item)
         )
     }
 
-    const $historyList = $("history_list")
-    $historyList.innerHTML = ""  /*todo: update, instead of rebuild all rows */
+    const $historyList = $('history_list')
+    $historyList.innerHTML = ''  /*todo: update, instead of rebuild all rows */
 
     if (history) {
         for (const item of history) {
-            const $row = document.createElement("div")
+            const $row = document.createElement('div')
             $row.tabIndex = 0 /* makes row tabbale */
-            $row.className = "list_item"
-            $row.addEventListener("click", () => onRowClick(item))
+            $row.className = 'list_item'
+            $row.addEventListener('click', () => onRowClick(item))
 
-            const $colText = document.createElement("div")
-            $colText.className = "list_column_60"
+            const $colText = document.createElement('div')
+            $colText.className = 'list_column_60'
             $colText.innerHTML = item.text
 
-            const $colSheet = document.createElement("div")
-            $colSheet.className = "list_column_20"
+            const $colSheet = document.createElement('div')
+            $colSheet.className = 'list_column_20'
             $colSheet.innerHTML = sheetName(item)
 
-            const $colTime = document.createElement("div")
-            $colTime.className = "list_column_20"
+            const $colTime = document.createElement('div')
+            $colTime.className = 'list_column_20'
             $colTime.innerHTML = formatTime(item)
 
             $row.appendChild($colText)
@@ -134,44 +134,44 @@ function onSpreadsheetChanged(info) {
         updateSpreadsheetSheetSection()
         sendMessage(MSG_GET_CURRENT_SHEET)
     } else {
-        alert(R("specified_spreadsheet_does_not_exists"))
+        alert(R('specified_spreadsheet_does_not_exists'))
     }
 }
 
-$loginButton.addEventListener("click", async () => {
+$loginButton.addEventListener('click', async () => {
     sendMessage(MSG_LOGIN)
 })
 
-$logoutButton.addEventListener("click", async () => {
-    if (confirm(R("sign_out_from_google_alert"))) {
+$logoutButton.addEventListener('click', async () => {
+    if (confirm(R('sign_out_from_google_alert'))) {
         sendMessage(MSG_LOGOUT)
     }
 })
 
-$spreadsheetMoreButton.addEventListener("click", async () => {
+$spreadsheetMoreButton.addEventListener('click', async () => {
     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
     updateSpreadsheetSection()
 })
 
-$("change_spreadsheet-button").addEventListener("click", async () => {
-    const newSpreadsheetId = prompt(R("enter_spreadsheet_id"), spreadsheetId)
+$('change_spreadsheet-button').addEventListener('click', async () => {
+    const newSpreadsheetId = prompt(R('enter_spreadsheet_id'), spreadsheetId)
     if (newSpreadsheetId) {
         sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)
     }
 })
 
-$sheetEdit.addEventListener("change", async (event) => {
+$sheetEdit.addEventListener('change', async (event) => {
     sendMessage(MSG_SET_CURRENT_SHEET, event.target.value)
 })
 
-$historyMoreButton.addEventListener("click", async () => {
+$historyMoreButton.addEventListener('click', async () => {
     historyMoreSectionVisible = !historyMoreSectionVisible
     updateHistorySection()
     sendMessage(MSG_GET_HISTORY)
 })
 
-$("clear_history_button").addEventListener("click", async () => {
-    if (confirm(R("clear_history_alert"))) {
+$('clear_history_button').addEventListener('click', async () => {
+    if (confirm(R('clear_history_alert'))) {
         sendMessage(MSG_CLEAR_HISTORY)
     }
 })

@@ -1,8 +1,8 @@
-const $authSection = $("login_section")
-const $optionsSection = $("options_sections")
-const $sheetEdit = $("sheet_edit")
-const $spreadsheetLink = $("spreadsheet_link")
-const $historyList = $("history_list")
+const $authSection = $('login_section')
+const $optionsSection = $('options_sections')
+const $sheetEdit = $('sheet_edit')
+const $spreadsheetLink = $('spreadsheet_link')
+const $historyList = $('history_list')
 
 let spreadsheetSheets
 
@@ -20,12 +20,12 @@ function onCurrentSheetChanged(sheet) {
 
 function onSpreadsheetChanged(info) {
     spreadsheetSheets = {}
-    $sheetEdit.innerHTML = ""
+    $sheetEdit.innerHTML = ''
     for (const sheet of info.sheets) {
         const id = sheet.properties.sheetId
         spreadsheetSheets[id] = sheet.properties.title
 
-        const option = document.createElement("option")
+        const option = document.createElement('option')
         option.value = id
         option.innerHTML = spreadsheetSheets[id]
 
@@ -44,11 +44,11 @@ function onSpreadsheetChanged(info) {
 function onHistoryChanged(history) {
 
     function spreadsheetName(item) {
-        return item.spreadsheetId || ("[" + R("unknown") + "]")
+        return item.spreadsheetId || ('[' + R('unknown') + ']')
     }
 
     function sheetName(item) {
-        return spreadsheetSheets[item.sheet] || ("[" + R("removed") + " ID: " + item.sheet + "]")
+        return spreadsheetSheets[item.sheet] || ('[' + R('removed') + ' ID: ' + item.sheet + ']')
     }
 
     function formatTime(item) {
@@ -57,21 +57,21 @@ function onHistoryChanged(history) {
 
     function onRowClick(item) {
         window.alert(
-            R("text") + ": " + item.text + "\n" +
-            R("spreadsheet") + ": " + spreadsheetName(item) + "\n" +
-            R("spreadsheet_sheet") + ": " + sheetName(item) + "\n" +
-            R("time") + ": " + formatTime(item)
+            R('text') + ': ' + item.text + '\n' +
+            R('spreadsheet') + ': ' + spreadsheetName(item) + '\n' +
+            R('spreadsheet_sheet') + ': ' + sheetName(item) + '\n' +
+            R('time') + ': ' + formatTime(item)
         )
     }
 
-    $historyList.innerHTML = ""  /*todo: update, instead of rebuild all rows */
+    $historyList.innerHTML = ''  /*todo: update, instead of rebuild all rows */
     if (history) {
         for (const item of history) {
-            const row = document.createElement("div")
+            const row = document.createElement('div')
             row.tabIndex = 0 /* makes row tabbale */
-            row.className = "list_item"
+            row.className = 'list_item'
             row.innerHTML = item.text
-            row.addEventListener("click", () => onRowClick(item))
+            row.addEventListener('click', () => onRowClick(item))
 
             $historyList.appendChild(row);
         }
@@ -80,15 +80,15 @@ function onHistoryChanged(history) {
     $historyList.disabled = false
 }
 
-$spreadsheetLink.addEventListener("click", async (event) => {
+$spreadsheetLink.addEventListener('click', async (event) => {
     openUniqueTab(event.target.href)
 })
 
-$("settings_button").addEventListener("click", async () => {
-    openUniqueTab(chrome.runtime.getURL("options.html"))
+$('settings_button').addEventListener('click', async () => {
+    openUniqueTab(chrome.runtime.getURL('options.html'))
 })
 
-$("login_button").addEventListener("click", async () => {
+$('login_button').addEventListener('click', async () => {
     sendMessage(MSG_LOGIN)
 })
 
