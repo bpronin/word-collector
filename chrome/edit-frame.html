@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title i18n="app_name"></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/window.css">
+</head>
+
+<body>
+
+<div class="window-header">
+    <span i18n="app_name">Word collector</span>
+</div>
+
+<div class="window-content bordered">
+
+    <div class="input-section">
+        <label for="text_editor" class="input-label" i18n="text">Text</label>
+        <input id="text_editor" class="input-text-editor" type="text">
+    </div>
+
+    <div class="input-section">
+        <label for="translation_editor" class="input-label" i18n="translation">Translation</label>
+        <input id="translation_editor" class="input-text-editor" type="text">
+    </div>
+
+    <div class="button-section">
+        <button id="ok_button" class="section-button" i18n="ok">OK</button>
+        <button id="cancel_button" class="section-button" i18n="cancel">Cancel</button>
+    </div>
+
+</div>
+
+<script src="js/edit-frame.js"></script>
+
+</body>
+</html>

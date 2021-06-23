@@ -1,13 +1,14 @@
 body {
     font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, Arial, sans-serif;
-    font-size: 1rem
+    font-size: 0.9rem;
+    margin: 0;
 }
 
 button {
-    min-width: 48px;
+    min-width: 100px;
     min-height: 28px;
     cursor: pointer;
-    padding: 7px 12px;
+    padding: 6px 12px;
     border-style: solid;
     border-width: 1px;
     border-color: lightgrey;
@@ -27,30 +28,13 @@ button:active {
 
 select {
     min-width: 80px;
-    min-height: 28px;
-    padding: 7px 4px;
+    padding: 6px 4px;
     border-color: lightgrey;
     font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
 }
 
-label {
-    min-width: 100px;
-    min-height: 28px;
-}
-
-/*textarea {*/
-/*    resize: none;*/
-/*    white-space: nowrap;*/
-/*    font-size: 14px;*/
-/*    overflow-x: scroll; !* or hidden *!*/
-/*    border-style: solid;*/
-/*    border-width: 1px;*/
-/*    border-color: #d7d6d6;*/
-/*    border-radius: 0;*/
-/*}*/
-
 input {
-    padding: 7px 4px;
+    padding: 6px 4px;
     border-style: solid;
     border-width: 1px;
     border-color: lightgrey;
@@ -58,35 +42,8 @@ input {
     font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
 }
 
-.sub_section {
-    padding-top: 12px;
-}
-
 .bordered {
     border-style: solid;
     border-width: 1px;
     border-color: lightgrey;
-}
-
-.list_item {
-    padding: 2px 4px;
-    text-align: left;
-    cursor: pointer;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: whitesmoke;
-    display: flex;
-    align-items: center;
-}
-
-.list_item:hover {
-    background-color: whitesmoke;
-}
-
-.list_column_60 {
-    width: 60%
-}
-
-.list_column_20 {
-    width: 20%
 }

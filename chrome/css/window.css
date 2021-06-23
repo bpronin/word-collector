@@ -1,0 +1,37 @@
+.window-header {
+    background-color: gray;
+    color: white;
+    font-weight: bolder;
+    padding: 4px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.window-content {
+    background-color: white;
+    padding: 4px 12px 12px 12px;
+}
+
+.input-section {
+    padding-top: 8px;
+}
+
+.input-label {
+    display: inline-block;
+    width: 100px;
+}
+
+.input-text-editor {
+    width:  calc(100% - 100px - 14px);
+}
+
+.button-section {
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.section-button {
+    margin-left: 8px;
+}

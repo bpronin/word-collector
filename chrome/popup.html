@@ -3,35 +3,37 @@
 <head>
     <title i18n="app_name"></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons">
-    <link rel="stylesheet" href="css/buttons.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/window.css">
+    <link rel="stylesheet" href="css/list.css">
+    <link rel="stylesheet" href="css/image-buttons.css">
     <link rel="stylesheet" href="css/popup.css">
 </head>
 
 <body>
 
-<div id="header">
-    <span i18n="app_name"></span>
+<div class="window-header">
+    <span i18n="app_name">Word collector</span>
     <div id="settings_button" class="font-button-inverted material-icons">settings</div>
 </div>
 
-<div id="content">
+<div class="window-content">
 
-    <div id="login_section">
-        <button id="login_button" i18n="sign_in_to_google"></button>
+    <div id="login_section" class="input-section">
+        <button id="login_button" i18n="sign_in_to_google">Sign In</button>
     </div>
 
-    <div id="options_sections">
+    <div id="options_sections" class="input-section">
         <div>
-            <label for="sheet_edit" i18n="add_text_to_sheet"></label>
+            <label for="sheet_edit" i18n="add_text_to_sheet">Page</label>
             <select id="sheet_edit"></select>
         </div>
-        <div class="sub_section">
-            <label for="history_list" i18n="history"></label>
+        <div class="input-section">
+            <label for="history_list" i18n="history">History</label>
             <div id="history_list" class="bordered"></div>
         </div>
-        <div class="sub_section">
-            <a id="spreadsheet_link" href="?" i18n="open_spreadsheet_in_browser"></a>
+        <div class="input-section">
+            <a id="spreadsheet_link" href="?" i18n="open_spreadsheet_in_browser">Open in google</a>
         </div>
     </div>
 

@@ -1,6 +1,9 @@
 body {
-    margin: 0;
     background-color: whitesmoke;
+}
+
+.sub_section {
+    padding-top: 12px;
 }
 
 .settings-header {

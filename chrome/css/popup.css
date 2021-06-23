@@ -1,25 +1,5 @@
 body {
     width: 300px;
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-#header {
-    background-color: gray;
-    color: white;
-    font-weight: bolder;
-    padding: 4px 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#content {
-    margin: 12px;
-}
-
-#options_sections {
-    width: 100%;
 }
 
 #login_section {
@@ -28,7 +8,6 @@ body {
 }
 
 #history_list {
-    width: 100%;
     height: 120px;
     margin-top: 4px;
     overflow-y: scroll;

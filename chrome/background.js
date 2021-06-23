@@ -183,6 +183,8 @@ function onLoginStateChanged(loggedIn) {
 }
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    let result = 'ok'
+
     switch (request.action) {
         case MSG_DEBUG:
             getData()
@@ -220,24 +222,35 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         default:
             throw ('Unknown action: ' + request.action)
     }
-    sendResponse()
+
+    sendResponse(result)
 })
 
-function showEditDialog(text) {
+function callEditDialog(text) {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+        const params = {
+            left: '100px',
+            top: '100px',
+            text: text
+        }
 
-        chrome.storage.local.set({last_selected_text: text}) /* passing param to injected script */
+        /* passing param to injected script through local store */
+        chrome.storage.local.set({edit_translation_params: params}, () => {
 
-        chrome.scripting.executeScript({
-            target: {tabId: tabs[0].id},
-            files: ['edit-dialog.js']
+            chrome.scripting.executeScript({
+                target: {
+                    tabId: tabs[0].id
+                },
+                files: ['edit-text.js']
+            })
         })
     })
 }
 
 chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        showEditDialog(info.selectionText)
+        // callEditDialog(info.selectionText)
+        sendValueToSpreadsheet(info.selectionText)
     }
 })
 
