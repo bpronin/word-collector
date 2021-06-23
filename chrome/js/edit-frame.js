@@ -8,6 +8,8 @@ async function onOkClick() {
         text: $textEditor.value,
         translation: $translationEditor.value
     }, '*')
+
+    console.log("Sent message to parent")
 }
 
 async function onCancelClick() {

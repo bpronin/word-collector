@@ -217,7 +217,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             clearHistory()
             break
         case MSG_EDIT_TRANSLATION_COMPLETE:
-            sendValueToSpreadsheet(request.data)
+            console.log('Edit complete:' + JSON.stringify(request.data))
+            // sendValueToSpreadsheet(request.data)
             break
         default:
             throw ('Unknown action: ' + request.action)
@@ -236,13 +237,19 @@ function callEditDialog(text) {
 
         /* passing param to injected script through local store */
         chrome.storage.local.set({edit_translation_params: params}, () => {
-
+            let tab = tabs[0];
             chrome.scripting.executeScript({
                 target: {
-                    tabId: tabs[0].id
+                    tabId: tab.id
                 },
                 files: ['edit-text.js']
-            })
+            }
+            // , () => {
+            //     sendMessage("test", "test-data")
+            //     const window = chrome.windows.get(tab.windowId)
+            //     window.postMessage({action: 'some_message'}, '*')
+            // }
+            )
         })
     })
 }
