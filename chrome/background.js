@@ -227,37 +227,22 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     sendResponse(result)
 })
 
-function callEditDialog(text) {
+function callEditDialog() {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-        const params = {
-            left: '100px',
-            top: '100px',
-            text: text
-        }
-
-        /* passing param to injected script through local store */
-        chrome.storage.local.set({edit_translation_params: params}, () => {
-            let tab = tabs[0];
-            chrome.scripting.executeScript({
+        chrome.scripting.executeScript({
                 target: {
-                    tabId: tab.id
+                    tabId: tabs[0].id
                 },
-                files: ['edit-text.js']
+                files: ['js/edit-text.js']
             }
-            // , () => {
-            //     sendMessage("test", "test-data")
-            //     const window = chrome.windows.get(tab.windowId)
-            //     window.postMessage({action: 'some_message'}, '*')
-            // }
-            )
-        })
+        )
     })
 }
 
 chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
-        // callEditDialog(info.selectionText)
-        sendValueToSpreadsheet(info.selectionText)
+        callEditDialog()
+        // sendValueToSpreadsheet(info.selectionText)
     }
 })
 

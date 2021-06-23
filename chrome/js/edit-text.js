@@ -6,7 +6,8 @@ function showFrame(left, top, text) {
     // $frame.src = chrome.runtime.getURL('edit-frame.html')
     // put pure html instead of file. i.e. $('#some-id').contents().find('html').html("some-html")
     $frame.src = 'edit-frame.html'
-    $frame.style.width = '400px'
+    $frame.style.width = frameWidth + 'px'
+    $frame.style.height = frameHeight + 'px'
     $frame.style.border = 'none'
     $frame.style.left = left
     $frame.style.top = top
@@ -19,9 +20,7 @@ function showFrame(left, top, text) {
 
 function initFrame(text) {
     const $frame = document.getElementById('edit-frame')
-    const frameWindow = $frame.contentWindow;
-    $frame.style.height = frameWindow.document.body.scrollHeight + 'px'
-    frameWindow.postMessage({
+    $frame.contentWindow.postMessage({
         action: 'init-edit-frame',
         text: text,
         translation: ''
@@ -40,28 +39,40 @@ function closeFrame() {
 }
 
 function startEdit() {
-    chrome.storage.local.get('edit_translation_params', data => {
-        const params = data.edit_translation_params
-        console.log("Params:" + JSON.stringify(params))
+    let selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0)
+        const rect = range.getBoundingClientRect()
 
-        showFrame(params.left, params.top, params.text)
-    })
+        let left = rect.left;
+        if (left + frameWidth > window.innerWidth) left -= frameWidth
+        if (left < 0) left = 0
+
+        let top = rect.bottom;
+        if (top + frameHeight > window.innerHeight) top -= frameHeight
+        if (top < 0) top = 0
+
+        showFrame(left + 'px', top + 'px', range.toString())
+    }
 }
 
 function endEdit(data) {
-    chrome.runtime.sendMessage({
-        action: 'edit-translation-complete',
-        data: {
-            text: data.text,
-            translation: data.translation
-        }
-    })
+    // chrome.runtime.sendMessage({
+    //     action: 'edit-translation-complete',
+    //     data: {
+    //         text: data.text,
+    //         translation: data.translation
+    //     }
+    // })
 
-    console.log("Sent to chrome")
+    console.log("Sent to chrome:" + JSON.stringify(data))
 }
 
 /* check that script have already been injected */
 if (typeof initialized === 'undefined') {
+    frameWidth = 400
+    frameHeight = 160 /* should be the same as body height in frame's html */
+
     document.addEventListener('click', async () => {
         closeFrame()
     })
@@ -78,12 +89,6 @@ if (typeof initialized === 'undefined') {
             }
         }
     })
-
-    // chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    //     console.log("Chrome says " + JSON.stringify(request))
-    //     sendResponse()
-    // })
-
     initialized = true
 
     console.log("Init")
