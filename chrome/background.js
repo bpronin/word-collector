@@ -66,16 +66,16 @@ function getLoginState() {
 
 function sendValueToSpreadsheet(data) {
     console.log('Saving: ' + JSON.stringify(data))
-
-    ensureSpreadsheetExists(info => {
-        const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
-
-        gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
-            updateHistory(data.text)
-
-            console.log('Saved: ' + data.text)
-        })
-    })
+    //
+    // ensureSpreadsheetExists(info => {
+    //     const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
+    //
+    //     gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
+    //         updateHistory(data.text)
+    //
+    //         console.log('Saved: ' + data.text)
+    //     })
+    // })
 }
 
 function getData() {
@@ -217,8 +217,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             clearHistory()
             break
         case MSG_EDIT_TRANSLATION_COMPLETE:
-            console.log('Edit complete:' + JSON.stringify(request.data))
-            // sendValueToSpreadsheet(request.data)
+            sendValueToSpreadsheet(request.data)
             break
         default:
             throw ('Unknown action: ' + request.action)
@@ -242,7 +241,6 @@ function callEditDialog() {
 chrome.contextMenus.onClicked.addListener(async (info) => {
     if (info.menuItemId === CONTEXT_MENU_ID) {
         callEditDialog()
-        // sendValueToSpreadsheet(info.selectionText)
     }
 })
 

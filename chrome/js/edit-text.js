@@ -3,9 +3,7 @@ function showFrame(left, top, text) {
     document.body.appendChild($frame)
 
     $frame.id = 'edit-frame'
-    // $frame.src = chrome.runtime.getURL('edit-frame.html')
-    // put pure html instead of file. i.e. $('#some-id').contents().find('html').html("some-html")
-    $frame.src = 'edit-frame.html'
+    $frame.src = chrome.runtime.getURL('edit-frame.html')
     $frame.style.width = frameWidth + 'px'
     $frame.style.height = frameHeight + 'px'
     $frame.style.border = 'none'
@@ -21,6 +19,7 @@ function showFrame(left, top, text) {
 function initFrame(text) {
     const $frame = document.getElementById('edit-frame')
     $frame.contentWindow.postMessage({
+        target: 'word-collector',
         action: 'init-edit-frame',
         text: text,
         translation: ''
@@ -39,57 +38,53 @@ function closeFrame() {
 }
 
 function startEdit() {
-    let selection = window.getSelection();
+    let selection = window.getSelection()
     if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0)
-        const rect = range.getBoundingClientRect()
+        let left = (window.innerWidth - frameWidth) / 2 + window.scrollX
+        let top = (window.innerHeight - frameHeight) / 2 + window.scrollY
 
-        let left = rect.left;
-        if (left + frameWidth > window.innerWidth) left -= frameWidth
-        if (left < 0) left = 0
-
-        let top = rect.bottom;
-        if (top + frameHeight > window.innerHeight) top -= frameHeight
-        if (top < 0) top = 0
-
-        showFrame(left + 'px', top + 'px', range.toString())
+        showFrame(left + 'px', top + 'px', selection.toString())
+    } else {
+        console.log('No selection')
     }
 }
 
 function endEdit(data) {
-    // chrome.runtime.sendMessage({
-    //     action: 'edit-translation-complete',
-    //     data: {
-    //         text: data.text,
-    //         translation: data.translation
-    //     }
-    // })
+    chrome.runtime.sendMessage({
+        action: 'edit-translation-complete',
+        data: {
+            text: data.text,
+            translation: data.translation
+        }
+    })
 
-    console.log("Sent to chrome:" + JSON.stringify(data))
+    console.log("Sent to chrome")
 }
 
 /* check that script have already been injected */
 if (typeof initialized === 'undefined') {
+    initialized = true
     frameWidth = 400
     frameHeight = 160 /* should be the same as body height in frame's html */
 
-    document.addEventListener('click', async () => {
+    window.addEventListener('click', async () => {
         closeFrame()
     })
 
     window.addEventListener('message', async event => {
-        console.log("Received message:" + JSON.stringify(event.data))
+        if (event.data.target === 'word-collector') {
+            console.log("Received message:" + JSON.stringify(event.data))
 
-        if (event.data.action === 'close-edit-frame') {
-            closeFrame()
-            if (event.data.result === 'ok') {
-                endEdit(event.data)
-            } else {
-                console.log("Edit canceled")
+            if (event.data.action === 'close-edit-frame') {
+                closeFrame()
+                if (event.data.result === 'ok') {
+                    endEdit(event.data)
+                } else {
+                    console.log("Edit canceled")
+                }
             }
         }
     })
-    initialized = true
 
     console.log("Init")
 }

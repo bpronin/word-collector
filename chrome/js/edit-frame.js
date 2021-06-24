@@ -1,8 +1,9 @@
-const $textEditor = document.getElementById('text_editor')
-const $translationEditor = document.getElementById('translation_editor')
+const $textEditor = $('text_editor')
+const $translationEditor = $('translation_editor')
 
 async function onOkClick() {
     window.parent.postMessage({
+        target: 'word-collector',
         action: 'close-edit-frame',
         result: 'ok',
         text: $textEditor.value,
@@ -14,17 +15,24 @@ async function onOkClick() {
 
 async function onCancelClick() {
     window.parent.postMessage({
+        target: 'word-collector',
         action: 'close-edit-frame',
         result: 'cancel'
     }, '*')
 }
 
 window.addEventListener('message', event => {
-    if (event.data.action === 'init-edit-frame') {
-        $textEditor.value = event.data.text || ''
-        $translationEditor.value = event.data.translation || ''
+    if (event.data.target === 'word-collector') {
+        console.log("Received message:" + JSON.stringify(event.data))
+
+        if (event.data.action === 'init-edit-frame') {
+            $textEditor.value = event.data.text || ''
+            $translationEditor.value = event.data.translation || ''
+        }
     }
 })
-document.getElementById('ok_button').addEventListener('click', onOkClick)
-document.getElementById('cancel_button').addEventListener('click', onCancelClick)
+
+localizeHtml()
+$('ok_button').addEventListener('click', onOkClick)
+$('cancel_button').addEventListener('click', onCancelClick)
 $translationEditor.focus()

@@ -86,5 +86,17 @@
   "removed": {
     "message": "удалено",
     "description": "Item name if removed"
+  },
+  "translation": {
+    "message": "Перевод",
+    "description": "Label"
+  },
+  "save": {
+    "message": "Сохранить",
+    "description": "Button"
+  },
+  "cancel": {
+    "message": "Отмена",
+    "description": "Button"
   }
 }

@@ -34,5 +34,15 @@
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets"
     ]
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "edit-frame.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }
