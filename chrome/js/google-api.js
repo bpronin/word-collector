@@ -156,12 +156,12 @@ const gapi = {
                 onData)
         },
 
-        appendValue(spreadsheetId, range, value, onComplete) {
+        appendValue(spreadsheetId, range, values, onComplete) {
             gapi.internal.sendRequest('POST',
                 gapi.spreadsheets.url,
                 spreadsheetId + '/values/' + range + ':append',
                 '&valueInputOption=USER_ENTERED',
-                {values: [[value]]},
+                {values: [values]},
                 onComplete
             )
         }

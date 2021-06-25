@@ -65,15 +65,13 @@ function getLoginState() {
 }
 
 function sendValueToSpreadsheet(data) {
-    console.log('Saving: ' + JSON.stringify(data))
-
     ensureSpreadsheetExists(info => {
         const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
 
-        gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
-            updateHistory(data.text)
+        gapi.spreadsheets.appendValue(spreadsheetId, range, [data.text, data.translation], () => {
+            updateHistory(data)
 
-            console.log('Saved: ' + data.text)
+            console.log('Saved: ' + JSON.stringify(data))
         })
     })
 }
@@ -128,12 +126,13 @@ function setCurrentSheet(sheet) {
     console.log('Current sheet: ' + spreadsheetSheet)
 }
 
-function updateHistory(text) {
+function updateHistory(value) {
     settings.get(KEY_HISTORY, data => {
         const history = data[KEY_HISTORY];
 
         let item = {
-            text: text,
+            text: value.text,
+            translation: value.translation,
             spreadsheetId: spreadsheetId,
             sheet: spreadsheetSheet,
             time: Date.now()
