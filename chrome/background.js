@@ -228,13 +228,12 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 function callEditDialog() {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-        chrome.scripting.executeScript({
-                target: {
-                    tabId: tabs[0].id
-                },
-                files: ['js/edit-text.js']
-            }
-        )
+        let tabId = tabs[0].id;
+
+        /* this is to inject multiple scripts */
+        chrome.scripting.executeScript({target: {tabId: tabId}, files: ['js/html-util.js']}, () => {
+            chrome.scripting.executeScript({target: {tabId: tabId}, files: ['js/edit-text.js']})
+        })
     })
 }
 

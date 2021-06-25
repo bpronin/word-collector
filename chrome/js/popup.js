@@ -1,8 +1,8 @@
-const $authSection = $('login_section')
-const $optionsSection = $('options_sections')
-const $sheetEdit = $('sheet_edit')
-const $spreadsheetLink = $('spreadsheet_link')
-const $historyList = $('history_list')
+const $authSection = element('login_section')
+const $optionsSection = element('options_sections')
+const $sheetEdit = element('sheet_edit')
+const $spreadsheetLink = element('spreadsheet_link')
+const $historyList = element('history_list')
 
 let spreadsheetSheets
 
@@ -25,11 +25,9 @@ function onSpreadsheetChanged(info) {
         const id = sheet.properties.sheetId
         spreadsheetSheets[id] = sheet.properties.title
 
-        const option = document.createElement('option')
-        option.value = id
-        option.innerHTML = spreadsheetSheets[id]
-
-        $sheetEdit.appendChild(option)
+        const $option = createElement($sheetEdit, 'option')
+        $option.value = id
+        $option.innerHTML = spreadsheetSheets[id]
     }
     $sheetEdit.disabled = false
 
@@ -67,13 +65,11 @@ function onHistoryChanged(history) {
     $historyList.innerHTML = ''  /*todo: update, instead of rebuild all rows */
     if (history) {
         for (const item of history) {
-            const row = document.createElement('div')
-            row.tabIndex = 0 /* makes row tabbale */
-            row.className = 'list_item'
-            row.innerHTML = item.text
-            row.addEventListener('click', () => onRowClick(item))
-
-            $historyList.appendChild(row);
+            const $row = createElement($historyList, 'div')
+            $row.tabIndex = 0 /* makes row tabbale */
+            $row.className = 'list_item'
+            $row.innerHTML = item.text
+            $row.addEventListener('click', async () => onRowClick(item))
         }
     }
 
@@ -84,11 +80,11 @@ $spreadsheetLink.addEventListener('click', async (event) => {
     openUniqueTab(event.target.href)
 })
 
-$('settings_button').addEventListener('click', async () => {
+element('settings_button').addEventListener('click', async () => {
     openUniqueTab(chrome.runtime.getURL('options.html'))
 })
 
-$('login_button').addEventListener('click', async () => {
+element('login_button').addEventListener('click', async () => {
     sendMessage(MSG_LOGIN)
 })
 

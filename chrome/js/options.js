@@ -1,8 +1,8 @@
-const $loginButton = $('login_button');
-const $logoutButton = $('logout_button');
-const $spreadsheetMoreButton = $('spreadsheet_more_button')
-const $sheetEdit = $('sheet_edit')
-const $historyMoreButton = $('history_more_button')
+const $loginButton = element('login_button');
+const $logoutButton = element('logout_button');
+const $spreadsheetMoreButton = element('spreadsheet_more_button')
+const $sheetEdit = element('sheet_edit')
+const $historyMoreButton = element('history_more_button')
 
 let accountLoggedIn = false
 let spreadsheetMoreSectionVisible = false
@@ -14,12 +14,12 @@ let spreadsheetSheets
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
     setVisible($logoutButton, accountLoggedIn)
-    setVisible($('options_sections'), accountLoggedIn)
+    setVisible(element('options_sections'), accountLoggedIn)
 }
 
 function updateSpreadsheetSection() {
-    const nameLabel = $('spreadsheet_name_label')
-    const idLabel = $('spreadsheet_id_label')
+    const nameLabel = element('spreadsheet_name_label')
+    const idLabel = element('spreadsheet_id_label')
     if (spreadsheetId) {
         nameLabel.innerHTML = spreadsheetTitle
         nameLabel.href = spreadsheetUrl(spreadsheetId)
@@ -30,12 +30,12 @@ function updateSpreadsheetSection() {
         idLabel.innerHTML = ''
     }
 
-    setVisible($('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
+    setVisible(element('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
     $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
 function updateHistorySection() {
-    setVisible($('history_more_section'), historyMoreSectionVisible)
+    setVisible(element('history_more_section'), historyMoreSectionVisible)
     $historyMoreButton.innerHTML = historyMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
@@ -43,10 +43,9 @@ function updateSpreadsheetSheetSection() {
     $sheetEdit.innerHTML = ''
     if (spreadsheetSheets) {
         Object.keys(spreadsheetSheets).forEach(id => {
-            const option = document.createElement('option')
-            option.value = id
-            option.innerHTML = spreadsheetSheets[id]
-            $sheetEdit.appendChild(option)
+            const $option = createElement($sheetEdit, 'option')
+            $option.value = id
+            $option.innerHTML = spreadsheetSheets[id]
         })
 
         $sheetEdit.disabled = false
@@ -88,7 +87,7 @@ function onHistoryChanged(history) {
         )
     }
 
-    const $historyList = $('history_list')
+    const $historyList = element('history_list')
     $historyList.innerHTML = ''  /*todo: update, instead of rebuild all rows */
 
     if (history) {
@@ -96,7 +95,7 @@ function onHistoryChanged(history) {
             const $row = document.createElement('div')
             $row.tabIndex = 0 /* makes row tabbale */
             $row.className = 'list_item'
-            $row.addEventListener('click', () => onRowClick(item))
+            $row.addEventListener('click', async () => onRowClick(item))
 
             const $colText = document.createElement('div')
             $colText.className = 'list_column_60'
@@ -153,7 +152,7 @@ $spreadsheetMoreButton.addEventListener('click', async () => {
     updateSpreadsheetSection()
 })
 
-$('change_spreadsheet-button').addEventListener('click', async () => {
+element('change_spreadsheet-button').addEventListener('click', async () => {
     const newSpreadsheetId = prompt(R('enter_spreadsheet_id'), spreadsheetId)
     if (newSpreadsheetId) {
         sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)
@@ -170,7 +169,7 @@ $historyMoreButton.addEventListener('click', async () => {
     sendMessage(MSG_GET_HISTORY)
 })
 
-$('clear_history_button').addEventListener('click', async () => {
+element('clear_history_button').addEventListener('click', async () => {
     if (confirm(R('clear_history_alert'))) {
         sendMessage(MSG_CLEAR_HISTORY)
     }

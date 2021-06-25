@@ -23,6 +23,7 @@ function R(key) {
 }
 
 function localizeHtml() {
+    //todo: how to translate attributes? __MSG_app_name__ ?
     document.querySelectorAll('[i18n]').forEach(element => {
         element.innerText = R(element.attributes.i18n.value)
     })

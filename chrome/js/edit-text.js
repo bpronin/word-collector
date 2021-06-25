@@ -1,6 +1,5 @@
 function showFrame(left, top, text) {
-    const $frame = document.createElement('iframe')
-    document.body.appendChild($frame)
+    const $frame = createElement(document.body, 'iframe')
 
     $frame.id = 'edit-frame'
     $frame.src = chrome.runtime.getURL('edit-frame.html')
@@ -17,7 +16,7 @@ function showFrame(left, top, text) {
 }
 
 function initFrame(text) {
-    const $frame = document.getElementById('edit-frame')
+    const $frame = element('edit-frame')
     $frame.contentWindow.postMessage({
         target: 'word-collector',
         action: 'init-edit-frame',
@@ -29,7 +28,7 @@ function initFrame(text) {
 }
 
 function closeFrame() {
-    const $frame = document.getElementById('edit-frame')
+    const $frame = element('edit-frame')
     if ($frame) {
         document.body.removeChild($frame)
 
@@ -67,11 +66,9 @@ if (typeof initialized === 'undefined') {
     frameWidth = 400
     frameHeight = 160 /* should be the same as body height in frame's html */
 
-    window.addEventListener('click', async () => {
-        closeFrame()
-    })
+    window.addEventListener('click', async () => closeFrame())
 
-    window.addEventListener('message', async event => {
+    window.addEventListener('message', async (event) => {
         if (event.data.target === 'word-collector') {
             console.log("Received message:" + JSON.stringify(event.data))
 
