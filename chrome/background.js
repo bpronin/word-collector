@@ -66,16 +66,16 @@ function getLoginState() {
 
 function sendValueToSpreadsheet(data) {
     console.log('Saving: ' + JSON.stringify(data))
-    //
-    // ensureSpreadsheetExists(info => {
-    //     const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
-    //
-    //     gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
-    //         updateHistory(data.text)
-    //
-    //         console.log('Saved: ' + data.text)
-    //     })
-    // })
+
+    ensureSpreadsheetExists(info => {
+        const range = formatSpreadsheetRange(info, spreadsheetSheet, 0)
+
+        gapi.spreadsheets.appendValue(spreadsheetId, range, data.text, () => {
+            updateHistory(data.text)
+
+            console.log('Saved: ' + data.text)
+        })
+    })
 }
 
 function getData() {

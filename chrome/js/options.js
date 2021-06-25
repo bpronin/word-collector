@@ -1,6 +1,6 @@
 const $loginButton = element('login_button');
 const $logoutButton = element('logout_button');
-const $spreadsheetMoreButton = element('spreadsheet_more_button')
+// const $spreadsheetMoreButton = element('spreadsheet_more_button')
 const $sheetEdit = element('sheet_edit')
 const $historyMoreButton = element('history_more_button')
 
@@ -18,20 +18,20 @@ function updateLoginSection() {
 }
 
 function updateSpreadsheetSection() {
-    const nameLabel = element('spreadsheet_name_label')
-    const idLabel = element('spreadsheet_id_label')
+    const $nameLabel = element('spreadsheet_name_label')
+    // const $idLabel = element('spreadsheet_id_label')
     if (spreadsheetId) {
-        nameLabel.innerHTML = spreadsheetTitle
-        nameLabel.href = spreadsheetUrl(spreadsheetId)
-        idLabel.innerHTML = spreadsheetId
+        $nameLabel.innerHTML = spreadsheetTitle
+        $nameLabel.href = spreadsheetUrl(spreadsheetId)
+        // $idLabel.innerHTML = spreadsheetId
     } else {
-        nameLabel.innerHTML = ''
-        nameLabel.href = ''
-        idLabel.innerHTML = ''
+        $nameLabel.innerHTML = ''
+        $nameLabel.href = ''
+        // $idLabel.innerHTML = ''
     }
 
-    setVisible(element('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
-    $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? 'expand_less' : 'expand_more'
+    // setVisible(element('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
+    // $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
 function updateHistorySection() {
@@ -147,10 +147,10 @@ $logoutButton.addEventListener('click', async () => {
     }
 })
 
-$spreadsheetMoreButton.addEventListener('click', async () => {
-    spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
-    updateSpreadsheetSection()
-})
+// $spreadsheetMoreButton.addEventListener('click', async () => {
+//     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
+//     updateSpreadsheetSection()
+// })
 
 element('change_spreadsheet-button').addEventListener('click', async () => {
     const newSpreadsheetId = prompt(R('enter_spreadsheet_id'), spreadsheetId)
