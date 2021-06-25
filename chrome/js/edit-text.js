@@ -16,7 +16,7 @@ function showFrame(left, top, text) {
 }
 
 function initFrame(text) {
-    const $frame = element('edit-frame')
+    const $frame = $('edit-frame')
     $frame.contentWindow.postMessage({
         target: 'word-collector',
         action: 'init-edit-frame',
@@ -28,7 +28,7 @@ function initFrame(text) {
 }
 
 function closeFrame() {
-    const $frame = element('edit-frame')
+    const $frame = $('edit-frame')
     if ($frame) {
         document.body.removeChild($frame)
 

@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="css/image-buttons.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/list.css">
+    <link rel="stylesheet" href="css/loading.css">
     <link rel="stylesheet" href="css/options.css">
 </head>
-<body>
+<body style="display: none">
 
 <div class="settings-header" i18n="app_settings">Settings</div>
 
@@ -19,22 +20,15 @@
             <div class="setting-section">
                 <div class="setting-row-title" i18n="spreadsheet">Spreadsheet</div>
                 <div class="setting-row-content">
-                    <a id="spreadsheet_name_label" href="https://spreadsheet">Spreadsheet name</a>
-<!--                    <span id="spreadsheet_more_button" class="font-button material-icons">expand_more</span>-->
+                    <div>
+                        <a id="spreadsheet_name_label" href="https://spreadsheet">Spreadsheet name</a>
+                        <div id="spreadsheet_name_loading_icon" class="loader --1"></div>
+                    </div>
                     <div>
                         <button id="change_spreadsheet-button" i18n="change">Change</button>
                         <button id="new_spreadsheet-button" i18n="new">New</button>
                     </div>
                 </div>
-<!--
-                <div id="spreadsheet_more_section">
-                    <div class="setting-row-title" i18n="spreadsheet_id"></div>
-                    <div class="setting-row-content">
-                        <span id="spreadsheet_id_label"></span>
-                        <button id="change_spreadsheet-button" i18n="change"></button>
-                    </div>
-                </div>
--->
             </div>
             <div class="setting-section">
                 <div class="setting-row-title" i18n="spreadsheet_sheet">Sheet</div>
@@ -61,7 +55,8 @@
             <div class="setting-row-content">
                 <button id="login_button" class="text-action-button" i18n="sign_in_to_google"></button>
                 <button id="logout_button" class="text-action-button dangerous-button"
-                        i18n="sign_out_from_google">Sign out</button>
+                        i18n="sign_out_from_google">Sign out
+                </button>
             </div>
         </div>
     </div>
@@ -69,10 +64,10 @@
 
 </body>
 
-<script src="js/html-util.js"></script>
-<script src="js/chrome-util.js"></script>
-<script src="js/resources.js"></script>
-<script src="js/messages.js"></script>
-<script src="js/options.js"></script>
+<script defer src="js/html-util.js"></script>
+<script defer src="js/chrome-util.js"></script>
+<script defer src="js/resources.js"></script>
+<script defer src="js/messages.js"></script>
+<script defer src="js/options.js"></script>
 
 </html>

@@ -1,8 +1,8 @@
-const $authSection = element('login_section')
-const $optionsSection = element('options_sections')
-const $sheetEdit = element('sheet_edit')
-const $spreadsheetLink = element('spreadsheet_link')
-const $historyList = element('history_list')
+const $authSection = $('login_section')
+const $optionsSection = $('options_sections')
+const $sheetEdit = $('sheet_edit')
+const $spreadsheetLink = $('spreadsheet_link')
+const $historyList = $('history_list')
 
 let spreadsheetSheets
 //todo: add 'loading...' icon
@@ -80,11 +80,11 @@ $spreadsheetLink.addEventListener('click', async (event) => {
     openUniqueTab(event.target.href)
 })
 
-element('settings_button').addEventListener('click', async () => {
+$('settings_button').addEventListener('click', async () => {
     openUniqueTab(chrome.runtime.getURL('options.html'))
 })
 
-element('login_button').addEventListener('click', async () => {
+$('login_button').addEventListener('click', async () => {
     sendMessage(MSG_LOGIN)
 })
 

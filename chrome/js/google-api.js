@@ -7,12 +7,12 @@ const gapi = {
         sendRequest(method, apiUrl, path, params, body, onResponse, onRejected) {
 
             function doRequest(token) {
-                if (token === undefined) {
+                if (!token) {
                     throw ('Token is undefined')
                 }
 
-                let input = apiUrl + path + '?key=' + API_KEY;
-                if (params !== undefined) {
+                let input = apiUrl + (path || '') + '?key=' + API_KEY;
+                if (params) {
                     input += params
                 }
 
@@ -37,14 +37,14 @@ const gapi = {
 
                             response.json()
                                 .then(data => {
-                                    if (onResponse !== undefined) {
+                                    if (onResponse) {
                                         onResponse(data)
                                     }
                                 })
                         } else {
                             console.log('Request rejected')
 
-                            if (onRejected !== undefined) {
+                            if (onRejected) {
                                 onRejected()
                             } else
                                 throw ('Request rejected: ' + response.status + '. ' + input)
@@ -53,6 +53,81 @@ const gapi = {
             }
 
             gapi.checkLoggedIn(doRequest)
+        },
+
+        batchUpdate(spreadsheetId, requests, onComplete) {
+            gapi.internal.sendRequest('POST',
+                gapi.spreadsheets.url,
+                spreadsheetId + ':batchUpdate',
+                undefined,
+                requests,
+                onComplete
+            )
+        },
+
+        applyDefaultFormat(info, onComplete) {
+            const sheetId = 0
+            gapi.internal.batchUpdate(info.spreadsheetId, {
+                requests: [{
+                    appendCells: {
+                        sheetId: sheetId,
+                        rows: [{
+                            values: [{
+                                userEnteredValue: {
+                                    stringValue: 'Text'
+                                }
+                            }, {
+                                userEnteredValue: {
+                                    stringValue: 'Translation'
+                                }
+                            }]
+                        }],
+                        fields: 'userEnteredValue'
+                    }
+                }, {
+                    updateSheetProperties: {
+                        properties: {
+                            sheetId: sheetId,
+                            gridProperties: {
+                                frozenRowCount: 1
+                            }
+                        },
+                        fields: 'gridProperties.frozenRowCount'
+                    }
+                }, {
+                    updateDimensionProperties: {
+                        range: {
+                            sheetId: sheetId,
+                            dimension: 'COLUMNS',
+                            startIndex: 0,
+                            endIndex: 2
+                        },
+                        properties: {
+                            pixelSize: 300
+                        },
+                        fields: 'pixelSize'
+                    }
+                }, {
+                    repeatCell: {
+                        range: {
+                            sheetId: sheetId,
+                            startRowIndex: 0,
+                            endRowIndex: 1
+                        },
+                        cell: {
+                            userEnteredFormat: {
+                                backgroundColor: {
+                                    red: 0.9,
+                                    green: 0.9,
+                                    blue: 0.9
+                                },
+                                horizontalAlignment: 'CENTER'
+                            }
+                        },
+                        fields: 'userEnteredFormat(backgroundColor,horizontalAlignment)'
+                    }
+                }]
+            }, onComplete)
         }
     },
 
@@ -62,7 +137,7 @@ const gapi = {
     setup(onSignInStatusChanged) {
         gapi.internal.onSignInStatusChanged = onSignInStatusChanged
 
-        // when this listener is calling ?
+        //todo: when this listener is calling and what for ?
         chrome.identity.onSignInChanged.addListener((account, token) => {
             console.log('Google API onSignInChanged: ' + token)
         })
@@ -79,7 +154,7 @@ const gapi = {
     login() {
 
         function doLogin(token) {
-            if (token === undefined) {
+            if (!token) {
                 console.log('Signing in...')
 
                 chrome.identity.getAuthToken({interactive: true}, () => {
@@ -98,7 +173,7 @@ const gapi = {
     logout() {
 
         function doLogout(token) {
-            if (token!== undefined) {
+            if (token) {
                 gapi.internal.onSignInStatusChanged(false)
 
                 console.log('Signing out...')
@@ -126,14 +201,17 @@ const gapi = {
         createSpreadsheet(name, onComplete) {
             gapi.internal.sendRequest('POST',
                 gapi.spreadsheets.url,
-                '',
+                undefined,
                 undefined,
                 {
                     properties: {
                         title: name
                     }
-                },
-                onComplete)
+                }, info => {
+                    gapi.internal.applyDefaultFormat(info, () => {
+                        onComplete(info) /* return create's info not apply's */
+                    })
+                })
         },
 
         getSpreadsheet(spreadsheetId, onData) {

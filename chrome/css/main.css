@@ -46,3 +46,8 @@ input {
     border-width: 1px;
     border-color: lightgrey;
 }
+
+.small-load-icon {
+    width: 28px;
+    height: 28px;
+}

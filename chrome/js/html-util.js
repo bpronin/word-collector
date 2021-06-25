@@ -1,4 +1,4 @@
-function element(componentId) {
+function $(componentId) {
     return document.getElementById(componentId)
 }
 

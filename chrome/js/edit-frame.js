@@ -1,5 +1,5 @@
-const $textEditor = element('text_editor')
-const $translationEditor = element('translation_editor')
+const $textEditor = $('text_editor')
+const $translationEditor = $('translation_editor')
 
 function onOkClick() {
     window.parent.postMessage({
@@ -33,6 +33,6 @@ window.addEventListener('message', async (event) => {
 })
 
 localizeHtml()
-element('ok_button').addEventListener('click', async () => onOkClick())
-element('cancel_button').addEventListener('click', async () => onCancelClick)
+$('ok_button').addEventListener('click', async () => onOkClick())
+$('cancel_button').addEventListener('click', async () => onCancelClick)
 $translationEditor.focus()

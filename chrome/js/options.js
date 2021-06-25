@@ -1,41 +1,39 @@
-const $loginButton = element('login_button');
-const $logoutButton = element('logout_button');
+const $loginButton = $('login_button');
+const $logoutButton = $('logout_button');
 // const $spreadsheetMoreButton = element('spreadsheet_more_button')
-const $sheetEdit = element('sheet_edit')
-const $historyMoreButton = element('history_more_button')
-
+const $sheetEdit = $('sheet_edit')
+const $historyMoreButton = $('history_more_button')
 let accountLoggedIn = false
 // let spreadsheetMoreSectionVisible = false
 let historyMoreSectionVisible = false
 let spreadsheetId
 let spreadsheetTitle
 let spreadsheetSheets
+let spreadsheetProcessing
 
 function updateLoginSection() {
     setVisible($loginButton, !accountLoggedIn)
     setVisible($logoutButton, accountLoggedIn)
-    setVisible(element('options_sections'), accountLoggedIn)
+    setVisible($('options_sections'), accountLoggedIn)
 }
 
 function updateSpreadsheetSection() {
-    const $nameLabel = element('spreadsheet_name_label')
-    // const $idLabel = element('spreadsheet_id_label')
+    const $nameLabel = $('spreadsheet_name_label')
     if (spreadsheetId) {
         $nameLabel.innerHTML = spreadsheetTitle
         $nameLabel.href = spreadsheetUrl(spreadsheetId)
-        // $idLabel.innerHTML = spreadsheetId
     } else {
         $nameLabel.innerHTML = ''
         $nameLabel.href = ''
-        // $idLabel.innerHTML = ''
     }
 
-    // setVisible(element('spreadsheet_more_section'), spreadsheetMoreSectionVisible)
-    // $spreadsheetMoreButton.innerHTML = spreadsheetMoreSectionVisible ? 'expand_less' : 'expand_more'
+    // setVisible($nameLabel, !spreadsheetProcessing)
+    $nameLabel.disabled = spreadsheetProcessing
+    setVisible($('spreadsheet_name_loading_icon'), spreadsheetProcessing)
 }
 
 function updateHistorySection() {
-    setVisible(element('history_more_section'), historyMoreSectionVisible)
+    setVisible($('history_more_section'), historyMoreSectionVisible)
     $historyMoreButton.innerHTML = historyMoreSectionVisible ? 'expand_less' : 'expand_more'
 }
 
@@ -54,10 +52,11 @@ function updateSpreadsheetSheetSection() {
 
 function onLoginStateChanged(loggedIn) {
     accountLoggedIn = loggedIn
-    updateLoginSection()
     if (accountLoggedIn) {
+        spreadsheetProcessing = true
         sendMessage(MSG_GET_SPREADSHEET)
     }
+    updateLoginSection()
 }
 
 function onCurrentSheetChanged(sheet) {
@@ -87,7 +86,7 @@ function onHistoryChanged(history) {
         )
     }
 
-    const $historyList = element('history_list')
+    const $historyList = $('history_list')
     $historyList.innerHTML = ''  /*todo: update, instead of rebuild all rows */
 
     if (history) {
@@ -121,6 +120,8 @@ function onHistoryChanged(history) {
 
 function onSpreadsheetChanged(info) {
     if (info) {
+        spreadsheetProcessing = false
+
         spreadsheetId = info.spreadsheetId
         spreadsheetTitle = info.properties.title
 
@@ -147,30 +148,31 @@ $logoutButton.addEventListener('click', async () => {
     }
 })
 
-// $spreadsheetMoreButton.addEventListener('click', async () => {
-//     spreadsheetMoreSectionVisible = !spreadsheetMoreSectionVisible
-//     updateSpreadsheetSection()
-// })
-
-element('change_spreadsheet-button').addEventListener('click', async () => {
+$('change_spreadsheet-button').addEventListener('click', async () => {
     let sid = prompt(R('enter_spreadsheet_id'), spreadsheetId)
-    if (sid) {
-        /* if input is URL strip it */
-        const expr = new RegExp("/spreadsheets/d/([a-zA-Z0-9-_]+)").exec(sid)
-        if (expr) {
-            sid = expr[1]
+    if (sid !== null) {
+        if (sid !== '') {
+            /* if input is URL strip it */
+            const expr = new RegExp("/spreadsheets/d/([a-zA-Z0-9-_]+)").exec(sid)
+            if (expr) {
+                sid = expr[1]
+            }
+            spreadsheetProcessing = true
+            updateSpreadsheetSection()
+
+            sendMessage(MSG_SET_SPREADSHEET, sid)
+        } else {
+            alert('ID cannot be empty')
         }
-        sendMessage(MSG_SET_SPREADSHEET, sid)
     }
 })
 
-element('new_spreadsheet-button').addEventListener('click', async () => {
+$('new_spreadsheet-button').addEventListener('click', async () => {
     let name = prompt(R('enter_spreadsheet_name'))
-    if (name) {
-        sendMessage(MSG_CREATE_SPREADSHEET, name)
-    } else {
-        alert("Name cannot be empty")
-    }
+    spreadsheetProcessing = true
+    updateSpreadsheetSection()
+
+    sendMessage(MSG_CREATE_SPREADSHEET, name)
 })
 
 $sheetEdit.addEventListener('change', async (event) => {
@@ -183,7 +185,7 @@ $historyMoreButton.addEventListener('click', async () => {
     sendMessage(MSG_GET_HISTORY)
 })
 
-element('clear_history_button').addEventListener('click', async () => {
+$('clear_history_button').addEventListener('click', async () => {
     if (confirm(R('clear_history_alert'))) {
         sendMessage(MSG_CLEAR_HISTORY)
     }
@@ -209,6 +211,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 )
 
 localizeHtml()
+setVisible(document.body, true)
+
 updateLoginSection()
 updateSpreadsheetSection()
 updateSpreadsheetSheetSection()
