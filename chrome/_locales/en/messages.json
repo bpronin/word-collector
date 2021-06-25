@@ -56,7 +56,7 @@
     "description": "TODO:"
   },
   "sign_out_from_google_alert": {
-    "message": "Signing out from Google Spreadsheets you won't be able to use Words Collector.",
+    "message": "Signing out from Google Spreadsheets you won't be able to use Words Collector until you sign in again.",
     "description": "Confirmation message"
   },
   "clear_history_alert": {
@@ -86,6 +86,10 @@
   "removed": {
     "message": "removed",
     "description": "Item name if removed"
+  },
+  "sheet_removed": {
+    "message": "[sheet removed]",
+    "description": "Sheet name if removed"
   },
   "translation": {
     "message": "Translation",

@@ -71,7 +71,7 @@ function onHistoryChanged(history) {
     }
 
     function sheetName(item) {
-        return spreadsheetSheets[item.sheet] || ('[' + R('removed') + ' ID: ' + item.sheet + ']')
+        return spreadsheetSheets[item.sheet] || R('sheet_removed')
     }
 
     function formatTime(item) {

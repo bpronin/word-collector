@@ -56,7 +56,7 @@
     "description": "TODO:"
   },
   "sign_out_from_google_alert": {
-    "message": "Выйдя из Google Таблиц вы не сможете использовать Words Collector.",
+    "message": "Выйдя из Google Таблиц вы не сможете использовать Words Collector пока не войдёте снова.",
     "description": "Confirmation message"
   },
   "clear_history_alert": {
@@ -86,6 +86,10 @@
   "removed": {
     "message": "удалено",
     "description": "Item name if removed"
+  },
+  "sheet_removed": {
+    "message": "[лист удален]",
+    "description": "Sheet name if removed"
   },
   "translation": {
     "message": "Перевод",
