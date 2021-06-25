@@ -153,9 +153,14 @@ $logoutButton.addEventListener('click', async () => {
 // })
 
 element('change_spreadsheet-button').addEventListener('click', async () => {
-    const newSpreadsheetId = prompt(R('enter_spreadsheet_id'), spreadsheetId)
-    if (newSpreadsheetId) {
-        sendMessage(MSG_SET_SPREADSHEET, newSpreadsheetId)
+    let sid = prompt(R('enter_spreadsheet_id'), spreadsheetId)
+    if (sid) {
+        /* if input is URL strip it */
+        const expr = new RegExp("/spreadsheets/d/([a-zA-Z0-9-_]+)").exec(sid)
+        if (expr) {
+            sid = expr[1]
+        }
+        sendMessage(MSG_SET_SPREADSHEET, sid)
     }
 })
 

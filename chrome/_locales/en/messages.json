@@ -72,7 +72,7 @@
     "description": "Time title"
   },
   "enter_spreadsheet_id": {
-    "message": "Enter spreadsheet ID",
+    "message": "Enter ID of spreadsheet or its fully qualified URL",
     "description": "TODO:"
   },
   "specified_spreadsheet_does_not_exists": {

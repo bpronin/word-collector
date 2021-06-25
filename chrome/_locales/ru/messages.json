@@ -72,7 +72,7 @@
     "description": "Time title"
   },
   "enter_spreadsheet_id": {
-    "message": "ID таблицы",
+    "message": "ID таблицы или полный URL",
     "description": "TODO:"
   },
   "specified_spreadsheet_does_not_exists": {
