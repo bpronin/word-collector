@@ -72,8 +72,12 @@
     "description": "Time title"
   },
   "enter_spreadsheet_id": {
-    "message": "ID таблицы или полный URL",
-    "description": "TODO:"
+    "message": "Укажите ID таблицы или полный URL",
+    "description": "Message in dialog"
+  },
+  "enter_spreadsheet_name": {
+    "message": "Укажите имя новой таблицы",
+    "description": "Message in dialog"
   },
   "specified_spreadsheet_does_not_exists": {
     "message": "Таблицы с указанным ID не существует.",
@@ -102,5 +106,9 @@
   "cancel": {
     "message": "Отмена",
     "description": "Button"
+  },
+  "new": {
+    "message": "Новый",
+    "description": "Button 'New spreadsheet'"
   }
 }

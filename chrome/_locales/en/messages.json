@@ -73,7 +73,11 @@
   },
   "enter_spreadsheet_id": {
     "message": "Enter ID of spreadsheet or its fully qualified URL",
-    "description": "TODO:"
+    "description": "Message in dialog"
+  },
+  "enter_spreadsheet_name": {
+    "message": "Enter name of new spreadsheet",
+    "description": "Message in dialog"
   },
   "specified_spreadsheet_does_not_exists": {
     "message": "Specified spreadsheet does not exists.",
@@ -102,5 +106,9 @@
   "cancel": {
     "message": "Cancel",
     "description": "Button"
+  },
+  "new": {
+    "message": "New",
+    "description": "Button 'New spreadsheet'"
   }
 }

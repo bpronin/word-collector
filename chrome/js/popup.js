@@ -5,7 +5,7 @@ const $spreadsheetLink = element('spreadsheet_link')
 const $historyList = element('history_list')
 
 let spreadsheetSheets
-
+//todo: add 'loading...' icon
 function onLoginStateChanged(loggedIn) {
     setVisible($authSection, !loggedIn)
     setVisible($optionsSection, loggedIn)

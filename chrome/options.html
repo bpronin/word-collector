@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div class="settings-header" i18n="app_settings"></div>
+<div class="settings-header" i18n="app_settings">Settings</div>
 
 <div class="settings-content">
     <div class="settings-sections">
@@ -19,9 +19,12 @@
             <div class="setting-section">
                 <div class="setting-row-title" i18n="spreadsheet">Spreadsheet</div>
                 <div class="setting-row-content">
-                    <a id="spreadsheet_name_label" href="https://spreadsheet"></a>
+                    <a id="spreadsheet_name_label" href="https://spreadsheet">Spreadsheet name</a>
 <!--                    <span id="spreadsheet_more_button" class="font-button material-icons">expand_more</span>-->
-                    <button id="change_spreadsheet-button" i18n="change"></button>
+                    <div>
+                        <button id="change_spreadsheet-button" i18n="change">Change</button>
+                        <button id="new_spreadsheet-button" i18n="new">New</button>
+                    </div>
                 </div>
 <!--
                 <div id="spreadsheet_more_section">
@@ -34,18 +37,18 @@
 -->
             </div>
             <div class="setting-section">
-                <div class="setting-row-title" i18n="spreadsheet_sheet"></div>
+                <div class="setting-row-title" i18n="spreadsheet_sheet">Sheet</div>
                 <div class="setting-row-content">
                     <div>
-                        <label for="sheet_edit" i18n="add_text_to_sheet"></label>
+                        <label for="sheet_edit" i18n="add_text_to_sheet">Add text to sheet</label>
                         <select id="sheet_edit"></select>
                     </div>
                 </div>
             </div>
             <div class="setting-section">
-                <div class="setting-row-title" i18n="history"></div>
+                <div class="setting-row-title" i18n="history">History</div>
                 <div class="setting-row-content">
-                    <button id="clear_history_button" class="text-action-button" i18n="clear_history"></button>
+                    <button id="clear_history_button" class="text-action-button" i18n="clear_history">Clear</button>
                     <span id="history_more_button" class="font-button material-icons">expand_more</span>
                 </div>
                 <div id="history_more_section">
@@ -54,11 +57,11 @@
             </div>
         </div>
         <div id="login_section" class="setting-section">
-            <div class="setting-row-title" i18n="google_account"></div>
+            <div class="setting-row-title" i18n="google_account">Account</div>
             <div class="setting-row-content">
                 <button id="login_button" class="text-action-button" i18n="sign_in_to_google"></button>
                 <button id="logout_button" class="text-action-button dangerous-button"
-                        i18n="sign_out_from_google"></button>
+                        i18n="sign_out_from_google">Sign out</button>
             </div>
         </div>
     </div>

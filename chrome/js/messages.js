@@ -5,6 +5,7 @@ const MSG_LOGIN_STATE_CHANGED = 'login-state-changed'
 
 const MSG_GET_SPREADSHEET = 'get-spreadsheet'
 const MSG_SET_SPREADSHEET = 'set-spreadsheet'
+const MSG_CREATE_SPREADSHEET = 'create-spreadsheet'
 const MSG_SPREADSHEET_CHANGED = 'spreadsheet-changed'
 
 const MSG_GET_CURRENT_SHEET = 'get-current-sheet'

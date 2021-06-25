@@ -123,14 +123,14 @@ const gapi = {
     spreadsheets: {
         url: 'https://sheets.googleapis.com/v4/spreadsheets/',
 
-        createSpreadsheet(onComplete) {
+        createSpreadsheet(name, onComplete) {
             gapi.internal.sendRequest('POST',
                 gapi.spreadsheets.url,
                 '',
                 undefined,
                 {
                     properties: {
-                        title: 'words-collector'
+                        title: name
                     }
                 },
                 onComplete)

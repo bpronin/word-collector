@@ -5,7 +5,7 @@ const $sheetEdit = element('sheet_edit')
 const $historyMoreButton = element('history_more_button')
 
 let accountLoggedIn = false
-let spreadsheetMoreSectionVisible = false
+// let spreadsheetMoreSectionVisible = false
 let historyMoreSectionVisible = false
 let spreadsheetId
 let spreadsheetTitle
@@ -161,6 +161,15 @@ element('change_spreadsheet-button').addEventListener('click', async () => {
             sid = expr[1]
         }
         sendMessage(MSG_SET_SPREADSHEET, sid)
+    }
+})
+
+element('new_spreadsheet-button').addEventListener('click', async () => {
+    let name = prompt(R('enter_spreadsheet_name'))
+    if (name) {
+        sendMessage(MSG_CREATE_SPREADSHEET, name)
+    } else {
+        alert("Name cannot be empty")
     }
 })
 
