@@ -10,7 +10,7 @@ function onOkClick() {
         translation: $translationEditor.value
     }, '*')
 
-    console.log("Sent message to parent")
+    console.log("Sent ok message")
 }
 
 function onCancelClick() {
@@ -19,6 +19,8 @@ function onCancelClick() {
         action: 'close-edit-frame',
         result: 'cancel'
     }, '*')
+
+    console.log("Sent cancel message")
 }
 
 window.addEventListener('message', async (event) => {
@@ -34,5 +36,5 @@ window.addEventListener('message', async (event) => {
 
 localizeHtml()
 $('ok_button').addEventListener('click', async () => onOkClick())
-$('cancel_button').addEventListener('click', async () => onCancelClick)
+$('cancel_button').addEventListener('click', async () => onCancelClick())
 $translationEditor.focus()
