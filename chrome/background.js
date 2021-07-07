@@ -90,7 +90,12 @@ function openEditDialog() {
 
         /* this is to inject multiple scripts */
         chrome.scripting.executeScript({target: {tabId: tabId}, files: ['js/html-util.js']}, () => {
-            chrome.scripting.executeScript({target: {tabId: tabId}, files: ['js/edit-text.js']})
+            chrome.scripting.executeScript({target: {tabId: tabId}, files: ['js/word-collector.js']}, () => {
+                // sendMessage('open-edit-frame', {
+                //     text: 'TEXT TO EDIT',
+                //     translation: 'TRANSLATION'
+                // })
+            })
         })
     })
 }
@@ -131,7 +136,7 @@ function onGetSpreadsheet() {
 
 function onCreateSpreadsheet(spreadsheetTitle) {
     createSpreadsheet(spreadsheetTitle, (info =>
-        sendMessage(MSG_SPREADSHEET_CHANGED, info)
+            sendMessage(MSG_SPREADSHEET_CHANGED, info)
     ))
 }
 

@@ -25,5 +25,5 @@ function sendMessage(action, data) {
     const message = {action: action, data: data};
     chrome.runtime.sendMessage(message)
 
-    // console.log('Message:' + JSON.stringify(message))
+    // console.log('Message sent: ' + JSON.stringify(message))
 }
