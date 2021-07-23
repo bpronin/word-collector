@@ -72,8 +72,6 @@ if (typeof initialized === 'undefined') {
     frameWidth = 400
     frameHeight = 160 /* should be the same as body height in frame's html */
 
-    window.addEventListener('click', async () => closeFrame())
-
     window.addEventListener('message', async (event) => {
         if (event.data.target === 'word-collector') {
             console.log("Received window message:" + JSON.stringify(event.data))
@@ -88,14 +86,6 @@ if (typeof initialized === 'undefined') {
             }
         }
     })
-
-    // chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-    //     console.log("Received chrome message: " + JSON.stringify(request))
-    //
-    //     // if (request.action === 'open-edit-frame') {
-    //     //     sendResponse()
-    //     // }
-    // })
 
     console.log("Init")
 }
