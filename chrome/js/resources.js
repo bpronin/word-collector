@@ -1,4 +1,4 @@
-/* Localized strings that cannot be loaded be chrome.i18n.getMessage()
+/* Localized strings that cannot be loaded by chrome.i18n.getMessage()
     due to asynchronous context (like in background.js) */
 const i18n = {
     get(key) {
