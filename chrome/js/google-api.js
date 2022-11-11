@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyCZStNvDstH0sddbbVbFpmj6CaGPRGKkIg'
+const API_KEY = '{GOOGLE_API_KEY}'
 
 const gapi = {
     internal: {
